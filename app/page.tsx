@@ -3,25 +3,27 @@ import { PageWrapper } from "@/components/page-wrapper"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase"
+import { safeAsyncOperation } from "@/lib/error-handler"
 
 async function getFeaturedProjects() {
-  try {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*')
-      .eq('featured', true)
-      .order('date', { ascending: false })
-      .limit(3)
+  return safeAsyncOperation(
+    async () => {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('featured', true)
+        .order('date', { ascending: false })
+        .limit(3)
 
-    if (error) {
-      console.error('Error fetching featured projects:', error)
-      return []
-    }
-    return data || []
-  } catch (error) {
-    console.error('Error fetching featured projects:', error)
-    return []
-  }
+      if (error) {
+        throw new Error(`Failed to fetch featured projects: ${error.message}`)
+      }
+      
+      return data || []
+    },
+    [], // fallback to empty array
+    'getFeaturedProjects'
+  )
 }
 
 export default async function Home() {

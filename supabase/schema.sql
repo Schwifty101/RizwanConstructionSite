@@ -65,19 +65,19 @@ DROP POLICY IF EXISTS "Public can view active services" ON services;
 CREATE POLICY "Public can view active services" ON services
     FOR SELECT USING (active = true);
 
--- Create policies for admin access (allows all operations for now)
--- In production, you should restrict these to authenticated admin users
+-- Create policies for admin access (requires authentication)
+-- Only authenticated users can manage projects, services, and contacts
 DROP POLICY IF EXISTS "Admin can manage projects" ON projects;
 CREATE POLICY "Admin can manage projects" ON projects
-    FOR ALL USING (true);
+    FOR ALL USING (auth.role() = 'authenticated');
 
 DROP POLICY IF EXISTS "Admin can manage services" ON services;
 CREATE POLICY "Admin can manage services" ON services
-    FOR ALL USING (true);
+    FOR ALL USING (auth.role() = 'authenticated');
 
 DROP POLICY IF EXISTS "Admin can manage contacts" ON contacts;
 CREATE POLICY "Admin can manage contacts" ON contacts
-    FOR ALL USING (true);
+    FOR ALL USING (auth.role() = 'authenticated');
 
 -- Create storage bucket for project images (if not exists)
 INSERT INTO storage.buckets (id, name, public) 
@@ -91,15 +91,15 @@ CREATE POLICY "Public can view project images" ON storage.objects
 
 DROP POLICY IF EXISTS "Admin can upload project images" ON storage.objects;
 CREATE POLICY "Admin can upload project images" ON storage.objects
-    FOR INSERT WITH CHECK (bucket_id = 'project-images');
+    FOR INSERT WITH CHECK (bucket_id = 'project-images' AND auth.role() = 'authenticated');
 
 DROP POLICY IF EXISTS "Admin can update project images" ON storage.objects;
 CREATE POLICY "Admin can update project images" ON storage.objects
-    FOR UPDATE USING (bucket_id = 'project-images');
+    FOR UPDATE USING (bucket_id = 'project-images' AND auth.role() = 'authenticated');
 
 DROP POLICY IF EXISTS "Admin can delete project images" ON storage.objects;
 CREATE POLICY "Admin can delete project images" ON storage.objects
-    FOR DELETE USING (bucket_id = 'project-images');
+    FOR DELETE USING (bucket_id = 'project-images' AND auth.role() = 'authenticated');
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()

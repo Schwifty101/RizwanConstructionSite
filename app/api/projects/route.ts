@@ -22,7 +22,14 @@ export async function GET(request: Request) {
     }
 
     if (limit) {
-      query = query.limit(parseInt(limit))
+      const limitNum = parseInt(limit)
+      if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+        return NextResponse.json(
+          { error: 'Invalid limit parameter. Must be between 1 and 100.' },
+          { status: 400 }
+        )
+      }
+      query = query.limit(limitNum)
     }
 
     const { data, error } = await query
@@ -100,11 +107,20 @@ export async function GET(request: Request) {
   }
 }
 
+// Helper function to sanitize input and prevent XSS
+function sanitizeInput(input: string): string {
+  return input
+    .trim()
+    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .substring(0, 1000) // Limit length
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { title, description, category, images, date, location, slug, featured } = body
 
+    // Validate required fields
     if (!title || !category || !date || !slug) {
       return NextResponse.json(
         { error: 'Missing required fields: title, category, date, slug' },
@@ -112,17 +128,48 @@ export async function POST(request: Request) {
       )
     }
 
+    // Validate input lengths
+    if (title.length > 255 || slug.length > 255) {
+      return NextResponse.json(
+        { error: 'Title and slug must be under 255 characters' },
+        { status: 400 }
+      )
+    }
+
+    if (description && description.length > 2000) {
+      return NextResponse.json(
+        { error: 'Description must be under 2000 characters' },
+        { status: 400 }
+      )
+    }
+
+    // Validate date format
+    if (!Date.parse(date)) {
+      return NextResponse.json(
+        { error: 'Invalid date format' },
+        { status: 400 }
+      )
+    }
+
+    // Validate slug format (alphanumeric and hyphens only)
+    if (!/^[a-z0-9-]+$/.test(slug)) {
+      return NextResponse.json(
+        { error: 'Slug must contain only lowercase letters, numbers, and hyphens' },
+        { status: 400 }
+      )
+    }
+
     const { data, error } = await supabase
       .from('projects')
       .insert([{
-        title,
-        description,
-        category,
-        images: images || [],
+        title: sanitizeInput(title),
+        description: description ? sanitizeInput(description) : null,
+        category: sanitizeInput(category),
+        images: Array.isArray(images) ? images.slice(0, 10) : [], // Limit to 10 images
         date,
-        location,
-        slug,
-        featured: featured || false
+        location: location ? sanitizeInput(location) : null,
+        slug: slug.toLowerCase(),
+        featured: Boolean(featured)
       }])
       .select()
 
