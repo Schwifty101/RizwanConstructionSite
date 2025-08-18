@@ -1,9 +1,12 @@
 import Link from "next/link"
+import Image from "next/image"
+import Script from "next/script"
 import { PageWrapper } from "@/components/page-wrapper"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase"
 import { safeAsyncOperation } from "@/lib/error-handler"
+import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/seo"
 
 async function getFeaturedProjects() {
   return safeAsyncOperation(
@@ -28,9 +31,29 @@ async function getFeaturedProjects() {
 
 export default async function Home() {
   const featuredProjects = await getFeaturedProjects()
+  
+  const serviceSchema = generateServiceSchema()
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: '/' }
+  ])
 
   return (
     <PageWrapper>
+      {/* Service and Breadcrumb Schema */}
+      <Script
+        id="service-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(serviceSchema),
+        }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       {/* Hero Section */}
       <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-cream to-beige">
         <div className="absolute inset-0 bg-black/20"></div>
@@ -71,8 +94,20 @@ export default async function Home() {
               featuredProjects.map((project) => (
                 <Card key={project.id} className="group hover:shadow-lg transition-shadow duration-300">
                   <div className="relative overflow-hidden rounded-t-lg">
-                    <div className="aspect-[4/3] bg-muted flex items-center justify-center">
-                      <span className="text-muted-foreground">Project Image</span>
+                    <div className="aspect-[4/3] relative">
+                      {project.images && project.images.length > 0 ? (
+                        <Image
+                          src={project.images[0]}
+                          alt={project.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <span className="text-muted-foreground">Project Image</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <CardHeader>

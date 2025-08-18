@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
-
-// Helper function to sanitize input and prevent XSS
-function sanitizeInput(input: string): string {
-  return input
-    .trim()
-    .replace(/[<>]/g, '') // Remove potential HTML tags
-    .substring(0, 1000) // Limit length
-}
+import { API_LIMITS, VALIDATION_PATTERNS } from '@/lib/constants'
+import { sanitizeInput, sanitizeEmail, sanitizePhone } from '@/lib/sanitize'
+import { getClientIdentifier, checkRateLimit, createRateLimitResponse, rateLimiters } from '@/lib/rate-limiter'
 
 export async function POST(request: Request) {
   try {
+    // Check rate limit
+    const identifier = getClientIdentifier(request)
+    const rateLimitResult = checkRateLimit(identifier, rateLimiters.contact)
+    
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(rateLimitResult.resetTime)
+    }
+
     const body = await request.json()
     const { name, email, phone, message } = body
 
@@ -23,16 +26,15 @@ export async function POST(request: Request) {
     }
 
     // Validate input lengths
-    if (name.length > 100 || message.length > 2000) {
+    if (name.length > API_LIMITS.MAX_NAME_LENGTH || message.length > API_LIMITS.MAX_MESSAGE_LENGTH) {
       return NextResponse.json(
-        { error: 'Input too long. Name must be under 100 characters, message under 2000.' },
+        { error: `Input too long. Name must be under ${API_LIMITS.MAX_NAME_LENGTH} characters, message under ${API_LIMITS.MAX_MESSAGE_LENGTH}.` },
         { status: 400 }
       )
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email) || email.length > 255) {
+    if (!VALIDATION_PATTERNS.EMAIL.test(email) || email.length > API_LIMITS.MAX_EMAIL_LENGTH) {
       return NextResponse.json(
         { error: 'Invalid email format or email too long' },
         { status: 400 }
@@ -40,7 +42,7 @@ export async function POST(request: Request) {
     }
 
     // Validate phone if provided
-    if (phone && phone.length > 20) {
+    if (phone && phone.length > API_LIMITS.MAX_PHONE_LENGTH) {
       return NextResponse.json(
         { error: 'Phone number too long' },
         { status: 400 }
@@ -50,10 +52,10 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from('contacts')
       .insert([{
-        name: sanitizeInput(name),
-        email: email.trim().toLowerCase(),
-        phone: phone ? sanitizeInput(phone) : null,
-        message: sanitizeInput(message),
+        name: sanitizeInput(name, API_LIMITS.MAX_NAME_LENGTH),
+        email: sanitizeEmail(email),
+        phone: phone ? sanitizePhone(phone) : null,
+        message: sanitizeInput(message, API_LIMITS.MAX_MESSAGE_LENGTH),
         status: 'new'
       }])
       .select()

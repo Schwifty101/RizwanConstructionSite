@@ -2,51 +2,10 @@ import Link from "next/link"
 import { supabase, Project } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { safeAsyncOperation } from "@/lib/error-handler"
+import { FALLBACK_PROJECTS } from "@/lib/constants"
 import { PortfolioClient } from "./portfolio-client"
 
 const categories = ["All", "Residential", "Commercial", "Interior Design", "Renovation"]
-
-const fallbackProjects: Project[] = [
-  {
-    id: '1',
-    title: 'Modern Family Home',
-    description: 'Contemporary 3-bedroom home with open floor plan and sustainable features',
-    category: 'Residential',
-    images: ['/images/projects/modern-home-1.jpg'],
-    date: '2024-01-15',
-    location: 'Downtown District',
-    slug: 'modern-family-home',
-    featured: true,
-    created_at: '2024-01-15T00:00:00Z',
-    updated_at: '2024-01-15T00:00:00Z'
-  },
-  {
-    id: '2',
-    title: 'Luxury Kitchen Remodel',
-    description: 'Complete kitchen transformation with custom cabinetry and premium appliances',
-    category: 'Interior Design',
-    images: ['/images/projects/kitchen-remodel-1.jpg'],
-    date: '2024-02-28',
-    location: 'Suburban Area',
-    slug: 'luxury-kitchen-remodel',
-    featured: true,
-    created_at: '2024-02-28T00:00:00Z',
-    updated_at: '2024-02-28T00:00:00Z'
-  },
-  {
-    id: '3',
-    title: 'Office Space Renovation',
-    description: 'Modern office design focusing on productivity and employee wellness',
-    category: 'Commercial',
-    images: ['/images/projects/office-renovation-1.jpg'],
-    date: '2024-03-10',
-    location: 'Business District',
-    slug: 'office-space-renovation',
-    featured: false,
-    created_at: '2024-03-10T00:00:00Z',
-    updated_at: '2024-03-10T00:00:00Z'
-  }
-]
 
 // Server-side data fetching function
 async function getProjects(): Promise<Project[]> {
@@ -63,7 +22,7 @@ async function getProjects(): Promise<Project[]> {
       
       return data || []
     },
-    fallbackProjects, // fallback to sample data
+    FALLBACK_PROJECTS, // fallback to sample data
     'getProjects'
   )
 }

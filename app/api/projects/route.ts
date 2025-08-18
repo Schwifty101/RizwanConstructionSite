@@ -1,8 +1,19 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { FALLBACK_PROJECTS, API_LIMITS, VALIDATION_PATTERNS } from '@/lib/constants'
+import { sanitizeInput, sanitizeUrl } from '@/lib/sanitize'
+import { getClientIdentifier, checkRateLimit, createRateLimitResponse, rateLimiters } from '@/lib/rate-limiter'
 
 export async function GET(request: Request) {
   try {
+    // Check rate limit
+    const identifier = getClientIdentifier(request)
+    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
+    
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(rateLimitResult.resetTime)
+    }
+
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
@@ -23,9 +34,9 @@ export async function GET(request: Request) {
 
     if (limit) {
       const limitNum = parseInt(limit)
-      if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+      if (isNaN(limitNum) || limitNum < 1 || limitNum > API_LIMITS.MAX_PROJECTS_LIMIT) {
         return NextResponse.json(
-          { error: 'Invalid limit parameter. Must be between 1 and 100.' },
+          { error: `Invalid limit parameter. Must be between 1 and ${API_LIMITS.MAX_PROJECTS_LIMIT}.` },
           { status: 400 }
         )
       }
@@ -38,49 +49,7 @@ export async function GET(request: Request) {
       console.error('Error fetching projects:', error)
 
       // Return fallback data when database is not available
-      const fallbackData = [
-        {
-          id: '1',
-          title: 'Modern Family Home',
-          description: 'Contemporary 3-bedroom home with open floor plan and sustainable features',
-          category: 'Residential',
-          images: ['/images/projects/modern-home-1.jpg'],
-          date: '2024-01-15',
-          location: 'Downtown District',
-          slug: 'modern-family-home',
-          featured: true,
-          created_at: '2024-01-15T00:00:00Z',
-          updated_at: '2024-01-15T00:00:00Z'
-        },
-        {
-          id: '2',
-          title: 'Luxury Kitchen Remodel',
-          description: 'Complete kitchen transformation with custom cabinetry and premium appliances',
-          category: 'Interior Design',
-          images: ['/images/projects/kitchen-remodel-1.jpg'],
-          date: '2024-02-28',
-          location: 'Suburban Area',
-          slug: 'luxury-kitchen-remodel',
-          featured: true,
-          created_at: '2024-02-28T00:00:00Z',
-          updated_at: '2024-02-28T00:00:00Z'
-        },
-        {
-          id: '3',
-          title: 'Office Space Renovation',
-          description: 'Modern office design focusing on productivity and employee wellness',
-          category: 'Commercial',
-          images: ['/images/projects/office-renovation-1.jpg'],
-          date: '2024-03-10',
-          location: 'Business District',
-          slug: 'office-space-renovation',
-          featured: false,
-          created_at: '2024-03-10T00:00:00Z',
-          updated_at: '2024-03-10T00:00:00Z'
-        }
-      ]
-
-      let filteredData = fallbackData
+      let filteredData = [...FALLBACK_PROJECTS]
 
       if (category) {
         filteredData = filteredData.filter(project => project.category === category)
@@ -107,16 +76,17 @@ export async function GET(request: Request) {
   }
 }
 
-// Helper function to sanitize input and prevent XSS
-function sanitizeInput(input: string): string {
-  return input
-    .trim()
-    .replace(/[<>]/g, '') // Remove potential HTML tags
-    .substring(0, 1000) // Limit length
-}
 
 export async function POST(request: Request) {
   try {
+    // Check rate limit
+    const identifier = getClientIdentifier(request)
+    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
+    
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(rateLimitResult.resetTime)
+    }
+
     const body = await request.json()
     const { title, description, category, images, date, location, slug, featured } = body
 
@@ -129,16 +99,16 @@ export async function POST(request: Request) {
     }
 
     // Validate input lengths
-    if (title.length > 255 || slug.length > 255) {
+    if (title.length > API_LIMITS.MAX_TITLE_LENGTH || slug.length > API_LIMITS.MAX_SLUG_LENGTH) {
       return NextResponse.json(
-        { error: 'Title and slug must be under 255 characters' },
+        { error: `Title and slug must be under ${API_LIMITS.MAX_TITLE_LENGTH} characters` },
         { status: 400 }
       )
     }
 
-    if (description && description.length > 2000) {
+    if (description && description.length > API_LIMITS.MAX_DESCRIPTION_LENGTH) {
       return NextResponse.json(
-        { error: 'Description must be under 2000 characters' },
+        { error: `Description must be under ${API_LIMITS.MAX_DESCRIPTION_LENGTH} characters` },
         { status: 400 }
       )
     }
@@ -152,7 +122,7 @@ export async function POST(request: Request) {
     }
 
     // Validate slug format (alphanumeric and hyphens only)
-    if (!/^[a-z0-9-]+$/.test(slug)) {
+    if (!VALIDATION_PATTERNS.SLUG.test(slug)) {
       return NextResponse.json(
         { error: 'Slug must contain only lowercase letters, numbers, and hyphens' },
         { status: 400 }
@@ -162,12 +132,14 @@ export async function POST(request: Request) {
     const { data, error } = await supabase
       .from('projects')
       .insert([{
-        title: sanitizeInput(title),
-        description: description ? sanitizeInput(description) : null,
-        category: sanitizeInput(category),
-        images: Array.isArray(images) ? images.slice(0, 10) : [], // Limit to 10 images
+        title: sanitizeInput(title, API_LIMITS.MAX_TITLE_LENGTH),
+        description: description ? sanitizeInput(description, API_LIMITS.MAX_DESCRIPTION_LENGTH) : null,
+        category: sanitizeInput(category, 50),
+        images: Array.isArray(images) 
+          ? images.slice(0, API_LIMITS.MAX_IMAGES_PER_PROJECT).map(img => sanitizeUrl(img))
+          : [],
         date,
-        location: location ? sanitizeInput(location) : null,
+        location: location ? sanitizeInput(location, 100) : null,
         slug: slug.toLowerCase(),
         featured: Boolean(featured)
       }])
