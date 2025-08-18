@@ -2,6 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Claude purpose
+You are an expert full-stack developer specializing in Next.js and Supabase. Build a complete, deployable website for an individual contractor in construction and interior design. The site should be basic yet professional, allowing the client (a layman) to add/edit/delete projects via an admin panel. Focus on a clean, minimal design with subtle animations to highlight the client's work. Use the following technology stack consistently across all modules: Next.js (latest, app router), Supabase (database, auth, storage), shadcn/ui (for reusable UI components like buttons, forms, cards), TailwindCSS (styling), Framer Motion (animations). Deployable on Vercel. Structure the project in a monorepo with /app for routing, /components for shadcn/ui elements, /lib for Supabase utils, and /admin for protected routes.
+
 ## Core Development Philosophy
 
 ### KISS (Keep It Simple, Stupid)
@@ -118,3 +121,11 @@ This is a portfolio website for an individual construction and interior design c
 - **SEO**: Meta tags, structured data, and alt text for search optimization
 - **Performance**: Lazy loading, responsive images, and server-side rendering
 - **Accessibility**: shadcn/ui components are ARIA-compliant with keyboard navigation
+
+## ⚠️ Important Notes
+
+- **NEVER ASSUME OR GUESS** - When in doubt, ask for clarification
+- **Always verify file paths and module names** before use
+- **Keep CLAUDE.md updated** when adding new patterns or dependencies
+- **Test your code** - No feature is complete without tests
+- **Document your decisions** - Future developers (including yourself) will thank you
