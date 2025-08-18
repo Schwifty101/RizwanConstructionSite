@@ -1,23 +1,28 @@
 import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { FALLBACK_PROJECTS, API_LIMITS, VALIDATION_PATTERNS } from '@/lib/constants'
 import { sanitizeInput, sanitizeUrl } from '@/lib/sanitize'
-import { getClientIdentifier, checkRateLimit, createRateLimitResponse, rateLimiters } from '@/lib/rate-limiter'
+import { getClientIdentifier } from '@/lib/rate-limiter'
+import { productionRateLimit, productionRateLimiters, createProductionRateLimitResponse } from '@/lib/redis-rate-limiter'
+import { getCurrentUser, isUserAdmin } from '@/lib/auth-middleware'
 
 export async function GET(request: Request) {
   try {
-    // Check rate limit
+    // Check rate limit (production-aware)
     const identifier = getClientIdentifier(request)
-    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
+    const rateLimitResult = await productionRateLimit(identifier, productionRateLimiters.projects)
     
     if (!rateLimitResult.allowed) {
-      return createRateLimitResponse(rateLimitResult.resetTime)
+      return createProductionRateLimitResponse(rateLimitResult.resetTime)
     }
 
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const featured = searchParams.get('featured')
     const limit = searchParams.get('limit')
+    const page = searchParams.get('page') || '1'
+    const offset = searchParams.get('offset')
 
     let query = supabase
       .from('projects')
@@ -32,18 +37,61 @@ export async function GET(request: Request) {
       query = query.eq('featured', true)
     }
 
+    // Handle pagination
+    let limitNum = API_LIMITS.MAX_PROJECTS_LIMIT || 20 // Default page size
+    let offsetNum = 0
+
     if (limit) {
-      const limitNum = parseInt(limit)
-      if (isNaN(limitNum) || limitNum < 1 || limitNum > API_LIMITS.MAX_PROJECTS_LIMIT) {
+      limitNum = parseInt(limit)
+      if (isNaN(limitNum) || limitNum < 1 || limitNum > (API_LIMITS.MAX_PROJECTS_LIMIT || 100)) {
         return NextResponse.json(
-          { error: `Invalid limit parameter. Must be between 1 and ${API_LIMITS.MAX_PROJECTS_LIMIT}.` },
+          { error: `Invalid limit parameter. Must be between 1 and ${API_LIMITS.MAX_PROJECTS_LIMIT || 100}.` },
           { status: 400 }
         )
       }
-      query = query.limit(limitNum)
     }
 
-    const { data, error } = await query
+    if (offset) {
+      offsetNum = parseInt(offset)
+      if (isNaN(offsetNum) || offsetNum < 0) {
+        return NextResponse.json(
+          { error: 'Invalid offset parameter. Must be a non-negative number.' },
+          { status: 400 }
+        )
+      }
+    } else if (page) {
+      const pageNum = parseInt(page)
+      if (isNaN(pageNum) || pageNum < 1) {
+        return NextResponse.json(
+          { error: 'Invalid page parameter. Must be a positive number.' },
+          { status: 400 }
+        )
+      }
+      offsetNum = (pageNum - 1) * limitNum
+    }
+
+    // Apply pagination
+    query = query.range(offsetNum, offsetNum + limitNum - 1)
+
+    // Get total count for pagination metadata (separate query)
+    const countQuery = supabase
+      .from('projects')
+      .select('*', { count: 'exact', head: true })
+    
+    if (category) {
+      countQuery.eq('category', category)
+    }
+    if (featured === 'true') {
+      countQuery.eq('featured', true)
+    }
+
+    const [dataResult, countResult] = await Promise.all([
+      query,
+      countQuery
+    ])
+
+    const { data, error } = dataResult
+    const { count } = countResult
 
     if (error) {
       console.error('Error fetching projects:', error)
@@ -59,14 +107,38 @@ export async function GET(request: Request) {
         filteredData = filteredData.filter(project => project.featured)
       }
 
-      if (limit) {
-        filteredData = filteredData.slice(0, parseInt(limit))
-      }
+      // Apply pagination to fallback data
+      const paginatedFallback = filteredData.slice(offsetNum, offsetNum + limitNum)
 
-      return NextResponse.json(filteredData)
+      return NextResponse.json({
+        data: paginatedFallback,
+        pagination: {
+          page: Math.floor(offsetNum / limitNum) + 1,
+          limit: limitNum,
+          offset: offsetNum,
+          total: filteredData.length,
+          totalPages: Math.ceil(filteredData.length / limitNum)
+        },
+        fallback: true
+      })
     }
 
-    return NextResponse.json(data || [])
+    const totalCount = count || 0
+    const totalPages = Math.ceil(totalCount / limitNum)
+    const currentPage = Math.floor(offsetNum / limitNum) + 1
+
+    return NextResponse.json({
+      data: data || [],
+      pagination: {
+        page: currentPage,
+        limit: limitNum,
+        offset: offsetNum,
+        total: totalCount,
+        totalPages: totalPages,
+        hasNext: currentPage < totalPages,
+        hasPrev: currentPage > 1
+      }
+    })
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(
@@ -79,12 +151,27 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    // Check rate limit
+    // Check authentication first
+    const user = await getCurrentUser(request as NextRequest)
+    if (!user || !isUserAdmin(user)) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Unauthorized',
+          message: 'Admin authentication required to create projects.'
+        }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Check rate limit (production-aware)
     const identifier = getClientIdentifier(request)
-    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
+    const rateLimitResult = await productionRateLimit(identifier, productionRateLimiters.projects)
     
     if (!rateLimitResult.allowed) {
-      return createRateLimitResponse(rateLimitResult.resetTime)
+      return createProductionRateLimitResponse(rateLimitResult.resetTime)
     }
 
     const body = await request.json()

@@ -51,6 +51,20 @@ CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects(slug);
 CREATE INDEX IF NOT EXISTS idx_services_order ON services(order_index);
 CREATE INDEX IF NOT EXISTS idx_contacts_timestamp ON contacts(timestamp DESC);
 
+-- Additional performance indexes
+CREATE INDEX IF NOT EXISTS idx_projects_featured_date ON projects(featured, date DESC) WHERE featured = true;
+CREATE INDEX IF NOT EXISTS idx_projects_category_date ON projects(category, date DESC);
+CREATE INDEX IF NOT EXISTS idx_projects_created_at ON projects(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_services_active_order ON services(active, order_index) WHERE active = true;
+CREATE INDEX IF NOT EXISTS idx_contacts_status ON contacts(status);
+
+-- Composite index for common queries
+CREATE INDEX IF NOT EXISTS idx_projects_composite ON projects(category, featured, date DESC);
+
+-- Text search indexes (for future search functionality)
+CREATE INDEX IF NOT EXISTS idx_projects_title_search ON projects USING gin(to_tsvector('english', title));
+CREATE INDEX IF NOT EXISTS idx_projects_description_search ON projects USING gin(to_tsvector('english', description));
+
 -- Enable RLS (Row Level Security)
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;

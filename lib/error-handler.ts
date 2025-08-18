@@ -58,7 +58,66 @@ export async function safeAsyncOperation<T>(
   try {
     return await operation()
   } catch (error) {
-    console.error(`Safe operation failed (${operationName}):`, error)
+    // Enhanced error logging with more context
+    const errorDetails = {
+      operation: operationName,
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name
+      } : String(error)
+    }
+    
+    console.error(`❌ Safe operation failed:`, errorDetails)
+    
+    // In production, you might want to send this to a logging service
+    if (process.env.NODE_ENV === 'production') {
+      // TODO: Send to logging service (e.g., Sentry, LogRocket, etc.)
+      console.warn(`⚠️ Production error occurred in ${operationName}, falling back to default value`)
+    }
+    
+    return fallback
+  }
+}
+
+// Enhanced database error handler with better logging
+export async function safeDatabaseOperation<T>(
+  operation: () => Promise<T>,
+  fallback: T,
+  operationName: string,
+  shouldThrowOnError = false
+): Promise<T> {
+  try {
+    return await operation()
+  } catch (error) {
+    const errorDetails = {
+      operation: operationName,
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? {
+        message: error.message,
+        stack: error.stack,
+        name: error.name,
+        // Supabase specific error details
+        ...('details' in error && { details: (error as Record<string, unknown>).details }),
+        ...('hint' in error && { hint: (error as Record<string, unknown>).hint }),
+        ...('code' in error && { code: (error as Record<string, unknown>).code })
+      } : String(error),
+      fallbackUsed: !shouldThrowOnError
+    }
+    
+    console.error(`🗄️ Database operation failed:`, errorDetails)
+    
+    // Log to external service in production
+    if (process.env.NODE_ENV === 'production') {
+      // TODO: Send to logging service
+      console.warn(`⚠️ Database error in production for ${operationName}`)
+    }
+    
+    if (shouldThrowOnError) {
+      throw error
+    }
+    
     return fallback
   }
 }

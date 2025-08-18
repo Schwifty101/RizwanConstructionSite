@@ -4,6 +4,12 @@ import Script from "next/script";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { generateMetadata, generateViewport, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
+import { logEnvironmentStatus } from "@/lib/env-validation";
+
+// Log environment status on server startup
+if (typeof window === 'undefined') {
+  logEnvironmentStatus();
+}
 
 const inter = Inter({
   subsets: ["latin"],

@@ -5,11 +5,12 @@ import { PageWrapper } from "@/components/page-wrapper"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase"
-import { safeAsyncOperation } from "@/lib/error-handler"
+import { safeDatabaseOperation } from "@/lib/error-handler"
 import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/seo"
+import { getSafeImageUrl, validateImageArray } from "@/lib/image-utils"
 
 async function getFeaturedProjects() {
-  return safeAsyncOperation(
+  return safeDatabaseOperation(
     async () => {
       const { data, error } = await supabase
         .from('projects')
@@ -25,7 +26,8 @@ async function getFeaturedProjects() {
       return data || []
     },
     [], // fallback to empty array
-    'getFeaturedProjects'
+    'getFeaturedProjects',
+    false // don't throw on error, use fallback
   )
 }
 
@@ -55,8 +57,9 @@ export default async function Home() {
         }}
       />
       {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-cream to-beige">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-100/50 via-orange-100/30 to-yellow-100/50"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,245,220,0.3)_0%,rgba(255,253,208,0.1)_100%)]"></div>
         <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground mb-6">
             Quality Construction<br />
@@ -95,19 +98,19 @@ export default async function Home() {
                 <Card key={project.id} className="group hover:shadow-lg transition-shadow duration-300">
                   <div className="relative overflow-hidden rounded-t-lg">
                     <div className="aspect-[4/3] relative">
-                      {project.images && project.images.length > 0 ? (
-                        <Image
-                          src={project.images[0]}
-                          alt={project.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-muted flex items-center justify-center">
-                          <span className="text-muted-foreground">Project Image</span>
-                        </div>
-                      )}
+                      <Image
+                        src={getSafeImageUrl(
+                          validateImageArray(project.images)[0],
+                          400,
+                          300,
+                          project.title
+                        )}
+                        alt={project.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        priority={false}
+                      />
                     </div>
                   </div>
                   <CardHeader>

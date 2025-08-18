@@ -36,8 +36,6 @@ Never place more than one React component per file (except small internal subcom
 
 Maximum line length: 100 characters (enforced by ESLint + Prettier).
 
-All app code lives inside src/.
-
 ## Project Overview
 
 This is a portfolio website for an individual construction and interior design contractor, built with Next.js 15 and modern web technologies. The site showcases the contractor's expertise, completed projects, and services through a clean, minimalistic design that emphasizes visual appeal and user engagement.
