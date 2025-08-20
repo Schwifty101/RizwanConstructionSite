@@ -2,16 +2,21 @@
   "name": "rizwan-website",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.18.0 <=22.x",
+    "npm": ">=9"
+  },
   "scripts": {
-    "dev": "NODE_OPTIONS='--no-deprecation' next dev --turbopack",
-    "build": "NODE_OPTIONS='--no-deprecation' next build",
-    "start": "NODE_OPTIONS='--no-deprecation' next start",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "clean": "rm -rf .next out node_modules/.cache",
-    "postinstall": "npm dedupe"
+    "postinstall": "npm dedupe",
+    "prepare": "npm dedupe || true"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -48,8 +53,10 @@
     "eslint-config-next": "15.4.6",
     "jest": "^30.0.5",
     "jest-environment-jsdom": "^30.0.5",
+    "node-mocks-http": "^1.17.2",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.7",
-    "typescript": "^5"
+    "typescript": "^5",
+    "whatwg-fetch": "^3.6.20"
   }
 }

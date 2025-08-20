@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { POST } from '../contact/route'
 import { NextRequest } from 'next/server'
 
@@ -23,11 +27,24 @@ jest.mock('@/lib/rate-limiter', () => ({
     limit: 5,
     resetTime: Date.now() + 60000
   })),
-  createRateLimitResponse: jest.fn(() => new Response('Rate limited', { status: 429 })),
+  createRateLimitResponse: jest.fn(() => 
+    Response.json({ error: 'Rate limited' }, { status: 429 })
+  ),
   rateLimiters: {
     contact: { windowMs: 60000, maxRequests: 5 }
   }
 }))
+
+// Helper function to create a test request
+function createRequest(body: Record<string, unknown>) {
+  return new NextRequest('http://localhost:3000/api/contact', {
+    method: 'POST',
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+}
 
 describe('/api/contact', () => {
   test('successfully processes valid contact form', async () => {
@@ -38,18 +55,12 @@ describe('/api/contact', () => {
       message: 'I would like to inquire about your services.'
     }
 
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
+    const request = createRequest(requestBody)
     const response = await POST(request)
-    const data = await response.json()
-
+    
     expect(response.status).toBe(201)
+    
+    const data = await response.json()
     expect(data.message).toBe('Contact form submitted successfully')
     expect(data.id).toBe('123')
   })
@@ -60,18 +71,12 @@ describe('/api/contact', () => {
       // missing email and message
     }
 
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
+    const request = createRequest(requestBody)
     const response = await POST(request)
-    const data = await response.json()
-
+    
     expect(response.status).toBe(400)
+    
+    const data = await response.json()
     expect(data.error).toContain('Missing required fields')
   })
 
@@ -82,18 +87,12 @@ describe('/api/contact', () => {
       message: 'Test message'
     }
 
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
+    const request = createRequest(requestBody)
     const response = await POST(request)
-    const data = await response.json()
-
+    
     expect(response.status).toBe(400)
+    
+    const data = await response.json()
     expect(data.error).toContain('Invalid email format')
   })
 
@@ -104,18 +103,12 @@ describe('/api/contact', () => {
       message: 'Test message'
     }
 
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
+    const request = createRequest(requestBody)
     const response = await POST(request)
-    const data = await response.json()
-
+    
     expect(response.status).toBe(400)
+    
+    const data = await response.json()
     expect(data.error).toContain('Input too long')
   })
 
@@ -126,14 +119,7 @@ describe('/api/contact', () => {
       message: 'Test <b>message</b> with HTML'
     }
 
-    const request = new NextRequest('http://localhost:3000/api/contact', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-
+    const request = createRequest(requestBody)
     const response = await POST(request)
     
     expect(response.status).toBe(201)

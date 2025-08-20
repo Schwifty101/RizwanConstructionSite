@@ -29,8 +29,24 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1) Set environment variables (see `.env.example`). At minimum:
+	- `NEXT_PUBLIC_SUPABASE_URL`
+	- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2) Optional but recommended for production:
+	- `REDIS_URL` for distributed rate limiting
+	- `SMTP_*` for sending emails from the contact form
+	- `SENTRY_DSN` for error monitoring
+
+3) Build and start
+
+```bash
+npm run build
+npm start
+```
+
+Notes
+- This project targets Node 18.18+ and works on Node 22 (see `package.json#engines`).
+- When running on serverless platforms, ensure environment variables are set in the provider dashboard.

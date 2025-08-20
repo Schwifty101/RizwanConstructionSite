@@ -1,41 +1,16 @@
 import '@testing-library/jest-dom'
+import 'whatwg-fetch'
 
-// Mock Response and Request objects for Node.js testing
-global.Response = class MockResponse {
-  constructor(body, init = {}) {
-    this.body = body
-    this.status = init.status || 200
-    this.statusText = init.statusText || 'OK'
-    this.headers = new Map()
-    
-    if (init.headers) {
-      Object.entries(init.headers).forEach(([key, value]) => {
-        this.headers.set(key, value)
-      })
-    }
-  }
-  
-  async json() {
-    return JSON.parse(this.body)
-  }
-  
-  async text() {
-    return this.body
-  }
-}
-
-global.Request = class MockRequest {
-  constructor(url, init = {}) {
-    this.url = url
-    this.method = init.method || 'GET'
-    this.headers = {
-      get: (name) => init.headers?.[name] || null
-    }
-    this.body = init.body
-  }
-  
-  async json() {
-    return JSON.parse(this.body || '{}')
+// Polyfill Response.json for Node.js < 18 compatibility
+if (!global.Response.json) {
+  global.Response.json = function(data, init = {}) {
+    return new Response(JSON.stringify(data), {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        ...init.headers,
+      },
+    })
   }
 }
 
@@ -78,17 +53,19 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 }
 
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-})
+// Mock window.matchMedia (only in jsdom environment)
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  })
+}

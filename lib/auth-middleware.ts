@@ -12,10 +12,10 @@ function createSupabaseServerClient(request: NextRequest) {
         get(name: string) {
           return request.cookies.get(name)?.value
         },
-        set(_name: string, _value: string, _options: unknown) {
+        set() {
           // We can't set cookies in middleware, but we return the response later
         },
-        remove(_name: string, _options: unknown) {
+        remove() {
           // We can't remove cookies in middleware, but we return the response later
         }
       }
