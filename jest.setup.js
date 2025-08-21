@@ -3,7 +3,7 @@ import 'whatwg-fetch'
 
 // Polyfill Response.json for Node.js < 18 compatibility
 if (!global.Response.json) {
-  global.Response.json = function(data, init = {}) {
+  global.Response.json = function (data, init = {}) {
     return new Response(JSON.stringify(data), {
       ...init,
       headers: {
@@ -47,10 +47,10 @@ jest.mock('framer-motion', () => ({
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
+  constructor() { }
+  disconnect() { }
+  observe() { }
+  unobserve() { }
 }
 
 // Mock window.matchMedia (only in jsdom environment)

@@ -27,7 +27,7 @@ jest.mock('@/lib/rate-limiter', () => ({
     limit: 5,
     resetTime: Date.now() + 60000
   })),
-  createRateLimitResponse: jest.fn(() => 
+  createRateLimitResponse: jest.fn(() =>
     Response.json({ error: 'Rate limited' }, { status: 429 })
   ),
   rateLimiters: {
@@ -57,9 +57,9 @@ describe('/api/contact', () => {
 
     const request = createRequest(requestBody)
     const response = await POST(request)
-    
+
     expect(response.status).toBe(201)
-    
+
     const data = await response.json()
     expect(data.message).toBe('Contact form submitted successfully')
     expect(data.id).toBe('123')
@@ -73,9 +73,9 @@ describe('/api/contact', () => {
 
     const request = createRequest(requestBody)
     const response = await POST(request)
-    
+
     expect(response.status).toBe(400)
-    
+
     const data = await response.json()
     expect(data.error).toContain('Missing required fields')
   })
@@ -89,9 +89,9 @@ describe('/api/contact', () => {
 
     const request = createRequest(requestBody)
     const response = await POST(request)
-    
+
     expect(response.status).toBe(400)
-    
+
     const data = await response.json()
     expect(data.error).toContain('Invalid email format')
   })
@@ -105,9 +105,9 @@ describe('/api/contact', () => {
 
     const request = createRequest(requestBody)
     const response = await POST(request)
-    
+
     expect(response.status).toBe(400)
-    
+
     const data = await response.json()
     expect(data.error).toContain('Input too long')
   })
@@ -121,7 +121,7 @@ describe('/api/contact', () => {
 
     const request = createRequest(requestBody)
     const response = await POST(request)
-    
+
     expect(response.status).toBe(201)
     // The sanitized input should be used in the database call
   })
@@ -136,7 +136,7 @@ describe('/api/contact', () => {
     })
 
     const response = await POST(request)
-    
+
     expect(response.status).toBe(500)
   })
 })

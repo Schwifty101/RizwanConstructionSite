@@ -31,16 +31,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy
 
-1) Set environment variables (see `.env.example`). At minimum:
-	- `NEXT_PUBLIC_SUPABASE_URL`
-	- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+1. Set environment variables (see `.env.example`). At minimum:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-2) Optional but recommended for production:
-	- `REDIS_URL` for distributed rate limiting
-	- `SMTP_*` for sending emails from the contact form
-	- `SENTRY_DSN` for error monitoring
+2. Optional but recommended for production:
+   - `REDIS_URL` for distributed rate limiting
+   - `SMTP_*` for sending emails from the contact form
+   - `SENTRY_DSN` for error monitoring
 
-3) Build and start
+3. Build and start
 
 ```bash
 npm run build
@@ -48,5 +48,6 @@ npm start
 ```
 
 Notes
+
 - This project targets Node 18.18+ and works on Node 22 (see `package.json#engines`).
 - When running on serverless platforms, ensure environment variables are set in the provider dashboard.
