@@ -52,7 +52,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#C9A66B" />
         <meta name="format-detection" content="telephone=no" />
       </head>
-      <body className="font-sans antialiased bg-background text-foreground">
+      <body className="font-sans antialiased bg-background text-foreground" suppressHydrationWarning>
         {/* Structured Data */}
         <Script
           id="organization-schema"
@@ -68,7 +68,7 @@ export default function RootLayout({
             __html: JSON.stringify(localBusinessSchema),
           }}
         />
-        
+
         <Navbar />
         <main className="min-h-screen">
           {children}

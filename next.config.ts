@@ -26,36 +26,15 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Turbopack configuration (now stable)
+  // Turbopack configuration (stable in Next.js 15)
   turbopack: {
     rules: {
-      // Handle SVG files
+      // Handle SVG files with SVGR
       '*.svg': {
         loaders: ['@svgr/webpack'],
         as: '*.js',
       },
     },
-  },
-
-  // Webpack configuration (fallback for non-turbopack builds)
-  webpack: (config, { dev, isServer }) => {
-    // Only apply webpack config when not using turbopack
-    if (!process.env.TURBOPACK) {
-      if (!dev && !isServer) {
-        config.resolve.alias = {
-          ...config.resolve.alias,
-          punycode: false,
-        };
-      }
-
-      // Ignore deprecation warnings
-      config.ignoreWarnings = [
-        { module: /node_modules\/punycode/ },
-        { file: /node_modules\/punycode/ },
-      ];
-    }
-
-    return config;
   },
 
   // Output configuration

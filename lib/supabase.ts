@@ -31,11 +31,11 @@ export const isSupabaseConfigured = () => {
 export type Project = {
   id: string
   title: string
-  description: string
+  description?: string
   category: string
   images: string[]
   date: string
-  location: string
+  location?: string
   slug: string
   featured: boolean
   created_at: string
