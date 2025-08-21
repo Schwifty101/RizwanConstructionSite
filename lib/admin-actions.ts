@@ -99,6 +99,9 @@ export async function createProject(formData: ProjectFormData) {
     // Validate input
     const validatedData = projectSchema.parse(formData)
     
+    // Limit images to maximum 4
+    const limitedImages = validatedData.images.slice(0, 4)
+    
     // Generate unique slug
     const baseSlug = generateSlug(validatedData.title)
     let slug = baseSlug
@@ -122,12 +125,27 @@ export async function createProject(formData: ProjectFormData) {
       .insert({
         ...validatedData,
         slug,
+        images: limitedImages,
         date: new Date(validatedData.date).toISOString().split('T')[0]
       })
       .select()
       .single()
 
     if (error) throw error
+
+    // Organize uploaded images into project folder
+    if (limitedImages.length > 0) {
+      const organizeResult = await organizeProjectImages(data.id, limitedImages)
+      if (organizeResult.success && organizeResult.urls) {
+        // Update project with organized image URLs
+        await supabase
+          .from('projects')
+          .update({ images: organizeResult.urls })
+          .eq('id', data.id)
+        
+        data.images = organizeResult.urls
+      }
+    }
 
     revalidatePath('/admin')
     revalidatePath('/portfolio')
@@ -151,10 +169,13 @@ export async function updateProject(id: string, formData: ProjectFormData) {
     // Validate input
     const validatedData = projectSchema.parse(formData)
     
+    // Limit images to maximum 4
+    const limitedImages = validatedData.images.slice(0, 4)
+    
     // Check if project exists
     const { data: existingProject, error: fetchError } = await supabase
       .from('projects')
-      .select('slug, title')
+      .select('slug, title, images')
       .eq('id', id)
       .single()
     
@@ -184,11 +205,21 @@ export async function updateProject(id: string, formData: ProjectFormData) {
       }
     }
 
+    // Organize new images if any were added
+    let finalImages = limitedImages
+    if (limitedImages.length > 0) {
+      const organizeResult = await organizeProjectImages(id, limitedImages)
+      if (organizeResult.success && organizeResult.urls) {
+        finalImages = organizeResult.urls
+      }
+    }
+
     const { data, error } = await supabase
       .from('projects')
       .update({
         ...validatedData,
         slug,
+        images: finalImages,
         date: new Date(validatedData.date).toISOString().split('T')[0]
       })
       .eq('id', id)
@@ -229,20 +260,11 @@ export async function deleteProject(id: string) {
       throw new Error('Project not found')
     }
 
-    // Delete associated images from storage
+    // Delete associated images from storage using new organized deletion
     if (project.images && project.images.length > 0) {
-      const imagePaths = project.images.map((url: string) => {
-        // Extract file path from URL
-        const parts = url.split('/')
-        return parts[parts.length - 1]
-      })
-      
-      const { error: storageError } = await supabase.storage
-        .from('project-images')
-        .remove(imagePaths)
-      
-      if (storageError) {
-        console.warn('Warning: Failed to delete some images:', storageError.message)
+      const deleteResult = await deleteProjectImages(id, project.images)
+      if (!deleteResult.success) {
+        console.warn('Warning: Failed to delete project images:', deleteResult.error)
       }
     }
 
@@ -269,8 +291,8 @@ export async function deleteProject(id: string) {
   }
 }
 
-// Upload image to Supabase storage
-export async function uploadImage(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
+// Upload image to Supabase storage with dedicated project folders
+export async function uploadProjectImage(file: File, projectId?: string): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
     const { supabase } = await getAuthenticatedClient()
     
@@ -284,11 +306,16 @@ export async function uploadImage(file: File): Promise<{ success: boolean; url?:
       return { success: false, error: 'File size must be less than 5MB' }
     }
 
-    // Generate unique filename
+    // Generate project folder path
+    const timestamp = Date.now()
+    const randomId = Math.random().toString(36).substring(2)
     const fileExt = file.name.split('.').pop()
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
+    
+    // Use existing project ID or generate temporary ID for new projects
+    const folderId = projectId || `temp-${timestamp}-${randomId}`
+    const fileName = `${folderId}/${timestamp}-${randomId}.${fileExt}`
 
-    // Upload file
+    // Upload file to dedicated project folder
     const { error } = await supabase.storage
       .from('project-images')
       .upload(fileName, file, {
@@ -309,6 +336,107 @@ export async function uploadImage(file: File): Promise<{ success: boolean; url?:
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Failed to upload image' 
+    }
+  }
+}
+
+// Legacy function for backward compatibility
+export async function uploadImage(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
+  return uploadProjectImage(file)
+}
+
+// Move uploaded images to proper project folder after project creation
+export async function organizeProjectImages(projectId: string, imageUrls: string[]): Promise<{ success: boolean; urls?: string[]; error?: string }> {
+  try {
+    const { supabase } = await getAuthenticatedClient()
+    
+    const organizedUrls: string[] = []
+    
+    for (const url of imageUrls) {
+      // Extract filename from URL
+      const urlParts = url.split('/')
+      const currentFileName = urlParts[urlParts.length - 1]
+      
+      // Check if it's already in a proper project folder
+      if (currentFileName.includes('/') && !currentFileName.startsWith('temp-')) {
+        organizedUrls.push(url)
+        continue
+      }
+      
+      // Generate new organized path
+      const timestamp = Date.now()
+      const randomId = Math.random().toString(36).substring(2)
+      const fileExt = currentFileName.split('.').pop()
+      const newFileName = `${projectId}/${timestamp}-${randomId}.${fileExt}`
+      
+      // Move file to organized folder
+      const { error: moveError } = await supabase.storage
+        .from('project-images')
+        .move(currentFileName, newFileName)
+      
+      if (moveError) {
+        console.warn(`Failed to move ${currentFileName}:`, moveError)
+        organizedUrls.push(url) // Keep original URL if move fails
+      } else {
+        // Get new public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from('project-images')
+          .getPublicUrl(newFileName)
+        organizedUrls.push(publicUrl)
+      }
+    }
+    
+    return { success: true, urls: organizedUrls }
+  } catch (error) {
+    console.error('Error organizing images:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to organize images' 
+    }
+  }
+}
+
+// Delete project folder and all images
+export async function deleteProjectImages(projectId: string, imageUrls: string[]): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { supabase } = await getAuthenticatedClient()
+    
+    // Extract file paths from URLs
+    const filePaths = imageUrls.map((url: string) => {
+      const urlParts = url.split('/')
+      const fileName = urlParts[urlParts.length - 1]
+      // Check if it includes folder structure
+      if (url.includes(`/${projectId}/`)) {
+        return `${projectId}/${fileName}`
+      }
+      return fileName
+    })
+    
+    if (filePaths.length > 0) {
+      const { error: deleteError } = await supabase.storage
+        .from('project-images')
+        .remove(filePaths)
+      
+      if (deleteError) {
+        console.warn('Warning: Failed to delete some images:', deleteError.message)
+      }
+    }
+    
+    // Try to remove the project folder (will only work if empty)
+    try {
+      await supabase.storage
+        .from('project-images')
+        .remove([`${projectId}/`])
+    } catch {
+      // Ignore folder deletion errors
+    }
+    
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting project images:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to delete images' 
     }
   }
 }

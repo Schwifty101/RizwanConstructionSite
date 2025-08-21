@@ -1,9 +1,9 @@
 import Link from "next/link"
-import Image from "next/image"
 import Script from "next/script"
 import { PageWrapper } from "@/components/page-wrapper"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { supabase } from "@/lib/supabase"
 import { safeDatabaseOperation } from "@/lib/error-handler"
 import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/seo"
@@ -97,21 +97,18 @@ export default async function Home() {
               featuredProjects.map((project) => (
                 <Card key={project.id} className="group hover:shadow-lg transition-shadow duration-300">
                   <div className="relative overflow-hidden rounded-t-lg">
-                    <div className="aspect-[4/3] relative">
-                      <Image
-                        src={getSafeImageUrl(
-                          validateImageArray(project.images)[0],
-                          400,
-                          300,
-                          project.title
-                        )}
-                        alt={project.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        priority={false}
-                      />
-                    </div>
+                    <ImageSlideshow
+                      images={validateImageArray(project.images).map(img => 
+                        getSafeImageUrl(img, 400, 300, project.title)
+                      )}
+                      alt={project.title}
+                      aspectRatio="portrait"
+                      autoPlay={true}
+                      autoPlayInterval={4000}
+                      showDots={validateImageArray(project.images).length > 1}
+                      showArrows={false}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
                   </div>
                   <CardHeader>
                     <CardTitle className="font-serif">{project.title}</CardTitle>

@@ -57,10 +57,23 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
   const handleImageUpload = async (files: FileList) => {
     if (files.length === 0) return
 
+    // Check if adding these images would exceed the limit
+    const remainingSlots = 4 - images.length
+    if (remainingSlots <= 0) {
+      setError('Maximum 4 images allowed per project')
+      return
+    }
+
+    // Limit the number of files to upload
+    const filesToUpload = Math.min(files.length, remainingSlots)
+    if (files.length > remainingSlots) {
+      setError(`Only ${remainingSlots} more image(s) can be added. Maximum 4 images per project.`)
+    }
+
     setUploadingImages(true)
     const newImages: string[] = []
 
-    for (let i = 0; i < files.length; i++) {
+    for (let i = 0; i < filesToUpload; i++) {
       const file = files[i]
       const result = await uploadImage(file)
       
@@ -228,17 +241,27 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
       {/* Images */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label>Project Images</Label>
+          <div>
+            <Label>Project Images</Label>
+            <p className="text-sm text-stone-600 mt-1">Maximum 4 images ({images.length}/4)</p>
+          </div>
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={() => fileInputRef.current?.click()}
-            disabled={isSubmitting || uploadingImages}
+            disabled={isSubmitting || uploadingImages || images.length >= 4}
             className="flex items-center space-x-2"
           >
             <Upload className="w-4 h-4" />
-            <span>{uploadingImages ? 'Uploading...' : 'Upload Images'}</span>
+            <span>
+              {uploadingImages 
+                ? 'Uploading...' 
+                : images.length >= 4 
+                  ? 'Max Reached' 
+                  : 'Upload Images'
+              }
+            </span>
           </Button>
         </div>
 
@@ -296,6 +319,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           <div className="border-2 border-dashed border-stone-300 rounded-md p-8 text-center">
             <ImageIcon className="w-12 h-12 text-stone-400 mx-auto mb-4" />
             <p className="text-stone-600 mb-2">No images uploaded yet</p>
+            <p className="text-sm text-stone-500 mb-4">Add up to 4 images to showcase your project</p>
             <Button
               type="button"
               variant="outline"
