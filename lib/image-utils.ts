@@ -54,9 +54,14 @@ export function validateImageArray(images: unknown): string[] {
 
 // Generate placeholder image URL for missing/invalid images
 export function getPlaceholderImageUrl(width = 400, height = 300, text = 'No Image'): string {
-  // Using a service like placeholder.com or generating a data URL
-  const encodedText = encodeURIComponent(text)
-  return `https://via.placeholder.com/${width}x${height}/f5f5dc/333333?text=${encodedText}`
+  // Generate a data URL with SVG placeholder instead of external service
+  const svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#f5f5dc"/>
+    <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Arial, sans-serif" font-size="16" fill="#333333">${text}</text>
+  </svg>`
+  
+  const base64 = btoa(svg)
+  return `data:image/svg+xml;base64,${base64}`
 }
 
 // Component-safe image URL getter
