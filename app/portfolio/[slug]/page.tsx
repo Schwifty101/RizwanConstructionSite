@@ -3,6 +3,7 @@ import Link from "next/link"
 import { PageWrapper } from "@/components/page-wrapper"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { ArrowLeft, Calendar, MapPin, Tag } from "lucide-react"
 import { supabase, Project } from "@/lib/supabase"
 
@@ -107,20 +108,25 @@ export default async function ProjectDetail({ params }: PageProps) {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            {/* Main Image */}
-            <div className="mb-8">
-              <div className="aspect-[16/9] bg-muted rounded-lg flex items-center justify-center">
-                <span className="text-muted-foreground text-lg">Main Project Image</span>
-              </div>
-            </div>
-
-            {/* Image Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {[1, 2, 3, 4, 5, 6].map((index) => (
-                <div key={index} className="aspect-[4/3] bg-muted rounded-lg flex items-center justify-center hover:shadow-lg transition-shadow cursor-pointer">
-                  <span className="text-muted-foreground">Image {index}</span>
+            {/* Main Image Slideshow */}
+            <div className="mb-12">
+              {project.images && project.images.length > 0 ? (
+                <ImageSlideshow
+                  images={project.images}
+                  alt={project.title}
+                  aspectRatio="video"
+                  autoPlay={true}
+                  autoPlayInterval={5000}
+                  showDots={true}
+                  showArrows={true}
+                  sizes="(max-width: 1200px) 100vw, 1200px"
+                  className="rounded-xl shadow-2xl"
+                />
+              ) : (
+                <div className="aspect-video bg-muted rounded-xl flex items-center justify-center shadow-2xl">
+                  <span className="text-muted-foreground text-lg">Project Images</span>
                 </div>
-              ))}
+              )}
             </div>
 
             {/* Project Details */}
@@ -209,9 +215,22 @@ export default async function ProjectDetail({ params }: PageProps) {
               {relatedProjects.map((relatedProject) => (
                 <Card key={relatedProject.id} className="group hover:shadow-lg transition-shadow duration-300">
                   <div className="relative overflow-hidden rounded-t-lg">
-                    <div className="aspect-[4/3] bg-muted flex items-center justify-center">
-                      <span className="text-muted-foreground">Project Image</span>
-                    </div>
+                    {relatedProject.images && relatedProject.images.length > 0 ? (
+                      <ImageSlideshow
+                        images={relatedProject.images}
+                        alt={relatedProject.title}
+                        aspectRatio="portrait"
+                        autoPlay={true}
+                        autoPlayInterval={4000}
+                        showDots={relatedProject.images.length > 1}
+                        showArrows={false}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="aspect-[4/3] bg-muted flex items-center justify-center">
+                        <span className="text-muted-foreground">Project Image</span>
+                      </div>
+                    )}
                   </div>
                   <CardHeader>
                     <CardTitle className="font-serif">{relatedProject.title}</CardTitle>

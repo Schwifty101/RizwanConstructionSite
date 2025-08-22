@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
   TableBody,
@@ -62,43 +61,130 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
 
   if (projects.length === 0) {
     return (
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle>No Projects Yet</CardTitle>
-          <CardDescription>
-            Start building your portfolio by adding your first project
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
+      <div className="py-12">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto">
+            <Eye className="w-8 h-8 text-stone-400" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-stone-800">No Projects Yet</h3>
+            <p className="text-stone-600 mt-1">
+              Start building your portfolio by adding your first project
+            </p>
+          </div>
           <Button asChild>
             <Link href="/admin/projects/new">Add Your First Project</Link>
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     )
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>All Projects ({projects.length})</CardTitle>
-        <CardDescription>
-          Manage your portfolio projects
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Project</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
+    <div className="p-6">
+      {/* Mobile view - Card layout for small screens */}
+      <div className="block md:hidden space-y-4">
+        {projects.map((project, index) => (
+          <motion.div
+            key={project.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-stone-50 rounded-lg p-4 space-y-3"
+          >
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0">
+                {project.images && project.images.length > 0 ? (
+                  <Image
+                    src={project.images[0]}
+                    alt={project.title}
+                    width={60}
+                    height={60}
+                    className="w-16 h-16 rounded-md object-cover"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-stone-200 rounded-md flex items-center justify-center">
+                    <Eye className="w-6 h-6 text-stone-400" />
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center space-x-2">
+                  <h3 className="font-medium text-stone-900">{project.title}</h3>
+                  {project.featured && (
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                  )}
+                </div>
+                {project.description && (
+                  <p className="text-sm text-stone-600 mt-1 line-clamp-2">
+                    {project.description}
+                  </p>
+                )}
+                <div className="flex items-center space-x-4 mt-2 text-xs text-stone-500">
+                  <span className="px-2 py-1 bg-stone-200 rounded-full">
+                    {project.category}
+                  </span>
+                  <span>{new Date(project.date).toLocaleDateString()}</span>
+                  {project.location && <span>{project.location}</span>}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between pt-2">
+              {project.featured && (
+                <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
+                  Featured
+                </span>
+              )}
+              
+              <div className="flex items-center space-x-2 ml-auto">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link
+                    href={`/portfolio/${project.slug}`}
+                    target="_blank"
+                    className="flex items-center space-x-1"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Link>
+                </Button>
+                
+                <Button variant="ghost" size="sm" asChild>
+                  <Link
+                    href={`/admin/projects/${project.id}/edit`}
+                    className="flex items-center space-x-1"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </Link>
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDeleteClick(project)}
+                  disabled={deletingId === project.id}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Desktop view - Table layout for larger screens */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Project</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
             <TableBody>
               {projects.map((project, index) => (
                 <motion.tr
@@ -214,10 +300,9 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                 </motion.tr>
               ))}
             </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-
+        </Table>
+      </div>
+      
       <DeleteConfirmationDialog
         isOpen={deleteDialog.isOpen}
         onClose={handleDeleteCancel}
@@ -227,6 +312,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
         itemName={deleteDialog.project?.title || ''}
         isDeleting={deletingId === deleteDialog.project?.id}
       />
-    </Card>
+    </div>
   )
 }

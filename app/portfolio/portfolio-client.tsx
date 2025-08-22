@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { Project } from "@/lib/supabase"
 
 interface PortfolioClientProps {
@@ -80,21 +80,23 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                 <motion.div key={project.id} variants={itemVariants}>
                   <Card className="group hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                     <div className="relative overflow-hidden rounded-t-lg">
-                      <div className="aspect-[4/3] relative">
-                        {project.images && project.images.length > 0 ? (
-                          <Image
-                            src={project.images[0]}
-                            alt={project.title}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <span className="text-muted-foreground">Project Image</span>
-                          </div>
-                        )}
-                      </div>
+                      {project.images && project.images.length > 0 ? (
+                        <ImageSlideshow
+                          images={project.images}
+                          alt={project.title}
+                          aspectRatio="portrait"
+                          autoPlay={true}
+                          autoPlayInterval={3000}
+                          showDots={project.images.length > 1}
+                          showArrows={project.images.length > 1}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="aspect-[4/3] bg-muted flex items-center justify-center">
+                          <span className="text-muted-foreground">Project Image</span>
+                        </div>
+                      )}
                       {project.featured && (
                         <div className="absolute top-4 left-4 bg-muted-gold text-white px-3 py-1 rounded-full text-sm font-medium">
                           Featured

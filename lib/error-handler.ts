@@ -71,9 +71,8 @@ export async function safeAsyncOperation<T>(
     
     console.error(`❌ Safe operation failed:`, errorDetails)
     
-    // In production, you might want to send this to a logging service
+    // In production, log additional context
     if (process.env.NODE_ENV === 'production') {
-      // TODO: Send to logging service (e.g., Sentry, LogRocket, etc.)
       console.warn(`⚠️ Production error occurred in ${operationName}, falling back to default value`)
     }
     
@@ -108,9 +107,8 @@ export async function safeDatabaseOperation<T>(
     
     console.error(`🗄️ Database operation failed:`, errorDetails)
     
-    // Log to external service in production
+    // Log additional context in production
     if (process.env.NODE_ENV === 'production') {
-      // TODO: Send to logging service
       console.warn(`⚠️ Database error in production for ${operationName}`)
     }
     

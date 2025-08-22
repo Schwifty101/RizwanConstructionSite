@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-navigation-menu'],
+    serverActions: {
+      bodySizeLimit: '50mb', // Increase to 50MB for multiple file uploads
+    },
   },
 
   // Suppress hydration warnings caused by browser extensions
@@ -17,12 +20,11 @@ const nextConfig: NextConfig = {
   // Image configuration
   images: {
     remotePatterns: [
-      // Add Supabase storage domain when needed
-      // {
-      //   protocol: 'https',
-      //   hostname: 'your-supabase-project.supabase.co',
-      //   pathname: '/storage/v1/object/public/**',
-      // },
+      {
+        protocol: 'https',
+        hostname: 'vgiqpiznebfgvgbxykfd.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 

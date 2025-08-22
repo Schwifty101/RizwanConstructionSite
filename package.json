@@ -16,7 +16,9 @@
     "test:coverage": "jest --coverage",
     "clean": "rm -rf .next out node_modules/.cache",
     "postinstall": "npm dedupe",
-    "prepare": "npm dedupe || true"
+    "prepare": "npm dedupe || true",
+    "storage:organize": "node scripts/organize-storage.mjs",
+    "storage:organize:dry-run": "node scripts/organize-storage.mjs --dry-run"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

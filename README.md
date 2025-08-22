@@ -36,9 +36,7 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 2. Optional but recommended for production:
-   - `REDIS_URL` for distributed rate limiting
    - `SMTP_*` for sending emails from the contact form
-   - `SENTRY_DSN` for error monitoring
 
 3. Build and start
 
