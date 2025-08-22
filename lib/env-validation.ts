@@ -36,16 +36,6 @@ const ENV_CONFIG: EnvConfig = {
     validation: (value) => ['development', 'production', 'test'].includes(value)
   },
   
-  // Optional: External services
-  REDIS_URL: {
-    required: false,
-    description: 'Redis URL for production rate limiting'
-  },
-  
-  SENTRY_DSN: {
-    required: false,
-    description: 'Sentry DSN for error monitoring'
-  },
   
   // Optional: Email service
   SMTP_HOST: {
@@ -170,8 +160,6 @@ export const isProduction = () => process.env.NODE_ENV === 'production'
 export const isDevelopment = () => process.env.NODE_ENV === 'development'
 
 // Check if optional services are configured
-export const hasRedis = () => Boolean(process.env.REDIS_URL)
-export const hasSentry = () => Boolean(process.env.SENTRY_DSN)
 export const hasEmailService = () => Boolean(
   process.env.SMTP_HOST && 
   process.env.SMTP_PORT && 

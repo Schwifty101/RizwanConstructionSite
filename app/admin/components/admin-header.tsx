@@ -61,8 +61,8 @@ export function AdminHeader() {
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={handleSignOut}
-              className="flex items-center space-x-2"
+              onClick={handleSignOut} 
+              className="flex items-center space-x-2 cursor-pointer"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">Sign Out</span>

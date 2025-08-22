@@ -1,5 +1,4 @@
 // Simple in-memory rate limiter for API routes
-// For production, consider using Redis or a dedicated service
 
 interface RateLimitStore {
   [key: string]: {

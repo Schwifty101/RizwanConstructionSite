@@ -301,19 +301,21 @@ export async function uploadProjectImage(file: File, projectId?: string): Promis
       return { success: false, error: 'File must be an image' }
     }
 
-    const maxSize = 5 * 1024 * 1024 // 5MB
+    const maxSize = 50 * 1024 * 1024 // 50MB
     if (file.size > maxSize) {
-      return { success: false, error: 'File size must be less than 5MB' }
+      return { success: false, error: 'File size must be less than 50MB' }
     }
 
-    // Generate project folder path
+    // Generate project folder path with more unique identifiers
     const timestamp = Date.now()
     const randomId = Math.random().toString(36).substring(2)
+    const microTimestamp = performance.now().toString().replace('.', '')
     const fileExt = file.name.split('.').pop()
+    const sanitizedOriginalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_').split('.')[0]
     
     // Use existing project ID or generate temporary ID for new projects
     const folderId = projectId || `temp-${timestamp}-${randomId}`
-    const fileName = `${folderId}/${timestamp}-${randomId}.${fileExt}`
+    const fileName = `${folderId}/${timestamp}-${microTimestamp}-${sanitizedOriginalName}-${randomId}.${fileExt}`
 
     // Upload file to dedicated project folder
     const { error } = await supabase.storage
@@ -363,11 +365,12 @@ export async function organizeProjectImages(projectId: string, imageUrls: string
         continue
       }
       
-      // Generate new organized path
+      // Generate new organized path with unique identifiers
       const timestamp = Date.now()
       const randomId = Math.random().toString(36).substring(2)
+      const microTimestamp = performance.now().toString().replace('.', '')
       const fileExt = currentFileName.split('.').pop()
-      const newFileName = `${projectId}/${timestamp}-${randomId}.${fileExt}`
+      const newFileName = `${projectId}/${timestamp}-${microTimestamp}-${randomId}.${fileExt}`
       
       // Move file to organized folder
       const { error: moveError } = await supabase.storage

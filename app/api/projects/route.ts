@@ -3,18 +3,39 @@ import type { NextRequest } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { FALLBACK_PROJECTS, API_LIMITS, VALIDATION_PATTERNS } from '@/lib/constants'
 import { sanitizeInput, sanitizeUrl } from '@/lib/sanitize'
-import { getClientIdentifier } from '@/lib/rate-limiter'
-import { productionRateLimit, productionRateLimiters, createProductionRateLimitResponse } from '@/lib/redis-rate-limiter'
+import { getClientIdentifier, checkRateLimit, rateLimiters, createRateLimitResponse } from '@/lib/rate-limiter'
 import { getCurrentUser, isUserAdmin } from '@/lib/auth-middleware'
+import { createServerClient } from '@supabase/ssr'
+
+// Create authenticated Supabase client for server-side operations
+function createAuthenticatedSupabaseClient(request: NextRequest) {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return request.cookies.get(name)?.value
+        },
+        set() {
+          // We can't set cookies in API routes, but auth should already be established
+        },
+        remove() {
+          // We can't remove cookies in API routes
+        }
+      }
+    }
+  )
+}
 
 export async function GET(request: Request) {
   try {
-    // Check rate limit (production-aware)
+    // Check rate limit
     const identifier = getClientIdentifier(request)
-    const rateLimitResult = await productionRateLimit(identifier, productionRateLimiters.projects)
+    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
     
     if (!rateLimitResult.allowed) {
-      return createProductionRateLimitResponse(rateLimitResult.resetTime)
+      return createRateLimitResponse(rateLimitResult.resetTime)
     }
 
     const { searchParams } = new URL(request.url)
@@ -166,12 +187,12 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check rate limit (production-aware)
+    // Check rate limit
     const identifier = getClientIdentifier(request)
-    const rateLimitResult = await productionRateLimit(identifier, productionRateLimiters.projects)
+    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
     
     if (!rateLimitResult.allowed) {
-      return createProductionRateLimitResponse(rateLimitResult.resetTime)
+      return createRateLimitResponse(rateLimitResult.resetTime)
     }
 
     const body = await request.json()
@@ -216,7 +237,10 @@ export async function POST(request: Request) {
       )
     }
 
-    const { data, error } = await supabase
+    // Use authenticated Supabase client for the insert operation
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(request as NextRequest)
+    
+    const { data, error } = await authenticatedSupabase
       .from('projects')
       .insert([{
         title: sanitizeInput(title, API_LIMITS.MAX_TITLE_LENGTH),
@@ -241,6 +265,154 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(data[0], { status: 201 })
+  } catch (error) {
+    console.error('Unexpected error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    // Check authentication first
+    const user = await getCurrentUser(request as NextRequest)
+    if (!user || !isUserAdmin(user)) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Unauthorized',
+          message: 'Admin authentication required to update projects.'
+        }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Check rate limit
+    const identifier = getClientIdentifier(request)
+    const rateLimitResult = checkRateLimit(identifier, rateLimiters.projects)
+    
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(rateLimitResult.resetTime)
+    }
+
+    const body = await request.json()
+    const { id, title, description, category, images, date, location, slug, featured } = body
+
+    // Validate required fields
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Missing required field: id' },
+        { status: 400 }
+      )
+    }
+
+    // Build update object with only provided fields
+    const updateData: {
+      title?: string
+      description?: string | null
+      category?: string
+      images?: string[]
+      date?: string
+      location?: string | null
+      slug?: string
+      featured?: boolean
+    } = {}
+    
+    if (title !== undefined) {
+      if (title.length > API_LIMITS.MAX_TITLE_LENGTH) {
+        return NextResponse.json(
+          { error: `Title must be under ${API_LIMITS.MAX_TITLE_LENGTH} characters` },
+          { status: 400 }
+        )
+      }
+      updateData.title = sanitizeInput(title, API_LIMITS.MAX_TITLE_LENGTH)
+    }
+
+    if (description !== undefined) {
+      if (description && description.length > API_LIMITS.MAX_DESCRIPTION_LENGTH) {
+        return NextResponse.json(
+          { error: `Description must be under ${API_LIMITS.MAX_DESCRIPTION_LENGTH} characters` },
+          { status: 400 }
+        )
+      }
+      updateData.description = description ? sanitizeInput(description, API_LIMITS.MAX_DESCRIPTION_LENGTH) : null
+    }
+
+    if (category !== undefined) {
+      updateData.category = sanitizeInput(category, 50)
+    }
+
+    if (images !== undefined) {
+      updateData.images = Array.isArray(images) 
+        ? images.slice(0, API_LIMITS.MAX_IMAGES_PER_PROJECT).map(img => sanitizeUrl(img))
+        : []
+    }
+
+    if (date !== undefined) {
+      if (!Date.parse(date)) {
+        return NextResponse.json(
+          { error: 'Invalid date format' },
+          { status: 400 }
+        )
+      }
+      updateData.date = date
+    }
+
+    if (location !== undefined) {
+      updateData.location = location ? sanitizeInput(location, 100) : null
+    }
+
+    if (slug !== undefined) {
+      if (slug.length > API_LIMITS.MAX_SLUG_LENGTH) {
+        return NextResponse.json(
+          { error: `Slug must be under ${API_LIMITS.MAX_SLUG_LENGTH} characters` },
+          { status: 400 }
+        )
+      }
+
+      if (!VALIDATION_PATTERNS.SLUG.test(slug)) {
+        return NextResponse.json(
+          { error: 'Slug must contain only lowercase letters, numbers, and hyphens' },
+          { status: 400 }
+        )
+      }
+      updateData.slug = slug.toLowerCase()
+    }
+
+    if (featured !== undefined) {
+      updateData.featured = Boolean(featured)
+    }
+
+    // Use authenticated Supabase client for the update operation
+    const authenticatedSupabase = createAuthenticatedSupabaseClient(request as NextRequest)
+    
+    // Perform the update
+    const { data, error } = await authenticatedSupabase
+      .from('projects')
+      .update(updateData)
+      .eq('id', id)
+      .select()
+
+    if (error) {
+      console.error('Error updating project:', error)
+      return NextResponse.json(
+        { error: 'Failed to update project' },
+        { status: 500 }
+      )
+    }
+
+    if (!data || data.length === 0) {
+      return NextResponse.json(
+        { error: 'Project not found' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(data[0], { status: 200 })
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(
