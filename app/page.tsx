@@ -1,13 +1,8 @@
-import Link from "next/link"
 import Script from "next/script"
-import { PageWrapper } from "@/components/page-wrapper"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { supabase } from "@/lib/supabase"
 import { safeDatabaseOperation } from "@/lib/error-handler"
 import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/seo"
-import { getSafeImageUrl, validateImageArray } from "@/lib/image-utils"
+import { HomeClient } from "./home-client"
 
 async function getFeaturedProjects() {
   return safeDatabaseOperation(
@@ -40,7 +35,7 @@ export default async function Home() {
   ])
 
   return (
-    <PageWrapper>
+    <>
       {/* Service and Breadcrumb Schema */}
       <Script
         id="service-schema"
@@ -56,138 +51,8 @@ export default async function Home() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-100/50 via-orange-100/30 to-yellow-100/50"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,245,220,0.3)_0%,rgba(255,253,208,0.1)_100%)]"></div>
-        <div className="relative z-10 container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground mb-6">
-            Quality Construction<br />
-            <span className="text-muted-gold">& Design</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Professional construction and interior design services. 
-            Bringing your vision to life with quality craftsmanship and attention to detail.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="text-lg px-8 py-6">
-              <Link href="/portfolio">View Portfolio</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6">
-              <Link href="/contact">Get Quote</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Projects Section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-              Featured Projects
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover our latest construction and design work that showcases our commitment to excellence
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.length > 0 ? (
-              featuredProjects.map((project) => (
-                <Card key={project.id} className="group hover:shadow-lg transition-shadow duration-300">
-                  <div className="relative overflow-hidden rounded-t-lg">
-                    <ImageSlideshow
-                      images={validateImageArray(project.images).map(img => 
-                        getSafeImageUrl(img, 400, 300, project.title)
-                      )}
-                      alt={project.title}
-                      aspectRatio="portrait"
-                      autoPlay={true}
-                      autoPlayInterval={4000}
-                      showDots={validateImageArray(project.images).length > 1}
-                      showArrows={false}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="font-serif">{project.title}</CardTitle>
-                    <CardDescription className="text-sm text-muted-foreground">
-                      {project.category} • {project.location}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 line-clamp-3">
-                      {project.description}
-                    </p>
-                    <Button asChild variant="outline" className="w-full">
-                      <Link href={`/portfolio/${project.slug}`}>View Details</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-muted-foreground text-lg">
-                  Featured projects will appear here once the database is configured.
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button asChild size="lg">
-              <Link href="/portfolio">View All Projects</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Preview */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-              Our Services
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              From conception to completion, we provide comprehensive construction and design solutions
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Residential Construction",
-                description: "Complete home building services from foundation to finish"
-              },
-              {
-                title: "Interior Design",
-                description: "Professional interior design consulting and implementation"
-              },
-              {
-                title: "Renovation Services",
-                description: "Transform your existing space with expert renovation"
-              }
-            ].map((service, index) => (
-              <Card key={index} className="text-center">
-                <CardHeader>
-                  <CardTitle className="font-serif">{service.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{service.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button asChild size="lg" variant="outline">
-              <Link href="/services">All Services</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-    </PageWrapper>
+      
+      <HomeClient featuredProjects={featuredProjects} />
+    </>
   )
 }
