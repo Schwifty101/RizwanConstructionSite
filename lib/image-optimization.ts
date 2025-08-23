@@ -46,7 +46,7 @@ function isSupabaseStorageUrl(urlString: string): boolean {
 
 // Generate Supabase storage transform URL
 export function generateSupabaseImageUrl(
-  originalUrl: string, 
+  originalUrl: string,
   options: ImageOptimizationOptions = {}
 ): string {
   if (!originalUrl || !isSupabaseStorageUrl(originalUrl)) {
@@ -100,7 +100,7 @@ export function generateOptimizedImageData(
   aspectRatio: number | null = null
 ): OptimizedImageData {
   const responsive = generateResponsiveImageUrls(originalUrl)
-  
+
   // Generate srcSet for responsive images
   const srcSet = [
     `${responsive.thumbnail} 300w`,
@@ -113,10 +113,10 @@ export function generateOptimizedImageData(
   const sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
 
   // Generate low-quality placeholder
-  const placeholder = generateSupabaseImageUrl(originalUrl, { 
-    width: 20, 
+  const placeholder = generateSupabaseImageUrl(originalUrl, {
+    width: 20,
     quality: 10,
-    blur: true 
+    blur: true
   })
 
   return {
@@ -138,7 +138,7 @@ export function optimizeProjectImages(project: Project | ProjectLike) {
   const optimizedImages = project.images.map((imageUrl: string) => {
     const responsive = generateResponsiveImageUrls(imageUrl)
     const optimized = generateOptimizedImageData(imageUrl, project.title)
-    
+
     return {
       original: imageUrl,
       responsive,
@@ -209,12 +209,12 @@ export function createImageIntersectionObserver(
 export async function generateBlurDataURL(imageUrl: string): Promise<string> {
   try {
     // Generate a very small, low-quality version for blur placeholder
-    const blurUrl = generateSupabaseImageUrl(imageUrl, { 
-      width: 8, 
-      height: 8, 
-      quality: 1 
+    const blurUrl = generateSupabaseImageUrl(imageUrl, {
+      width: 8,
+      height: 8,
+      quality: 1
     })
-    
+
     if (typeof window === 'undefined') {
       // Server-side: return a generic blur data URL
       return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRkZGREQwIiBmaWxsLW9wYWNpdHk9IjAuMSIvPgo8L3N2Zz4K'
@@ -222,7 +222,11 @@ export async function generateBlurDataURL(imageUrl: string): Promise<string> {
 
     // Client-side: fetch and convert to base64
     const response = await fetch(blurUrl)
-    const uint8Array = new Uint8Array(arrayBuffer)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch blur image: ${response.status}`)
+    }
+    const buffer = await response.arrayBuffer()
+    const uint8Array = new Uint8Array(buffer)
     let binary = ''
     for (let i = 0; i < uint8Array.length; i++) {
       binary += String.fromCharCode(uint8Array[i])

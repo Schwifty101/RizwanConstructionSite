@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { SupabaseImage } from '@/components/supabase-image'
 
 interface ImageSlideshowProps {
   images: string[]
@@ -81,7 +81,7 @@ export function ImageSlideshow({
           transition={{ duration: 0.5, ease: 'easeInOut' }}
           className="absolute inset-0"
         >
-          <Image
+          <SupabaseImage
             src={images[currentIndex]}
             alt={`${alt} - Image ${currentIndex + 1} of ${images.length}`}
             fill

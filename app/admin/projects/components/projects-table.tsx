@@ -15,7 +15,7 @@ import {
 import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog'
 import { deleteProject } from '@/lib/admin-actions'
 import { Edit, Trash2, Eye, Star, Calendar, MapPin } from 'lucide-react'
-import Image from 'next/image'
+import { SupabaseImage } from '@/components/supabase-image'
 import type { Project } from '@/lib/supabase'
 
 interface ProjectsTableProps {
@@ -95,7 +95,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0">
                 {project.images && project.images.length > 0 ? (
-                  <Image
+                  <SupabaseImage
                     src={project.images[0]}
                     alt={project.title}
                     width={60}
@@ -198,7 +198,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                     <div className="flex items-start space-x-3">
                       <div className="flex-shrink-0">
                         {project.images && project.images.length > 0 ? (
-                          <Image
+                          <SupabaseImage
                             src={project.images[0]}
                             alt={project.title}
                             width={48}

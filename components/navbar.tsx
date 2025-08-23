@@ -41,7 +41,7 @@ export function Navbar() {
 
     window.addEventListener('scroll', handleScroll)
     handleScroll() // Call once to set initial state
-    
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isHomePage])
 
@@ -63,7 +63,7 @@ export function Navbar() {
     : "bg-muted-gold hover:bg-muted-gold/90 text-white"
 
   return (
-    <motion.header 
+    <motion.header
       className={navbarClasses}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
@@ -71,18 +71,19 @@ export function Navbar() {
     >
       <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
         {/* Brand */}
-        <motion.div 
+        <motion.div
           className="flex items-center"
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
         >
           <Link href="/" className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
-            <motion.span 
+            <motion.span
               className={`font-serif text-2xl md:text-3xl font-bold transition-colors duration-300 ${brandClasses}`}
               whileHover={{ scale: 1.05 }}
             >
               The New Home
             </motion.span>
+            <span className={`font-serif text-lg md:text-xl transition-colors duration-300 ${brandClasses}`}>
               Construction <span className="block">& Design</span>
             </span>
           </Link>
@@ -93,12 +94,11 @@ export function Navbar() {
           <NavigationMenuList className="space-x-2">
             {navigationItems.map((item, index) => (
               <NavigationMenuItem key={item.name}>
-                <NavigationMenuLink 
-                  className={`${navigationMenuTriggerStyle()} font-medium transition-colors duration-300 ${textClasses} ${
-                    isHomePage && !isScrolled 
-                      ? "hover:bg-dusty-gold/10" 
+                <NavigationMenuLink
+                  className={`${navigationMenuTriggerStyle()} font-medium transition-colors duration-300 ${textClasses} ${isHomePage && !isScrolled
+                      ? "hover:bg-dusty-gold/10"
                       : "hover:bg-muted-gold/10"
-                  }`} 
+                    }`}
                   asChild
                 >
                   <motion.div
@@ -117,7 +117,7 @@ export function Navbar() {
         </NavigationMenu>
 
         {/* Call to Action Button */}
-        <motion.div 
+        <motion.div
           className="hidden md:block"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -141,11 +141,10 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className={`lg:hidden transition-colors duration-300 ${textClasses} ${
-              isHomePage && !isScrolled 
-                ? "hover:bg-dusty-gold/10 hover:text-dusty-gold" 
+            className={`lg:hidden transition-colors duration-300 ${textClasses} ${isHomePage && !isScrolled
+                ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
                 : "hover:bg-muted-gold/10 hover:text-muted-gold"
-            }`}
+              }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -174,7 +173,7 @@ export function Navbar() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
             <div className="container mx-auto max-w-6xl px-4 py-6">
-              <motion.nav 
+              <motion.nav
                 className="flex flex-col space-y-4"
                 variants={{
                   hidden: { opacity: 0 },
@@ -198,11 +197,10 @@ export function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`font-serif text-xl font-medium transition-colors duration-300 py-2 block border-b last:border-b-0 ${textClasses} ${
-                        isHomePage && !isScrolled 
-                          ? "border-paper-white/20" 
+                      className={`font-serif text-xl font-medium transition-colors duration-300 py-2 block border-b last:border-b-0 ${textClasses} ${isHomePage && !isScrolled
+                          ? "border-paper-white/20"
                           : "border-border/30"
-                      }`}
+                        }`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
