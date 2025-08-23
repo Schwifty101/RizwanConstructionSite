@@ -6,6 +6,7 @@ import { sanitizeInput, sanitizeUrl } from '@/lib/sanitize'
 import { getClientIdentifier, checkRateLimit, rateLimiters, createRateLimitResponse } from '@/lib/rate-limiter'
 import { getCurrentUser, isUserAdmin } from '@/lib/auth-middleware'
 import { createServerClient } from '@supabase/ssr'
+import { optimizeProjectsForResponse } from '@/lib/image-optimization'
 
 // Create authenticated Supabase client for server-side operations
 function createAuthenticatedSupabaseClient(request: NextRequest) {
@@ -132,7 +133,7 @@ export async function GET(request: Request) {
       const paginatedFallback = filteredData.slice(offsetNum, offsetNum + limitNum)
 
       return NextResponse.json({
-        data: paginatedFallback,
+        data: optimizeProjectsForResponse(paginatedFallback),
         pagination: {
           page: Math.floor(offsetNum / limitNum) + 1,
           limit: limitNum,
@@ -149,7 +150,7 @@ export async function GET(request: Request) {
     const currentPage = Math.floor(offsetNum / limitNum) + 1
 
     return NextResponse.json({
-      data: data || [],
+      data: optimizeProjectsForResponse(data || []),
       pagination: {
         page: currentPage,
         limit: limitNum,

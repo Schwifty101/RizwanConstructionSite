@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { optimizeProjectsForResponse } from '@/lib/image-optimization'
 
 export async function GET() {
   try {
@@ -43,10 +44,10 @@ export async function GET() {
         }
       ]
 
-      return NextResponse.json(fallbackData)
+      return NextResponse.json(optimizeProjectsForResponse(fallbackData))
     }
 
-    return NextResponse.json(data || [])
+    return NextResponse.json(optimizeProjectsForResponse(data || []))
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(

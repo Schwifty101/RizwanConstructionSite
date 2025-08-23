@@ -78,47 +78,140 @@ This is a portfolio website for an individual construction and interior design c
 - **api/**: Server routes for backend operations
 - **public/**: Static assets including project images and icons
 
-**Database Schema (Supabase):**
-- **Projects**: id, title, description, category, images (URLs), date, location
-- **Services**: id, name, description, image_url
-- **Contacts**: id, name, email, message, timestamp
-
-**Design System:**
-- Color palette: Warm earthy tones (beige #F5F5DC, cream #FFFDD0, dark grey #333333, muted gold #C9A66B)
-- Typography: Playfair Display (serif headings), Inter (sans-serif body)
-- Responsive mobile-first approach with subtle animations
+**Technology Stack:**
+- Next.js 15 with App Router and Turbopack
+- Supabase (database, auth, storage) 
+- shadcn/ui with Radix UI primitives
+- Tailwind CSS v4
+- TypeScript with strict mode
+- Framer Motion for animations
+- Jest for testing
 
 ## Development Commands
 
 ### Core Development
-- `npm run dev` - Start development server with Turbopack
+- `npm run dev` - Start development server with Turbopack on http://localhost:3000
 - `npm run build` - Build production version
 - `npm start` - Start production server
-- `npm run lint` - Run ESLint
+- `npm run lint` - Run ESLint linting
 
-### Project Setup
-- Development server runs on http://localhost:3000
-- The project uses Turbopack for faster development builds
-- TypeScript path aliases configured with `@/*` pointing to root directory
+### Testing
+- `npm test` - Run Jest tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Generate coverage report
 
-## Key Configuration Details
+### Storage Management
+- `npm run storage:organize` - Organize Supabase storage files into proper folders
+- `npm run storage:organize:dry-run` - Preview storage organization without making changes
 
-- **TypeScript**: Strict mode enabled with Next.js plugin
-- **ESLint**: Uses Next.js core-web-vitals and TypeScript configurations
-- **Tailwind**: Version 4 with PostCSS plugin, custom theme configuration
-- **Supabase**: Environment variables needed: `SUPABASE_URL`, `SUPABASE_ANON_KEY`
-- **Authentication**: Row-Level Security (RLS) for admin panel protection
-- **Image Handling**: Next.js Image component with automatic optimization
-- **Deployment**: Vercel with automatic builds and environment variable management
+### Utility Commands
+- `npm run clean` - Clean build artifacts and caches
+- `npm run postinstall` - Dedupe dependencies after install
 
-## Development Notes
+## Architecture & Key Patterns
 
-- **Admin Panel**: Will require authentication middleware to protect admin routes
-- **Content Management**: Client-friendly forms for project/service management
-- **Image Uploads**: Supabase storage bucket integration for project images
-- **SEO**: Meta tags, structured data, and alt text for search optimization
-- **Performance**: Lazy loading, responsive images, and server-side rendering
-- **Accessibility**: shadcn/ui components are ARIA-compliant with keyboard navigation
+### File Organization
+```
+app/                     # Next.js App Router
+├── admin/               # Protected admin routes with middleware auth
+│   ├── layout.tsx       # Admin-specific layout with auth checks
+│   ├── projects/        # Project CRUD operations
+│   └── login/           # Admin authentication
+├── portfolio/[slug]/    # Dynamic project pages
+├── api/                 # API routes with rate limiting
+└── layout.tsx           # Root layout with fonts and SEO
+
+components/
+├── ui/                  # shadcn/ui components (button, form, etc.)
+└── [feature].tsx        # Feature-specific components
+
+lib/
+├── supabase.ts          # Supabase client with type definitions
+├── admin-actions.ts     # Server actions for admin operations
+├── auth-middleware.ts   # Authentication utilities
+├── env-validation.ts    # Environment variable validation
+└── __tests__/           # Unit tests for utilities
+```
+
+### Authentication Architecture
+- **Middleware**: `/middleware.ts` protects `/admin/*` routes, checks user roles
+- **Admin Actions**: Server actions in `lib/admin-actions.ts` validate auth before operations
+- **Environment-based Admin**: Admin access controlled by `ADMIN_EMAIL` env var
+- **Route Protection**: Redirects to `/admin/login` or `/admin/unauthorized` as needed
+
+### Database Types & Schema
+Core types defined in `lib/supabase.ts`:
+- **Project**: id, title, description, category, images[], date, location, slug, featured
+- **Service**: id, name, description, image_url, order_index, active  
+- **Contact**: id, name, email, phone, message, status, timestamp
+
+### Image Management System
+- **Upload**: `uploadProjectImage()` - Uploads to project-specific folders
+- **Organization**: `organizeProjectImages()` - Moves files to structured folders after project creation
+- **Cleanup**: `deleteProjectImages()` - Removes project folder and all associated images
+- **Storage Structure**: `/project-images/{projectId}/{timestamp}-{filename}`
+
+### Key Configuration
+
+**Environment Variables** (validated in `lib/env-validation.ts`):
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL (required)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anon key (required) 
+- `ADMIN_EMAIL` - Email address for admin access (optional)
+- `NODE_ENV` - Environment mode (required)
+
+**Next.js Configuration**:
+- Turbopack enabled for development builds
+- Standalone output for deployment
+- Server actions with 50MB body size limit
+- Remote image patterns configured for Supabase storage
+
+**TypeScript**:
+- Strict mode enabled
+- Path aliases: `@/*` maps to root directory
+- bundler module resolution
+
+### Testing Setup
+- **Framework**: Jest with jsdom environment
+- **Setup**: `jest.setup.js` includes mocks for Next.js router, Framer Motion, IntersectionObserver
+- **Coverage**: Configured for `app/`, `components/`, `lib/` directories
+- **Location**: Tests in `__tests__/` directories or `*.test.*` files
+- **Existing Tests**: Rate limiter and input sanitization utilities
+
+### Core Development Philosophy
+
+**KISS & YAGNI**: Keep solutions simple, implement only what's needed now.
+
+**File Limits**: Components <200 lines, hooks <100 lines, max 100 character line length.
+
+**Single Responsibility**: Each component, hook, or API route does one clear thing.
+
+**Fail Fast**: Validate props, environment variables, and API inputs early.
+
+**Server Actions Pattern**: All admin operations use validated server actions with proper auth checks.
+
+## Common Development Tasks
+
+### Adding New Admin Features
+1. Create server action in `lib/admin-actions.ts` with authentication validation
+2. Add form component in `app/admin/` with proper error handling
+3. Update database types in `lib/supabase.ts` if needed
+4. Add tests for the new functionality
+
+### Working with Images
+- Use `uploadProjectImage(file, projectId)` for new uploads
+- Images automatically organized into project folders
+- Always handle cleanup when deleting projects
+- 4 image limit per project enforced
+
+### API Route Development
+- Implement rate limiting using utilities in `lib/rate-limiter.ts`
+- Sanitize inputs using functions in `lib/sanitize.ts`
+- Follow existing patterns in `app/api/` for consistent error handling
+
+### Environment Validation
+- Use `validateEnvironmentVariables()` to check config
+- Use `getEnvVar()` helper for type-safe environment access
+- Environment status logged on server startup
 
 ## ⚠️ Important Notes
 

@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Upload, X, Image as ImageIcon, GripVertical, Loader2 } from 'lucide-react'
-import Image from 'next/image'
+import { SupabaseImage } from '@/components/supabase-image'
 import type { Project } from '@/lib/supabase'
 import {
   StagedImage,
@@ -494,7 +494,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
                   </div>
 
                   {/* Image */}
-                  <Image
+                  <SupabaseImage
                     src={stagedImage.url}
                     alt={`Project image ${index + 1}`}
                     width={300}

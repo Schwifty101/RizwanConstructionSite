@@ -10,6 +10,12 @@
   --color-beige: var(--beige);
   --color-dark-grey: var(--dark-grey);
   --color-muted-gold: var(--muted-gold);
+  --color-charcoal: var(--charcoal);
+  --color-warm-brown: var(--warm-brown);
+  --color-dusty-gold: var(--dusty-gold);
+  --color-paper-white: var(--paper-white);
+  --color-rust-orange: var(--rust-orange);
+  --color-vintage-green: var(--vintage-green);
   --font-sans: var(--font-inter);
   --font-serif: var(--font-playfair);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -52,11 +58,19 @@
   --background: oklch(0.961 0.005 85.26); /* Cream #FFFDD0 */
   --foreground: oklch(0.205 0 0); /* Dark Grey #333333 */
   
-  /* Custom construction theme colors */
+  /* Modern Retro/Vintage + Grunge Palette */
   --beige: oklch(0.940 0.010 85.26); /* #F5F5DC */
   --cream: oklch(0.961 0.005 85.26); /* #FFFDD0 */
   --dark-grey: oklch(0.205 0 0); /* #333333 */
   --muted-gold: oklch(0.692 0.045 85.26); /* #C9A66B */
+  
+  /* Grunge & Texture Colors */
+  --charcoal: oklch(0.18 0 0); /* Deep charcoal #2D2D2D */
+  --warm-brown: oklch(0.35 0.028 42.5); /* Warm brown #5D4E37 */
+  --dusty-gold: oklch(0.72 0.058 85.26); /* Dusty gold #D4AF37 */
+  --paper-white: oklch(0.97 0.005 85.26); /* Off-white paper #F8F6F0 */
+  --rust-orange: oklch(0.52 0.118 42.5); /* Rust orange #B7410E */
+  --vintage-green: oklch(0.48 0.068 155.5); /* Vintage green #6B8E23 */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -131,5 +145,167 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;
+  }
+}
+
+@layer utilities {
+  /* Grunge Textures - CSS-based for performance */
+  .texture-paper {
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(255,253,208,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(201,166,107,0.05) 0%, transparent 50%),
+      linear-gradient(45deg, rgba(248,246,240,0.03) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(248,246,240,0.03) 25%, transparent 25%);
+    background-size: 60px 60px, 80px 80px, 20px 20px, 20px 20px;
+    background-position: 0 0, 40px 40px, 0 0, 10px 10px;
+  }
+  
+  .texture-grain {
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(45,45,45,0.02) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(93,78,55,0.02) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(212,175,55,0.01) 0%, transparent 50%);
+    background-size: 120px 120px, 100px 100px, 80px 80px;
+  }
+  
+  .texture-concrete {
+    background-image: 
+      linear-gradient(90deg, rgba(45,45,45,0.02) 50%, transparent 50%),
+      linear-gradient(rgba(93,78,55,0.01) 50%, transparent 50%);
+    background-size: 3px 3px, 7px 7px;
+  }
+  
+  /* Retro Typography */
+  .text-retro-display {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  
+  .text-retro-caps {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-variant: small-caps;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Vintage Card Styling */
+  .card-vintage {
+    background: rgba(248,246,240,0.95);
+    border: 1px solid rgba(201,166,107,0.2);
+    box-shadow: 
+      0 1px 3px rgba(45,45,45,0.1),
+      inset 0 1px 0 rgba(255,253,208,0.5);
+    position: relative;
+  }
+  
+  .card-vintage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(212,175,55,0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  .card-vintage:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 4px 12px rgba(45,45,45,0.15),
+      inset 0 1px 0 rgba(255,253,208,0.5);
+  }
+  
+  /* Retro Button Styling */
+  .btn-retro {
+    position: relative;
+    background: linear-gradient(145deg, var(--muted-gold), var(--dusty-gold));
+    border: 1px solid rgba(93,78,55,0.3);
+    color: var(--charcoal);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  
+  .btn-retro:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(45,45,45,0.2);
+  }
+  
+  .btn-retro-outline {
+    background: transparent;
+    border: 2px solid var(--muted-gold);
+    color: var(--charcoal);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    position: relative;
+  }
+  
+  .btn-retro-outline:hover {
+    background: rgba(201,166,107,0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(201,166,107,0.3);
+  }
+  
+  /* Distressed Dividers */
+  .divider-grunge {
+    position: relative;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(93,78,55,0.3) 20%, 
+      rgba(201,166,107,0.5) 50%, 
+      rgba(93,78,55,0.3) 80%, 
+      transparent 100%);
+  }
+  
+  .divider-grunge::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, 
+      rgba(45,45,45,0.1) 25%, 
+      transparent 25%, 
+      transparent 75%, 
+      rgba(45,45,45,0.1) 75%);
+    background-size: 4px 100%;
+  }
+  
+  /* Vintage Link Styling */
+  .link-vintage {
+    color: var(--warm-brown);
+    text-decoration: none;
+    position: relative;
+    font-weight: 500;
+  }
+  
+  .link-vintage::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--dusty-gold), var(--muted-gold));
+    transition: width 0.3s ease-out;
+  }
+  
+  .link-vintage:hover::after {
+    width: 100%;
+  }
+  
+  /* Noise Overlay for depth */
+  .noise-overlay {
+    position: relative;
+  }
+  
+  .noise-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(0,0,0,0.02) 1px, transparent 0);
+    background-size: 15px 15px;
+    pointer-events: none;
+    z-index: 1;
   }
 }

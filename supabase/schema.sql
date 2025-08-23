@@ -139,7 +139,7 @@ INSERT INTO services (name, description, order_index) VALUES
 ('Interior Design', 'Professional interior design consulting and implementation', 2),
 ('Kitchen Remodeling', 'Custom kitchen design and renovation services', 3),
 ('Bathroom Renovation', 'Modern bathroom design and construction', 4),
-('Commercial Construction', 'Office and retail space construction and renovation', 5),
+('Commercial Construction', 'Office & retail space construction and renovation', 5),
 ('Project Consultation', 'Expert advice and project planning services', 6)
 ON CONFLICT DO NOTHING;
 

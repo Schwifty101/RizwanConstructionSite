@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { PageWrapper } from "@/components/page-wrapper"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { ArrowLeft, Calendar, MapPin, Tag } from "lucide-react"
@@ -65,15 +64,20 @@ export default async function ProjectDetail({ params }: PageProps) {
   return (
     <PageWrapper>
       {/* Navigation */}
-      <section className="py-8 bg-background border-b">
-        <div className="container mx-auto px-4">
-          <Button asChild variant="ghost" className="mb-4">
-            <Link href="/portfolio">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Portfolio
+      <section className="py-6 bg-gradient-to-r from-charcoal/90 to-warm-brown/90 texture-grain relative">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.05)_0%,transparent_70%)]"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <Button asChild variant="ghost" className="mb-0 text-paper-white/90 hover:text-dusty-gold hover:bg-paper-white/10 transition-all duration-300">
+            <Link href="/portfolio" className="flex items-center gap-3 font-medium tracking-wide">
+              <ArrowLeft className="h-5 w-5" />
+              <span>Return to Portfolio</span>
             </Link>
           </Button>
         </div>
+        
+        {/* Decorative bottom edge */}
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-dusty-gold/40 to-transparent"></div>
       </section>
 
       {/* Project Hero */}
@@ -154,11 +158,9 @@ export default async function ProjectDetail({ params }: PageProps) {
               </div>
 
               <div>
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="font-serif">Project Details</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+                <div className="bg-card border rounded-lg p-6 mb-8">
+                  <h3 className="font-serif text-xl font-bold text-foreground mb-6">Project Details</h3>
+                  <div className="space-y-4">
                     <div>
                       <h4 className="font-semibold text-foreground mb-1">Category</h4>
                       <p className="text-muted-foreground">{project.category}</p>
@@ -184,8 +186,8 @@ export default async function ProjectDetail({ params }: PageProps) {
                         </span>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
 
                 <div className="mt-8">
                   <Button asChild size="lg" className="w-full">
@@ -213,7 +215,7 @@ export default async function ProjectDetail({ params }: PageProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {relatedProjects.map((relatedProject) => (
-                <Card key={relatedProject.id} className="group hover:shadow-lg transition-shadow duration-300">
+                <div key={relatedProject.id} className="group hover:shadow-lg transition-shadow duration-300 bg-card border rounded-lg overflow-hidden">
                   <div className="relative overflow-hidden rounded-t-lg">
                     {relatedProject.images && relatedProject.images.length > 0 ? (
                       <ImageSlideshow
@@ -232,21 +234,20 @@ export default async function ProjectDetail({ params }: PageProps) {
                       </div>
                     )}
                   </div>
-                  <CardHeader>
-                    <CardTitle className="font-serif">{relatedProject.title}</CardTitle>
-                    <CardDescription className="text-sm text-muted-foreground">
+                  
+                  <div className="p-6">
+                    <h3 className="font-serif text-xl font-bold text-foreground mb-2">{relatedProject.title}</h3>
+                    <div className="text-sm text-muted-foreground mb-4">
                       {relatedProject.location} • {new Date(relatedProject.date).getFullYear()}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
+                    </div>
                     <p className="text-muted-foreground mb-4 line-clamp-2">
                       {relatedProject.description}
                     </p>
                     <Button asChild variant="outline" className="w-full">
                       <Link href={`/portfolio/${relatedProject.slug}`}>View Project</Link>
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
 
