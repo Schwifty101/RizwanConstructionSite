@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { usePathname } from "next/navigation"
 import { fadeInUp, containerVariants } from "@/lib/animations"
 
 interface PageWrapperProps {
@@ -16,6 +17,9 @@ export function PageWrapper({
   variant = "default",
   delay = 0 
 }: PageWrapperProps) {
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
+
   const getVariants = () => {
     switch (variant) {
       case "stagger":
@@ -40,12 +44,15 @@ export function PageWrapper({
     }
   }
 
+  // Add padding-top for non-home pages to account for fixed navbar
+  const paddingClass = isHomePage ? "" : "pt-20"
+
   return (
     <motion.div
       variants={getVariants()}
       initial="initial"
       animate="animate"
-      className={className}
+      className={`${paddingClass} ${className}`.trim()}
     >
       {children}
     </motion.div>

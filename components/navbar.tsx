@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -23,10 +24,47 @@ const navigationItems = [
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY
+      // On home page, show transparent navbar until scrolled past hero section (roughly 100vh)
+      if (isHomePage) {
+        setIsScrolled(scrollPosition > window.innerHeight * 0.8)
+      } else {
+        setIsScrolled(scrollPosition > 20)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    handleScroll() // Call once to set initial state
+    
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isHomePage])
+
+  // Dynamic classes based on scroll state and page
+  const navbarClasses = isHomePage && !isScrolled
+    ? "fixed top-0 z-50 w-full bg-transparent backdrop-blur-none border-transparent"
+    : "fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+
+  const textClasses = isHomePage && !isScrolled
+    ? "text-paper-white hover:text-dusty-gold bg-transparent"
+    : "text-foreground hover:text-muted-gold"
+
+  const brandClasses = isHomePage && !isScrolled
+    ? "text-paper-white hover:text-dusty-gold"
+    : "text-foreground hover:text-muted-gold"
+
+  const buttonClasses = isHomePage && !isScrolled
+    ? "bg-dusty-gold/80 hover:bg-dusty-gold text-paper-white border-dusty-gold/50"
+    : "bg-muted-gold hover:bg-muted-gold/90 text-white"
 
   return (
     <motion.header 
-      className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className={navbarClasses}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
@@ -40,12 +78,16 @@ export function Navbar() {
         >
           <Link href="/" className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
             <motion.span 
-              className="font-serif text-2xl md:text-3xl font-bold text-foreground hover:text-muted-gold transition-colors duration-300"
+              className={`font-serif text-2xl md:text-3xl font-bold transition-colors duration-300 ${brandClasses}`}
               whileHover={{ scale: 1.05 }}
             >
               The New Home
             </motion.span>
-            <span className="font-sans text-xs sm:text-sm text-muted-foreground sm:border-l sm:border-border sm:pl-3 leading-tight">
+            <span className={`font-sans text-xs sm:text-sm sm:border-l sm:pl-3 leading-tight transition-colors duration-300 ${
+              isHomePage && !isScrolled 
+                ? "text-paper-white/80 sm:border-paper-white/30" 
+                : "text-muted-foreground sm:border-border"
+            }`}>
               Construction <br /> & Design
             </span>
           </Link>
@@ -57,7 +99,11 @@ export function Navbar() {
             {navigationItems.map((item, index) => (
               <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink 
-                  className={`${navigationMenuTriggerStyle()} font-medium hover:text-muted-gold hover:bg-muted-gold/10 transition-colors duration-300`} 
+                  className={`${navigationMenuTriggerStyle()} font-medium transition-colors duration-300 ${textClasses} ${
+                    isHomePage && !isScrolled 
+                      ? "hover:bg-dusty-gold/10" 
+                      : "hover:bg-muted-gold/10"
+                  }`} 
                   asChild
                 >
                   <motion.div
@@ -86,7 +132,7 @@ export function Navbar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button asChild className="bg-muted-gold hover:bg-muted-gold/90 text-white font-medium">
+            <Button asChild className={`font-medium transition-colors duration-300 ${buttonClasses}`}>
               <Link href="/contact">Get Quote</Link>
             </Button>
           </motion.div>
@@ -100,7 +146,11 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden hover:bg-muted-gold/10 hover:text-muted-gold"
+            className={`lg:hidden transition-colors duration-300 ${textClasses} ${
+              isHomePage && !isScrolled 
+                ? "hover:bg-dusty-gold/10 hover:text-dusty-gold" 
+                : "hover:bg-muted-gold/10 hover:text-muted-gold"
+            }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -153,7 +203,11 @@ export function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className="font-serif text-xl font-medium text-foreground hover:text-muted-gold transition-colors duration-300 py-2 block border-b border-border/30 last:border-b-0"
+                      className={`font-serif text-xl font-medium transition-colors duration-300 py-2 block border-b last:border-b-0 ${textClasses} ${
+                        isHomePage && !isScrolled 
+                          ? "border-paper-white/20" 
+                          : "border-border/30"
+                      }`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {item.name}
@@ -167,7 +221,7 @@ export function Navbar() {
                   }}
                   className="pt-4"
                 >
-                  <Button asChild className="w-full bg-muted-gold hover:bg-muted-gold/90 text-white font-medium">
+                  <Button asChild className={`w-full font-medium transition-colors duration-300 ${buttonClasses}`}>
                     <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
                       Get Free Quote
                     </Link>

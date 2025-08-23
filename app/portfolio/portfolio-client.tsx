@@ -3,32 +3,16 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { Project } from "@/lib/supabase"
-import { containerVariants, itemVariants, pageTransitionVariants } from "@/lib/animations"
+import { containerVariants, itemVariants } from "@/lib/animations"
 
 interface PortfolioClientProps {
   projects: Project[]
   categories: string[]
 }
 
-// Enhanced hover variants for portfolio cards
-const portfolioCardVariants = {
-  rest: { 
-    scale: 1, 
-    y: 0,
-    rotateY: 0,
-    transition: { duration: 0.2 }
-  },
-  hover: { 
-    scale: 1.02, 
-    y: -4,
-    rotateY: 1,
-    transition: { duration: 0.2 }
-  }
-}
 
 export function PortfolioClient({ projects, categories }: PortfolioClientProps) {
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects)
@@ -43,12 +27,7 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
   }, [selectedCategory, projects])
 
   return (
-    <motion.div
-      variants={pageTransitionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
+    <div>
       {/* Filter Section */}
       <section className="py-12 bg-background border-b">
         <div className="container mx-auto px-4">
@@ -93,12 +72,11 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
               {filteredProjects.map((project) => (
                 <motion.div key={project.id} variants={itemVariants}>
                   <motion.div
-                    variants={portfolioCardVariants}
-                    initial="rest"
-                    whileHover="hover"
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
                     className="h-full"
                   >
-                    <Card className="group h-full hover:shadow-xl transition-all duration-500 overflow-hidden">
+                    <div className="group h-full hover:shadow-xl transition-all duration-500 overflow-hidden bg-card border rounded-lg">
                       <motion.div 
                         className="relative overflow-hidden rounded-t-lg"
                         whileHover={{ scale: 1.1 }}
@@ -120,6 +98,7 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                             <span className="text-muted-foreground">Project Image</span>
                           </div>
                         )}
+                        
                         {project.featured && (
                           <motion.div 
                             className="absolute top-4 left-4 bg-muted-gold text-white px-3 py-1 rounded-full text-sm font-medium"
@@ -130,34 +109,44 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                             Featured
                           </motion.div>
                         )}
+                        
                         <motion.div
                           className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           initial={{ opacity: 0 }}
                           whileHover={{ opacity: 1 }}
                         />
                       </motion.div>
-                      <CardHeader>
-                        <CardTitle className="font-serif group-hover:text-muted-gold transition-colors duration-300">
-                          {project.title}
-                        </CardTitle>
-                        <CardDescription className="text-sm text-muted-foreground">
-                          {project.category} • {project.location} • {new Date(project.date).getFullYear()}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="flex-1 flex flex-col">
+                      
+                      <div className="p-6">
+                        <div className="mb-4">
+                          <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-muted-gold transition-colors duration-300 mb-2">
+                            {project.title}
+                          </h3>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span>{project.category}</span>
+                            <span>•</span>
+                            <span>{project.location}</span>
+                            <span>•</span>
+                            <span>{new Date(project.date).getFullYear()}</span>
+                          </div>
+                        </div>
+                        
                         <p className="text-muted-foreground mb-4 line-clamp-3 flex-1">
                           {project.description}
                         </p>
+                        
                         <motion.div
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
                           <Button asChild variant="outline" className="w-full group-hover:bg-muted-gold group-hover:text-white group-hover:border-muted-gold transition-all duration-300">
-                            <Link href={`/portfolio/${project.slug}`}>View Details</Link>
+                            <Link href={`/portfolio/${project.slug}`}>
+                              View Details
+                            </Link>
                           </Button>
                         </motion.div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   </motion.div>
                 </motion.div>
               ))}
@@ -183,6 +172,6 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
           )}
         </div>
       </section>
-    </motion.div>
+    </div>
   )
 }

@@ -14,6 +14,7 @@ export function AboutClient() {
       initial="initial"
       animate="animate"
       exit="exit"
+      className="pt-20"
     >
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-cream to-beige">

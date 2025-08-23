@@ -62,28 +62,29 @@ export function ContactClient() {
       initial="initial"
       animate="animate"
       exit="exit"
+      className="pt-20"
     >
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-cream to-beige">
         <div className="container mx-auto px-4 text-center">
-          <motion.h1 
+          <motion.h1
             className="text-4xl md:text-6xl font-serif font-bold text-foreground mb-6"
             variants={presets.heroSection}
           >
             Contact Us
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="text-xl text-muted-foreground max-w-3xl mx-auto"
             variants={{
               initial: { opacity: 0, y: 30 },
-              animate: { 
-                opacity: 1, 
+              animate: {
+                opacity: 1,
                 y: 0,
                 transition: { duration: 0.6, ease: "easeOut", delay: 0.3 }
               }
             }}
           >
-            Ready to start your next project? Get in touch for a consultation 
+            Ready to start your next project? Get in touch for a consultation
             and personalized quote for your construction or design needs.
           </motion.p>
         </div>
@@ -92,7 +93,7 @@ export function ContactClient() {
       {/* Contact Information & Form */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 lg:grid-cols-2 gap-12"
             variants={containerVariants}
             initial="hidden"
@@ -104,8 +105,8 @@ export function ContactClient() {
               <h2 className="text-3xl font-serif font-bold text-foreground mb-8">
                 Get In Touch
               </h2>
-              
-              <motion.div 
+
+              <motion.div
                 className="space-y-6 mb-8"
                 variants={containerVariants}
                 initial="hidden"
@@ -120,7 +121,7 @@ export function ContactClient() {
                   },
                   {
                     icon: Mail,
-                    title: "Email", 
+                    title: "Email",
                     content: "info@rizwanconstruction.com"
                   },
                   {
@@ -134,12 +135,12 @@ export function ContactClient() {
                     content: "Monday - Friday: 8:00 AM - 6:00 PM\nSaturday: 9:00 AM - 4:00 PM\nSunday: By appointment"
                   }
                 ].map((contact, index) => (
-                  <motion.div 
+                  <motion.div
                     key={index}
                     className="flex items-start space-x-4"
                     variants={itemVariants}
                   >
-                    <motion.div 
+                    <motion.div
                       className="bg-muted-gold/10 p-3 rounded-lg"
                       whileHover={{ scale: 1.1, backgroundColor: "rgba(184, 134, 11, 0.2)" }}
                       transition={{ duration: 0.2 }}
@@ -152,26 +153,6 @@ export function ContactClient() {
                     </div>
                   </motion.div>
                 ))}
-              </motion.div>
-
-              {/* Map Placeholder */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <Card>
-                  <CardContent className="p-0">
-                    <motion.div 
-                      className="aspect-[4/3] bg-muted flex items-center justify-center rounded-lg"
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <span className="text-muted-foreground">Service Area Map</span>
-                    </motion.div>
-                  </CardContent>
-                </Card>
               </motion.div>
             </motion.div>
 
@@ -189,8 +170,8 @@ export function ContactClient() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <motion.form 
-                      onSubmit={handleSubmit} 
+                    <motion.form
+                      onSubmit={handleSubmit}
                       className="space-y-6"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
@@ -198,7 +179,7 @@ export function ContactClient() {
                       transition={{ duration: 0.5, delay: 0.1 }}
                     >
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <motion.div 
+                        <motion.div
                           className="space-y-2"
                           whileHover={{ scale: 1.02 }}
                           transition={{ duration: 0.2 }}
@@ -214,7 +195,7 @@ export function ContactClient() {
                             placeholder="Your full name"
                           />
                         </motion.div>
-                        <motion.div 
+                        <motion.div
                           className="space-y-2"
                           whileHover={{ scale: 1.02 }}
                           transition={{ duration: 0.2 }}
@@ -232,7 +213,7 @@ export function ContactClient() {
                         </motion.div>
                       </div>
 
-                      <motion.div 
+                      <motion.div
                         className="space-y-2"
                         whileHover={{ scale: 1.02 }}
                         transition={{ duration: 0.2 }}
@@ -248,7 +229,7 @@ export function ContactClient() {
                         />
                       </motion.div>
 
-                      <motion.div 
+                      <motion.div
                         className="space-y-2"
                         whileHover={{ scale: 1.02 }}
                         transition={{ duration: 0.2 }}
@@ -266,12 +247,11 @@ export function ContactClient() {
                       </motion.div>
 
                       {submitMessage && (
-                        <motion.div 
-                          className={`p-4 rounded-lg ${
-                            submitMessage.includes('Thank you') 
-                              ? 'bg-green-50 text-green-800 border border-green-200' 
+                        <motion.div
+                          className={`p-4 rounded-lg ${submitMessage.includes('Thank you')
+                              ? 'bg-green-50 text-green-800 border border-green-200'
                               : 'bg-red-50 text-red-800 border border-red-200'
-                          }`}
+                            }`}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.3 }}
@@ -284,9 +264,9 @@ export function ContactClient() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <Button 
-                          type="submit" 
-                          size="lg" 
+                        <Button
+                          type="submit"
+                          size="lg"
                           className="w-full"
                           disabled={isSubmitting}
                         >
@@ -305,7 +285,7 @@ export function ContactClient() {
       {/* FAQ Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <motion.div 
+          <motion.div
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -317,7 +297,7 @@ export function ContactClient() {
             </h2>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
             variants={containerVariants}
             initial="hidden"
@@ -327,19 +307,19 @@ export function ContactClient() {
             {[
               {
                 question: "How do I get a project estimate?",
-                answer: "Contact us through the form above or give us a call. We'll schedule a consultation to discuss your project and provide a detailed estimate."
+                answer: "You can reach out by phone or using the form above. We’ll set up a consultation, discuss details, and provide a clear written estimate for your project."
               },
               {
                 question: "What's the typical project timeline?",
-                answer: "Project timelines vary based on scope and complexity. Small renovations may take 2-4 weeks, while new construction can take 3-6 months. We'll provide a detailed timeline during consultation."
+                answer: "Timelines depend on project scope and complexity. Smaller renovations usually require two to four weeks, while new construction may take three to six months."
               },
               {
                 question: "Do you handle permits and inspections?",
-                answer: "Yes, we manage all necessary permits and coordinate inspections as part of our comprehensive service to ensure your project meets all local building codes."
+                answer: "Yes, our team takes care of all required permits and coordinates necessary inspections ensuring project complies fully with local building codes and progresses without unnecessary delays."
               },
               {
                 question: "What areas do you serve?",
-                answer: "We serve the greater metro area within a 50-mile radius. Contact us to confirm service availability in your specific location."
+                answer: "We primarily serve clients across the greater metro region within fifty miles. Please contact us directly to confirm whether your exact location is included in our service coverage."
               }
             ].map((faq, index) => (
               <motion.div key={index} variants={itemVariants}>
