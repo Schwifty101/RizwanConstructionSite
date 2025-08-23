@@ -83,12 +83,7 @@ export function Navbar() {
             >
               The New Home
             </motion.span>
-            <span className={`font-sans text-xs sm:text-sm sm:border-l sm:pl-3 leading-tight transition-colors duration-300 ${
-              isHomePage && !isScrolled 
-                ? "text-paper-white/80 sm:border-paper-white/30" 
-                : "text-muted-foreground sm:border-border"
-            }`}>
-              Construction <br /> & Design
+              Construction <span className="block">& Design</span>
             </span>
           </Link>
         </motion.div>
