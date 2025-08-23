@@ -33,12 +33,23 @@ interface OptimizedImageData {
   alt: string
 }
 
+// Helper to check if a URL is a Supabase storage URL
+function isSupabaseStorageUrl(urlString: string): boolean {
+  try {
+    const url = new URL(urlString);
+    // Supabase storage URLs typically end with .supabase.co
+    return url.hostname.endsWith('.supabase.co');
+  } catch {
+    return false;
+  }
+}
+
 // Generate Supabase storage transform URL
 export function generateSupabaseImageUrl(
   originalUrl: string, 
   options: ImageOptimizationOptions = {}
 ): string {
-  if (!originalUrl || !originalUrl.includes('supabase')) {
+  if (!originalUrl || !isSupabaseStorageUrl(originalUrl)) {
     return originalUrl
   }
 
