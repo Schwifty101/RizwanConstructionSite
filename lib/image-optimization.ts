@@ -84,11 +84,23 @@ export function generateSupabaseImageUrl(
 
 // Generate responsive image URLs for different breakpoints
 export function generateResponsiveImageUrls(originalUrl: string): ResponsiveImageUrls {
+  // Only apply transformations to Supabase URLs
+  if (originalUrl.includes('/storage/v1/object/public/')) {
+    return {
+      thumbnail: generateSupabaseImageUrl(originalUrl, { width: 300, quality: 70 }),
+      small: generateSupabaseImageUrl(originalUrl, { width: 600, quality: 75 }),
+      medium: generateSupabaseImageUrl(originalUrl, { width: 900, quality: 80 }),
+      large: generateSupabaseImageUrl(originalUrl, { width: 1200, quality: 85 }),
+      original: originalUrl
+    }
+  }
+  
+  // For non-Supabase URLs, just return the same URL for all sizes
   return {
-    thumbnail: generateSupabaseImageUrl(originalUrl, { width: 300, quality: 70 }),
-    small: generateSupabaseImageUrl(originalUrl, { width: 600, quality: 75 }),
-    medium: generateSupabaseImageUrl(originalUrl, { width: 900, quality: 80 }),
-    large: generateSupabaseImageUrl(originalUrl, { width: 1200, quality: 85 }),
+    thumbnail: originalUrl,
+    small: originalUrl,
+    medium: originalUrl,
+    large: originalUrl,
     original: originalUrl
   }
 }
@@ -112,12 +124,14 @@ export function generateOptimizedImageData(
   // Default responsive sizes
   const sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
 
-  // Generate low-quality placeholder
-  const placeholder = generateSupabaseImageUrl(originalUrl, {
-    width: 20,
-    quality: 10,
-    blur: true
-  })
+  // Generate low-quality placeholder (only for Supabase URLs)
+  const placeholder = originalUrl.includes('/storage/v1/object/public/') 
+    ? generateSupabaseImageUrl(originalUrl, {
+        width: 20,
+        quality: 10,
+        blur: true
+      })
+    : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjRjVGNURDIiBmaWxsLW9wYWNpdHk9IjAuNSIvPgo8L3N2Zz4K' // Generic blur placeholder
 
   return {
     src: responsive.medium, // Default to medium size

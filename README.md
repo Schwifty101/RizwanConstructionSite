@@ -1,3 +1,27 @@
+# The New Home - Where Dreams Take Shape
+
+A modern, responsive portfolio website for interior design professionals built with Next.js 15 and Supabase. This project showcases **The New Home** - an interior design company specializing in texture coating, window blinds, flooring, false ceilings, and complete interior solutions for homes, hotels, restaurants, and offices.
+
+## Features
+
+- **Modern Interior Design Showcase**: Professional portfolio with image galleries and project filtering
+- **Complete Service Categories**: Texture Coating & Zola Paint, Window Blinds, Vinyl & Wooden Flooring, False Ceilings, Aluminium & Glass Work
+- **Specialized Interior Solutions**: Home Interiors, Hotel & Restaurant Interiors, Office Interiors
+- **Admin Panel**: Easy content management for non-technical users
+- **Responsive Design**: Mobile-first approach with elegant animations
+- **SEO Optimized**: Built-in metadata generation and structured data
+- **Performance Focused**: Optimized images, lazy loading, and static generation
+
+## Technology Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Database**: Supabase (PostgreSQL + Authentication + Storage)
+- **UI Components**: shadcn/ui with Radix UI primitives
+- **Styling**: Tailwind CSS v4
+- **Animations**: Framer Motion
+- **Language**: TypeScript with strict mode
+- **Deployment**: Vercel ready
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

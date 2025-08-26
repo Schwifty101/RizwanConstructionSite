@@ -30,8 +30,8 @@ function generateSlug(title: string): string {
 async function getAuthenticatedClient() {
   const cookieStore = await cookies()
   const supabase = createServerClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -87,6 +87,28 @@ export async function getAdminProjects() {
     return { 
       success: false, 
       error: error instanceof Error ? error.message : 'Failed to fetch projects' 
+    }
+  }
+}
+
+// Get all services for admin
+export async function getAdminServices() {
+  try {
+    const { supabase } = await getAuthenticatedClient()
+    
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .order('order_index', { ascending: true })
+
+    if (error) throw error
+    
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error fetching services:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to fetch services' 
     }
   }
 }

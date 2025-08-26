@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Mail, Phone, MapPin, Clock } from "lucide-react"
+import { Phone, MapPin, Clock } from "lucide-react"
 import { containerVariants, itemVariants, presets, pageTransitionVariants } from "@/lib/animations"
 
 export function ContactClient() {
@@ -117,17 +117,12 @@ export function ContactClient() {
                   {
                     icon: Phone,
                     title: "Phone",
-                    content: "(555) 123-4567"
-                  },
-                  {
-                    icon: Mail,
-                    title: "Email",
-                    content: "info@rizwanconstruction.com"
+                    content: "(+92)300-5131990\n(051)5738190\n(051)7131990"
                   },
                   {
                     icon: MapPin,
-                    title: "Service Area",
-                    content: "Greater Metro Area\nWithin 50 miles radius"
+                    title: "Address ",
+                    content: "First Floor, Gondal Plaza\nMain Commercial Area\nSoan Garden, Islamabad"
                   },
                   {
                     icon: Clock,

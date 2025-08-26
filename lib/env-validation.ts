@@ -20,11 +20,15 @@ const ENV_CONFIG: EnvConfig = {
     required: true,
     description: 'Supabase anonymous key for client-side operations'
   },
+  SUPABASE_SERVICE_ROLE_KEY: {
+    required: false,
+    description: 'Supabase service role key for admin operations (optional)'
+  },
   
   // Admin configuration
   ADMIN_EMAIL: {
     required: false,
-    description: 'Admin email address for authentication',
+    description: 'Admin email address for authentication (optional)',
     validation: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
   },
   

@@ -4,11 +4,12 @@ import Image from 'next/image'
 import { getSafeImageUrl } from '@/lib/image-utils'
 import { ComponentProps } from 'react'
 
-interface SupabaseImageProps extends Omit<ComponentProps<typeof Image>, 'src'> {
+interface SupabaseImageProps extends Omit<ComponentProps<typeof Image>, 'src' | 'srcSet' | 'placeholder'> {
   src: string | null | undefined
   fallbackText?: string
   fallbackWidth?: number
   fallbackHeight?: number
+  priority?: boolean
 }
 
 export function SupabaseImage({ 
@@ -18,33 +19,20 @@ export function SupabaseImage({
   fallbackWidth = 400,
   fallbackHeight = 300,
   className,
+  priority = false,
   ...props 
 }: SupabaseImageProps) {
   const safeImageUrl = getSafeImageUrl(src, fallbackWidth, fallbackHeight, fallbackText)
   
-  // Check if this is a Supabase storage URL
-  const isSupabaseUrl = safeImageUrl.includes('/storage/v1/object/public/')
-  
-  // For Supabase URLs, use unoptimized to bypass Next.js image optimization
-  // This prevents timeout errors from Supabase's storage
-  if (isSupabaseUrl) {
-    return (
-      <Image
-        src={safeImageUrl}
-        alt={alt}
-        className={className}
-        unoptimized
-        {...props}
-      />
-    )
-  }
-  
-  // For other URLs (including data URLs from getSafeImageUrl), use optimized
+  // For ALL URLs (Supabase, blob, data, http), use unoptimized to avoid Next.js issues
+  // This ensures compatibility with blob URLs for previews and Supabase URLs for storage
   return (
     <Image
       src={safeImageUrl}
-      alt={alt}
+      alt={alt || fallbackText}
       className={className}
+      priority={priority}
+      unoptimized
       {...props}
     />
   )

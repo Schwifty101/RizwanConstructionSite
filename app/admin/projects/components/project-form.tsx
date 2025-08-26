@@ -287,12 +287,9 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
   }
 
   const categories = [
-    'Residential',
-    'Commercial',
-    'Interior Design',
-    'Renovation',
-    'Construction',
-    'Architecture'
+    'Home Interiors',
+    'Hotel & Restaurant Interiors',
+    'Office Interiors'
   ]
 
   return (

@@ -3,7 +3,7 @@ import { safeAsyncOperation } from "@/lib/error-handler"
 import { FALLBACK_PROJECTS } from "@/lib/constants"
 import { PortfolioPageClient } from "./portfolio-page-client"
 
-const categories = ["All", "Residential", "Commercial", "Interior Design", "Renovation"]
+const categories = ["All", "Home Interiors", "Hotel & Restaurant Interiors", "Office Interiors"]
 
 // Server-side data fetching function
 async function getProjects(): Promise<Project[]> {
