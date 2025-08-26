@@ -3,6 +3,8 @@ import type { NextRequest } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { withAuth } from '@/lib/auth-middleware'
 import { createAuthenticatedSupabaseClient } from '@/lib/supabase-server'
+import { sanitizeInput, sanitizeUrl } from '@/lib/sanitize'
+import { checkRateLimit, getClientIdentifier, createRateLimitResponse, rateLimiters } from '@/lib/rate-limiter'
 
 export async function GET(request: Request) {
   try {
@@ -85,6 +87,14 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting
+  const identifier = getClientIdentifier(request)
+  const rateLimit = checkRateLimit(identifier, rateLimiters.projects)
+  
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit.resetTime)
+  }
+
   return withAuth(request, async () => {
     try {
       const body = await request.json()
@@ -97,15 +107,20 @@ export async function POST(request: NextRequest) {
         )
       }
 
+      // Sanitize inputs
+      const sanitizedName = sanitizeInput(name, 255)
+      const sanitizedDescription = description ? sanitizeInput(description, 1000) : undefined
+      const sanitizedImageUrl = image_url ? sanitizeUrl(image_url) : undefined
+
       // Create authenticated supabase client for this request
       const supabaseAuth = createAuthenticatedSupabaseClient(request)
 
       const { data, error } = await supabaseAuth
         .from('services')
         .insert([{
-          name,
-          description,
-          image_url,
+          name: sanitizedName,
+          description: sanitizedDescription,
+          image_url: sanitizedImageUrl,
           order_index: order_index || 0,
           active: active !== undefined ? active : true
         }])
@@ -131,6 +146,14 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+  // Apply rate limiting
+  const identifier = getClientIdentifier(request)
+  const rateLimit = checkRateLimit(identifier, rateLimiters.projects)
+  
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit.resetTime)
+  }
+
   return withAuth(request, async () => {
     try {
       const body = await request.json()
@@ -151,9 +174,9 @@ export async function PATCH(request: NextRequest) {
         active?: boolean
       } = {}
       
-      if (name !== undefined) updateData.name = name
-      if (description !== undefined) updateData.description = description
-      if (image_url !== undefined) updateData.image_url = image_url
+      if (name !== undefined) updateData.name = sanitizeInput(name, 255)
+      if (description !== undefined) updateData.description = sanitizeInput(description, 1000)
+      if (image_url !== undefined) updateData.image_url = sanitizeUrl(image_url)
       if (order_index !== undefined) updateData.order_index = order_index
       if (active !== undefined) updateData.active = active
 
@@ -193,6 +216,14 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Apply rate limiting
+  const identifier = getClientIdentifier(request)
+  const rateLimit = checkRateLimit(identifier, rateLimiters.projects)
+  
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit.resetTime)
+  }
+
   return withAuth(request, async () => {
     try {
       const body = await request.json()

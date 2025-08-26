@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { withAuth } from '@/lib/auth-middleware'
 import { createAuthenticatedSupabaseClient } from '@/lib/supabase-server'
+import { checkRateLimit, getClientIdentifier, createRateLimitResponse, rateLimiters } from '@/lib/rate-limiter'
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for uploads
+  const identifier = getClientIdentifier(request)
+  const rateLimit = checkRateLimit(identifier, rateLimiters.projects)
+  
+  if (!rateLimit.allowed) {
+    return createRateLimitResponse(rateLimit.resetTime)
+  }
+
   return withAuth(request, async () => {
     let bucket = ''
     try {

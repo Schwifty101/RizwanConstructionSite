@@ -8,11 +8,16 @@ export function isValidImageUrl(url: string): boolean {
   try {
     const parsedUrl = new URL(url)
     
-    // Check if it's a valid HTTP/HTTPS URL
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
+    // Check if it's a valid HTTP/HTTPS/BLOB URL
+    if (!['http:', 'https:', 'blob:'].includes(parsedUrl.protocol)) {
       return false
     }
 
+    // For blob URLs, always return true (they're created from valid image files)
+    if (parsedUrl.protocol === 'blob:') {
+      return true
+    }
+    
     // Check if it has a valid image extension
     const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.ico']
     const pathname = parsedUrl.pathname.toLowerCase()

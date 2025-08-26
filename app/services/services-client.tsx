@@ -1,17 +1,18 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
+import { SupabaseImage } from "@/components/supabase-image"
 import { containerVariants, itemVariants, presets, pageTransitionVariants } from "@/lib/animations"
 
 interface Service {
   id: string
   name: string
   description: string
+  image_url?: string
   details?: string[]
 }
 
@@ -34,9 +35,15 @@ export function ServicesClient({ services }: ServicesClientProps) {
     "project consultation": "/images/services/projectConsultation.avif",
   }
 
-  const getServiceImage = (name?: string): string | null => {
-    if (!name) return null
-    const key = name.trim().toLowerCase()
+  const getServiceImage = (service: Service): string | null => {
+    // First, try to use the database image if available
+    if (service.image_url) {
+      return service.image_url
+    }
+    
+    // Fall back to static images based on service name
+    if (!service.name) return null
+    const key = service.name.trim().toLowerCase()
     return serviceImageMap[key] ?? null
   }
 
@@ -99,7 +106,7 @@ export function ServicesClient({ services }: ServicesClientProps) {
                         transition={{ duration: 0.3 }}
                       >
                         {(() => {
-                          const src = getServiceImage(service.name)
+                          const src = getServiceImage(service)
                           if (!src) {
                             return (
                               <div className="w-full h-full flex items-center justify-center">
@@ -109,13 +116,14 @@ export function ServicesClient({ services }: ServicesClientProps) {
                           }
                           return (
                             <div className="relative w-full h-full">
-                              <Image
+                              <SupabaseImage
                                 src={src}
                                 alt={`${service.name} image`}
                                 fill
                                 className="object-cover"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 priority={index < 2}
+                                fallbackText="Service Image"
                               />
                             </div>
                           )

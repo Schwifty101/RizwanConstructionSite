@@ -88,39 +88,26 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('service-images', 'service-images', true)
 ON CONFLICT (id) DO NOTHING;
 
--- Create storage policies
+-- Create storage policies for both buckets
 DROP POLICY IF EXISTS "Public can view project images" ON storage.objects;
-CREATE POLICY "Public can view project images" ON storage.objects
-    FOR SELECT USING (bucket_id = 'project-images');
+DROP POLICY IF EXISTS "Public can view service images" ON storage.objects;
+CREATE POLICY "Public can view all bucket images" ON storage.objects
+    FOR SELECT USING (bucket_id IN ('project-images', 'service-images'));
 
 DROP POLICY IF EXISTS "Admin can upload project images" ON storage.objects;
-CREATE POLICY "Admin can upload project images" ON storage.objects
-    FOR INSERT WITH CHECK (bucket_id = 'project-images' AND auth.uid() IS NOT NULL);
+DROP POLICY IF EXISTS "Admin can upload service images" ON storage.objects;
+CREATE POLICY "Admin can upload all bucket images" ON storage.objects
+    FOR INSERT WITH CHECK (bucket_id IN ('project-images', 'service-images') AND auth.uid() IS NOT NULL);
 
 DROP POLICY IF EXISTS "Admin can update project images" ON storage.objects;
-CREATE POLICY "Admin can update project images" ON storage.objects
-    FOR UPDATE USING (bucket_id = 'project-images' AND auth.uid() IS NOT NULL);
+DROP POLICY IF EXISTS "Admin can update service images" ON storage.objects;
+CREATE POLICY "Admin can update all bucket images" ON storage.objects
+    FOR UPDATE USING (bucket_id IN ('project-images', 'service-images') AND auth.uid() IS NOT NULL);
 
 DROP POLICY IF EXISTS "Admin can delete project images" ON storage.objects;
-CREATE POLICY "Admin can delete project images" ON storage.objects
-    FOR DELETE USING (bucket_id = 'project-images' AND auth.uid() IS NOT NULL);
-
--- Service images storage policies
-DROP POLICY IF EXISTS "Public can view service images" ON storage.objects;
-CREATE POLICY "Public can view service images" ON storage.objects
-    FOR SELECT USING (bucket_id = 'service-images');
-
-DROP POLICY IF EXISTS "Admin can upload service images" ON storage.objects;
-CREATE POLICY "Admin can upload service images" ON storage.objects
-    FOR INSERT WITH CHECK (bucket_id = 'service-images' AND auth.uid() IS NOT NULL);
-
-DROP POLICY IF EXISTS "Admin can update service images" ON storage.objects;
-CREATE POLICY "Admin can update service images" ON storage.objects
-    FOR UPDATE USING (bucket_id = 'service-images' AND auth.uid() IS NOT NULL);
-
 DROP POLICY IF EXISTS "Admin can delete service images" ON storage.objects;
-CREATE POLICY "Admin can delete service images" ON storage.objects
-    FOR DELETE USING (bucket_id = 'service-images' AND auth.uid() IS NOT NULL);
+CREATE POLICY "Admin can delete all bucket images" ON storage.objects
+    FOR DELETE USING (bucket_id IN ('project-images', 'service-images') AND auth.uid() IS NOT NULL);
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -178,23 +165,7 @@ ON CONFLICT (id) DO UPDATE SET
   file_size_limit = EXCLUDED.file_size_limit,
   allowed_mime_types = EXCLUDED.allowed_mime_types;
 
--- Enable RLS on projects and services tables
-ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
-ALTER TABLE services ENABLE ROW LEVEL SECURITY;
-
--- Create RLS policies for projects table
-CREATE POLICY "Public can view projects" ON projects
-    FOR SELECT USING (true);
-
-CREATE POLICY "Authenticated can manage projects" ON projects
-    FOR ALL USING (auth.uid() IS NOT NULL);
-
--- Create RLS policies for services table
-CREATE POLICY "Public can view services" ON services
-    FOR SELECT USING (true);
-
-CREATE POLICY "Authenticated can manage services" ON services
-    FOR ALL USING (auth.uid() IS NOT NULL);
+-- Note: RLS and policies are already enabled above, no duplicates needed
 
 -- Success message
 SELECT 'The New Home database setup completed successfully! Projects and services tables with sample interior design data have been created. Storage buckets and RLS policies are configured.' as status;
