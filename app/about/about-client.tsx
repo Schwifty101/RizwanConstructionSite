@@ -23,7 +23,7 @@ export function AboutClient() {
               className="text-4xl md:text-6xl font-serif font-bold text-foreground mb-6"
               variants={presets.heroSection}
             >
-              About Rizwan
+              About The New Home
             </motion.h1>
             <motion.p 
               className="text-xl text-muted-foreground max-w-3xl mx-auto"
@@ -36,8 +36,8 @@ export function AboutClient() {
                 }
               }}
             >
-              Dedicated to delivering exceptional construction and interior design services 
-              with a passion for quality craftsmanship and innovative solutions.
+              We believe every space has a story, and we&apos;re here to help you tell yours. 
+              Creating elegant, comfortable, and modern interior designs for homes, offices, restaurants, and hotels.
             </motion.p>
         </div>
       </section>
@@ -57,14 +57,13 @@ export function AboutClient() {
                 Experience & Expertise
               </h2>
               <p className="text-lg text-muted-foreground mb-6">
-                With over a decade of experience in construction and interior design, 
-                I have developed a reputation for delivering projects that exceed expectations. 
-                My approach combines traditional craftsmanship with modern techniques to create 
-                spaces that are both functional and beautiful.
+                At The New Home, we specialize in interior designs that combine elegance, comfort, 
+                and modern innovation. Our expertise spans texture coating, window blinds, vinyl and wooden flooring, 
+                false ceilings, and aluminium & glass work to create truly inspiring spaces.
               </p>
               <p className="text-lg text-muted-foreground mb-6">
-                From residential homes to commercial spaces, I work closely with clients 
-                to understand their vision and bring it to life within budget and on schedule.
+                Whether it&apos;s your home sanctuary, a professional office environment, or a hospitality space 
+                meeting international standards, we work closely with you to turn your ideas into reality.
               </p>
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -96,12 +95,12 @@ export function AboutClient() {
             <motion.div variants={itemVariants}>
               <AnimatedCard animation="lift">
                 <CardHeader>
-                  <CardTitle className="font-serif text-xl">Quality First</CardTitle>
+                  <CardTitle className="font-serif text-xl">Elegant Design</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Every project is executed with meticulous attention to detail, 
-                    using only the finest materials and proven construction methods.
+                    Every project reflects our commitment to elegance and modern design, 
+                    using premium materials and innovative techniques for lasting beauty.
                   </p>
                 </CardContent>
               </AnimatedCard>
@@ -110,12 +109,12 @@ export function AboutClient() {
             <motion.div variants={itemVariants}>
               <AnimatedCard animation="lift">
                 <CardHeader>
-                  <CardTitle className="font-serif text-xl">Client Collaboration</CardTitle>
+                  <CardTitle className="font-serif text-xl">Your Story, Our Craft</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Your vision is at the heart of every project. I work closely with 
-                    clients throughout the process to ensure their goals are achieved.
+                    We believe every space has a story. We work closely with you to 
+                    understand your vision and transform it into inspiring, personalized spaces.
                   </p>
                 </CardContent>
               </AnimatedCard>
@@ -124,12 +123,12 @@ export function AboutClient() {
             <motion.div variants={itemVariants}>
               <AnimatedCard animation="lift">
                 <CardHeader>
-                  <CardTitle className="font-serif text-xl">Timely Delivery</CardTitle>
+                  <CardTitle className="font-serif text-xl">Professional Excellence</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground">
-                    Reliable project management and clear communication ensure 
-                    projects are completed on time and within budget.
+                    From texture coatings to custom blinds, we deliver professional results 
+                    that reflect our promise to turn your ideas into inspiring spaces.
                   </p>
                 </CardContent>
               </AnimatedCard>
@@ -159,16 +158,16 @@ export function AboutClient() {
             <motion.div variants={itemVariants}>
               <AnimatedCard animation="glow">
                 <CardHeader>
-                  <CardTitle className="font-serif text-2xl">Construction Services</CardTitle>
-                  <CardDescription>Complete building solutions</CardDescription>
+                  <CardTitle className="font-serif text-2xl">Interior Design Services</CardTitle>
+                  <CardDescription>Complete interior solutions</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Residential construction</li>
-                    <li>• Commercial building</li>
-                    <li>• Renovations and additions</li>
-                    <li>• Structural modifications</li>
-                    <li>• Foundation and framing</li>
+                    <li>• Texture Coating & Zola Paint</li>
+                    <li>• Window Blinds & Curtains</li>
+                    <li>• Vinyl & Wooden Flooring</li>
+                    <li>• False Ceilings</li>
+                    <li>• Aluminium & Glass Work</li>
                   </ul>
                 </CardContent>
               </AnimatedCard>
@@ -177,16 +176,16 @@ export function AboutClient() {
             <motion.div variants={itemVariants}>
               <AnimatedCard animation="glow">
                 <CardHeader>
-                  <CardTitle className="font-serif text-2xl">Interior Design</CardTitle>
-                  <CardDescription>Transforming spaces with style</CardDescription>
+                  <CardTitle className="font-serif text-2xl">Specialized Services</CardTitle>
+                  <CardDescription>Tailored for every space</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>• Space planning and design</li>
-                    <li>• Kitchen and bathroom design</li>
-                    <li>• Custom furniture and fixtures</li>
-                    <li>• Color and material selection</li>
-                    <li>• Lighting design</li>
+                    <li>• Home Interiors (complete solutions)</li>
+                    <li>• Hotel & Restaurant Interiors</li>
+                    <li>• Office Interiors (productivity-focused)</li>
+                    <li>• Custom Windows (Wood & Aluminium)</li>
+                    <li>• Paints & Finishes selection</li>
                   </ul>
                 </CardContent>
               </AnimatedCard>

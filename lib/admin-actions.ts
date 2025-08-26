@@ -91,6 +91,28 @@ export async function getAdminProjects() {
   }
 }
 
+// Get all services for admin
+export async function getAdminServices() {
+  try {
+    const { supabase } = await getAuthenticatedClient()
+    
+    const { data, error } = await supabase
+      .from('services')
+      .select('*')
+      .order('order_index', { ascending: true })
+
+    if (error) throw error
+    
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error fetching services:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to fetch services' 
+    }
+  }
+}
+
 // Create new project
 export async function createProject(formData: ProjectFormData) {
   try {

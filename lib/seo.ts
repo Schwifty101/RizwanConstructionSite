@@ -15,15 +15,15 @@ interface SeoConfig {
 }
 
 export const SITE_CONFIG = {
-  siteName: 'Rizwan Construction & Interior Design',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://rizwan-construction.com',
+  siteName: 'The New Home - Where Dreams Take Shape',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://the-new-home.com',
   defaultImage: '/images/og-image.jpg',
-  twitterHandle: '@rizwanconstruction',
-  author: 'Rizwan Construction',
+  twitterHandle: '@thenewhome',
+  author: 'The New Home',
   phone: '+1-555-0123',
-  email: 'info@rizwanconstruction.com',
+  email: 'info@thenewhome.com',
   address: {
-    streetAddress: '123 Construction Ave',
+    streetAddress: '123 Interior Design Ave',
     city: 'Your City',
     state: 'Your State',
     postalCode: '12345',
@@ -50,15 +50,20 @@ export function generateMetadata({
 
   const allKeywords = [
     ...keywords,
-    'construction',
     'interior design',
-    'contractor',
-    'renovation',
-    'home improvement',
-    'residential construction',
-    'commercial construction',
-    'custom homes',
-    'remodeling'
+    'texture coating',
+    'zola paint',
+    'window blinds',
+    'vinyl flooring',
+    'wooden flooring',
+    'false ceilings',
+    'aluminium glass work',
+    'home interiors',
+    'hotel interiors',
+    'restaurant interiors',
+    'office interiors',
+    'custom blinds',
+    'curtains'
   ]
 
   const metadata: Metadata = {
@@ -150,7 +155,7 @@ export function generateLocalBusinessSchema() {
     '@type': 'LocalBusiness',
     '@id': `${SITE_CONFIG.siteUrl}#LocalBusiness`,
     name: SITE_CONFIG.siteName,
-    description: 'Professional construction and interior design services. Quality craftsmanship for residential and commercial projects.',
+    description: 'The New Home - where every space has a story. We create elegant, comfortable, and modern interior designs for homes, offices, restaurants, and hotels.',
     url: SITE_CONFIG.siteUrl,
     telephone: SITE_CONFIG.phone,
     email: SITE_CONFIG.email,
@@ -239,19 +244,22 @@ export function generateServiceSchema() {
     '@context': 'https://schema.org',
     '@type': 'Service',
     '@id': `${SITE_CONFIG.siteUrl}/services#Service`,
-    name: 'Construction and Interior Design Services',
-    description: 'Professional construction and interior design services for residential and commercial projects.',
+    name: 'Complete Interior Design Services - The New Home',
+    description: 'Elegant interior design services including texture coating, window blinds, flooring, false ceilings, and specialized designs for homes, hotels, restaurants, and offices.',
     provider: {
       '@type': 'Organization',
       name: SITE_CONFIG.siteName,
       url: SITE_CONFIG.siteUrl
     },
     serviceType: [
-      'Construction',
-      'Interior Design', 
-      'Home Renovation',
-      'Commercial Construction',
-      'Residential Construction'
+      'Texture Coating & Zola Paint',
+      'Window Blinds',
+      'Vinyl & Wooden Flooring',
+      'False Ceilings',
+      'Aluminium & Glass Work',
+      'Home Interiors',
+      'Hotel & Restaurant Interiors',
+      'Office Interiors'
     ],
     areaServed: {
       '@type': 'State',

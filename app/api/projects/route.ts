@@ -4,30 +4,10 @@ import { supabase } from '@/lib/supabase'
 import { FALLBACK_PROJECTS, API_LIMITS, VALIDATION_PATTERNS } from '@/lib/constants'
 import { sanitizeInput, sanitizeUrl } from '@/lib/sanitize'
 import { getClientIdentifier, checkRateLimit, rateLimiters, createRateLimitResponse } from '@/lib/rate-limiter'
-import { getCurrentUser, isUserAdmin } from '@/lib/auth-middleware'
-import { createServerClient } from '@supabase/ssr'
+import { getCurrentUser } from '@/lib/auth-middleware'
 import { optimizeProjectsForResponse } from '@/lib/image-optimization'
+import { createAuthenticatedSupabaseClient } from '@/lib/supabase-server'
 
-// Create authenticated Supabase client for server-side operations
-function createAuthenticatedSupabaseClient(request: NextRequest) {
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-        set() {
-          // We can't set cookies in API routes, but auth should already be established
-        },
-        remove() {
-          // We can't remove cookies in API routes
-        }
-      }
-    }
-  )
-}
 
 export async function GET(request: Request) {
   try {
@@ -175,11 +155,11 @@ export async function POST(request: Request) {
   try {
     // Check authentication first
     const user = await getCurrentUser(request as NextRequest)
-    if (!user || !isUserAdmin(user)) {
+    if (!user) {
       return new NextResponse(
         JSON.stringify({
           error: 'Unauthorized',
-          message: 'Admin authentication required to create projects.'
+          message: 'Authentication required to create projects.'
         }),
         { 
           status: 401,
@@ -238,10 +218,10 @@ export async function POST(request: Request) {
       )
     }
 
-    // Use authenticated Supabase client for the insert operation
-    const authenticatedSupabase = createAuthenticatedSupabaseClient(request as NextRequest)
-    
-    const { data, error } = await authenticatedSupabase
+    // Create authenticated supabase client for this request
+    const supabaseAuth = createAuthenticatedSupabaseClient(request as NextRequest)
+
+    const { data, error } = await supabaseAuth
       .from('projects')
       .insert([{
         title: sanitizeInput(title, API_LIMITS.MAX_TITLE_LENGTH),
@@ -279,11 +259,11 @@ export async function PATCH(request: Request) {
   try {
     // Check authentication first
     const user = await getCurrentUser(request as NextRequest)
-    if (!user || !isUserAdmin(user)) {
+    if (!user) {
       return new NextResponse(
         JSON.stringify({
           error: 'Unauthorized',
-          message: 'Admin authentication required to update projects.'
+          message: 'Authentication required to update projects.'
         }),
         { 
           status: 401,
@@ -388,11 +368,11 @@ export async function PATCH(request: Request) {
       updateData.featured = Boolean(featured)
     }
 
-    // Use authenticated Supabase client for the update operation
-    const authenticatedSupabase = createAuthenticatedSupabaseClient(request as NextRequest)
-    
+    // Create authenticated supabase client for this request
+    const supabaseAuth = createAuthenticatedSupabaseClient(request as NextRequest)
+
     // Perform the update
-    const { data, error } = await authenticatedSupabase
+    const { data, error } = await supabaseAuth
       .from('projects')
       .update(updateData)
       .eq('id', id)

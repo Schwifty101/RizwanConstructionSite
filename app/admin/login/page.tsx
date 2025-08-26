@@ -40,17 +40,7 @@ function LoginForm() {
       }
 
       if (data.user) {
-        // Check if user has admin privileges
-        const isAdmin = data.user.user_metadata?.role === 'admin' || 
-                       data.user.app_metadata?.role === 'admin' ||
-                       data.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL
-
-        if (!isAdmin) {
-          setError('You do not have admin privileges.')
-          await supabase.auth.signOut()
-          return
-        }
-
+        // User is authenticated - allow access to admin panel
         router.push(redirectedFrom)
         router.refresh()
       }

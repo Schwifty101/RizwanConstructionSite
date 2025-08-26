@@ -49,27 +49,7 @@ export async function withAuth(
       )
     }
 
-    // Check if user has admin role (assuming admin role is stored in user metadata)
-    const isAdmin = user.user_metadata?.role === 'admin' || 
-                   user.app_metadata?.role === 'admin' ||
-                   user.email === process.env.ADMIN_EMAIL
-
-    if (!isAdmin) {
-      return new NextResponse(
-        JSON.stringify({
-          error: 'Forbidden',
-          message: 'Admin privileges required to access this resource.'
-        }),
-        {
-          status: 403,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-    }
-
-    // User is authenticated and has admin privileges, proceed with the request
+    // User is authenticated, proceed with the request
     return await handler(request)
     
   } catch (error) {
@@ -118,17 +98,13 @@ export async function getCurrentUser(request: NextRequest) {
   }
 }
 
-// Helper function to check if user is admin
-export function isUserAdmin(user: unknown): boolean {
+// Helper function to check if user is authenticated
+export function isUserAuthenticated(user: unknown): boolean {
   if (!user || typeof user !== 'object') return false
   
   const userObj = user as {
-    user_metadata?: { role?: string }
-    app_metadata?: { role?: string }
-    email?: string
+    id?: string
   }
   
-  return userObj.user_metadata?.role === 'admin' || 
-         userObj.app_metadata?.role === 'admin' ||
-         userObj.email === process.env.ADMIN_EMAIL
+  return Boolean(userObj.id)
 }

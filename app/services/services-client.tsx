@@ -77,14 +77,15 @@ export function ServicesClient({ services }: ServicesClientProps) {
       {/* Services Grid */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            {services.map((service, index) => (
+          {services.length > 0 ? (
+            <motion.div
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 mb-16"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+            >
+              {services.map((service, index) => (
               <motion.div key={service.id || index} variants={itemVariants}>
                 <motion.div
                   whileHover={{ y: -8, scale: 1.02 }}
@@ -139,10 +140,21 @@ export function ServicesClient({ services }: ServicesClientProps) {
                   </div>
                 </motion.div>
               </motion.div>
-            ))}
-          </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className="text-center py-12">
+              <h3 className="text-xl font-serif font-semibold text-foreground mb-4">
+                Services Coming Soon
+              </h3>
+              <p className="text-muted-foreground">
+                Our services are being updated. Please check back later or contact us for more information.
+              </p>
+            </div>
+          )}
 
           {/* Detailed Services Accordion */}
+          {services.length > 0 && (
           <motion.div
             className="max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 30 }}
@@ -196,6 +208,7 @@ export function ServicesClient({ services }: ServicesClientProps) {
               </Accordion>
             </motion.div>
           </motion.div>
+          )}
         </div>
       </section>
 
@@ -219,7 +232,7 @@ export function ServicesClient({ services }: ServicesClientProps) {
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
@@ -229,22 +242,22 @@ export function ServicesClient({ services }: ServicesClientProps) {
               {
                 step: "1",
                 title: "Consultation",
-                description: "Initial meeting to discuss your vision, requirements, and budget"
+                description: "Understanding your space's story and vision for the transformation"
               },
               {
                 step: "2",
-                title: "Planning",
-                description: "Detailed project planning, design, and timeline development"
+                title: "Design Planning",
+                description: "Creating detailed interior plans with materials, colors, and layout"
               },
               {
                 step: "3",
-                title: "Execution",
-                description: "Professional construction with regular updates and quality control"
+                title: "Implementation",
+                description: "Professional installation with attention to every detail and finish"
               },
               {
                 step: "4",
-                title: "Completion",
-                description: "Final walkthrough, cleanup, and project handover"
+                title: "Reveal",
+                description: "Final walkthrough of your transformed space, ready to inspire"
               }
             ].map((phase, index) => (
               <motion.div key={index} variants={itemVariants}>

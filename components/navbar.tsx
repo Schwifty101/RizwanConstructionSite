@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+// Hamburger menu is now custom animated
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import {
@@ -84,7 +84,7 @@ export function Navbar() {
               The New Home
             </motion.span>
             <span className={`font-serif text-lg md:text-xl transition-colors duration-300 ${brandClasses}`}>
-              Construction <span className="block">& Design</span>
+              Interior <span className="block">Design</span>
             </span>
           </Link>
         </motion.div>
@@ -135,29 +135,52 @@ export function Navbar() {
 
         {/* Mobile Menu Button */}
         <motion.div
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <Button
             variant="ghost"
             size="icon"
-            className={`lg:hidden transition-colors duration-300 ${textClasses} ${isHomePage && !isScrolled
+            className={`lg:hidden relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
                 ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
                 : "hover:bg-muted-gold/10 hover:text-muted-gold"
               }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            <motion.div
-              animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </motion.div>
+            {/* Animated Hamburger Icon */}
+            <div className="relative w-6 h-6 flex flex-col justify-center">
+              <motion.span
+                className={`absolute w-6 h-0.5 rounded-full transition-colors duration-300 ${
+                  isHomePage && !isScrolled ? "bg-paper-white" : "bg-foreground"
+                }`}
+                animate={{
+                  rotate: isMobileMenuOpen ? 45 : 0,
+                  y: isMobileMenuOpen ? 0 : -6
+                }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              />
+              <motion.span
+                className={`absolute w-6 h-0.5 rounded-full transition-colors duration-300 ${
+                  isHomePage && !isScrolled ? "bg-paper-white" : "bg-foreground"
+                }`}
+                animate={{
+                  opacity: isMobileMenuOpen ? 0 : 1,
+                  x: isMobileMenuOpen ? 20 : 0
+                }}
+                transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+              />
+              <motion.span
+                className={`absolute w-6 h-0.5 rounded-full transition-colors duration-300 ${
+                  isHomePage && !isScrolled ? "bg-paper-white" : "bg-foreground"
+                }`}
+                animate={{
+                  rotate: isMobileMenuOpen ? -45 : 0,
+                  y: isMobileMenuOpen ? 0 : 6
+                }}
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              />
+            </div>
           </Button>
         </motion.div>
       </div>
@@ -165,22 +188,35 @@ export function Navbar() {
       {/* Mobile Navigation */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            className="lg:hidden border-t border-border bg-background/98 backdrop-blur"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
-            <div className="container mx-auto max-w-6xl px-4 py-6">
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="lg:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            
+            {/* Mobile Menu */}
+            <motion.div
+              className="lg:hidden relative z-50 border-t border-border/20 bg-background/98 backdrop-blur-xl shadow-2xl"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            >
+            <div className="container mx-auto max-w-6xl px-6 py-8">
               <motion.nav
-                className="flex flex-col space-y-4"
+                className="space-y-6"
                 variants={{
                   hidden: { opacity: 0 },
                   visible: {
                     opacity: 1,
                     transition: {
-                      staggerChildren: 0.1
+                      staggerChildren: 0.08,
+                      delayChildren: 0.1
                     }
                   }
                 }}
@@ -191,38 +227,98 @@ export function Navbar() {
                   <motion.div
                     key={item.name}
                     variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      visible: { opacity: 1, x: 0 }
+                      hidden: { opacity: 0, x: -30, y: 10 },
+                      visible: { 
+                        opacity: 1, 
+                        x: 0, 
+                        y: 0,
+                        transition: {
+                          duration: 0.5,
+                          ease: [0.4, 0, 0.2, 1]
+                        }
+                      }
                     }}
+                    whileHover={{ x: 4, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     <Link
                       href={item.href}
-                      className={`font-serif text-xl font-medium transition-colors duration-300 py-2 block border-b last:border-b-0 ${textClasses} ${isHomePage && !isScrolled
-                          ? "border-paper-white/20"
-                          : "border-border/30"
-                        }`}
+                      className={`group relative font-serif text-2xl font-medium transition-all duration-300 py-4 px-4 -mx-4 block rounded-lg hover:bg-muted/50 ${textClasses}`}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {item.name}
+                      <span className="relative z-10">{item.name}</span>
+                      <motion.div 
+                        className={`absolute bottom-2 left-4 h-0.5 bg-gradient-to-r ${
+                          isHomePage && !isScrolled
+                            ? "from-dusty-gold to-dusty-gold/60"
+                            : "from-muted-gold to-muted-gold/60"
+                        } opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                        initial={{ width: 0 }}
+                        whileHover={{ width: "2rem" }}
+                        transition={{ duration: 0.3 }}
+                      />
                     </Link>
                   </motion.div>
                 ))}
+                
+                {/* Separator */}
+                <motion.div 
+                  className="py-2"
+                  variants={{
+                    hidden: { opacity: 0, scaleX: 0 },
+                    visible: { 
+                      opacity: 1, 
+                      scaleX: 1,
+                      transition: { duration: 0.4 }
+                    }
+                  }}
+                >
+                  <div className={`w-full h-px bg-gradient-to-r ${
+                    isHomePage && !isScrolled
+                      ? "from-transparent via-paper-white/20 to-transparent"
+                      : "from-transparent via-border/40 to-transparent"
+                  }`} />
+                </motion.div>
+                
                 <motion.div
                   variants={{
-                    hidden: { opacity: 0, x: -20 },
-                    visible: { opacity: 1, x: 0 }
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { 
+                      opacity: 1, 
+                      y: 0,
+                      transition: {
+                        duration: 0.5,
+                        ease: [0.4, 0, 0.2, 1]
+                      }
+                    }
                   }}
-                  className="pt-4"
+                  className="pt-2"
                 >
-                  <Button asChild className={`w-full font-medium transition-colors duration-300 ${buttonClasses}`}>
-                    <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-                      Get Free Quote
-                    </Link>
-                  </Button>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button 
+                      asChild 
+                      className={`w-full font-medium text-lg py-4 shadow-lg transition-all duration-300 ${buttonClasses}`}
+                    >
+                      <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                        <span>Get Free Quote</span>
+                        <motion.div
+                          className="ml-2 opacity-70"
+                          animate={{ x: [0, 4, 0] }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          →
+                        </motion.div>
+                      </Link>
+                    </Button>
+                  </motion.div>
                 </motion.div>
               </motion.nav>
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
     </motion.header>

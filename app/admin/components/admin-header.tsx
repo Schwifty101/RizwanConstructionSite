@@ -4,7 +4,7 @@ import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { LogOut, Home, Settings, FolderOpen } from 'lucide-react'
+import { LogOut, Home, Settings, FolderOpen, Wrench } from 'lucide-react'
 
 export function AdminHeader() {
   const supabase = createBrowserClient(
@@ -46,6 +46,14 @@ export function AdminHeader() {
               >
                 <FolderOpen className="h-4 w-4" />
                 <span>Projects</span>
+              </Link>
+              
+              <Link 
+                href="/admin/services" 
+                className="flex items-center space-x-2 text-stone-600 hover:text-stone-800 px-3 py-2 rounded-md transition-colors"
+              >
+                <Wrench className="h-4 w-4" />
+                <span>Services</span>
               </Link>
             </nav>
           </div>

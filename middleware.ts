@@ -55,18 +55,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl)
     }
 
-    // Check if user has admin privileges
-    const isAdmin = user.user_metadata?.role === 'admin' || 
-                   user.app_metadata?.role === 'admin' ||
-                   user.email === process.env.ADMIN_EMAIL
-
-    if (!isAdmin) {
-      // Redirect unauthorized users to a 403 page or login
-      const redirectUrl = new URL('/admin/unauthorized', request.url)
-      return NextResponse.redirect(redirectUrl)
-    }
-
-    // User is authenticated and authorized
+    // User is authenticated - allow access to admin routes
     return response
 
   } catch (error) {

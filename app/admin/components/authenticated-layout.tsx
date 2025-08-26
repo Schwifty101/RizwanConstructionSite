@@ -10,8 +10,8 @@ export async function AuthenticatedLayout({
 }) {
   const cookieStore = await cookies()
   const supabase = createServerClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -38,14 +38,7 @@ export async function AuthenticatedLayout({
       redirect('/admin/login')
     }
 
-    // Check admin privileges
-    const isAdmin = user.user_metadata?.role === 'admin' || 
-                   user.app_metadata?.role === 'admin' ||
-                   user.email === process.env.ADMIN_EMAIL
-
-    if (!isAdmin) {
-      redirect('/admin/unauthorized')
-    }
+    // User is authenticated - allow access to admin panel
   } catch (error) {
     console.error('Authentication error:', error)
     redirect('/admin/login')

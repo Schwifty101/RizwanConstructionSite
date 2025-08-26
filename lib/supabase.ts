@@ -14,7 +14,9 @@ const supabaseAnonKey = getEnvVar('NEXT_PUBLIC_SUPABASE_ANON_KEY')
 // Create Supabase client with error handling
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: false, // Disable auth for static generation
+    persistSession: true, // Enable auth persistence for admin operations
+    autoRefreshToken: true, // Auto-refresh tokens
+    detectSessionInUrl: true // Detect auth sessions in URL
   },
   global: {
     headers: {
@@ -45,20 +47,13 @@ export type Project = {
 export type Service = {
   id: string
   name: string
-  description: string
-  image_url: string
+  description?: string
+  image_url?: string
   order_index: number
   active: boolean
   created_at: string
   updated_at: string
+  details?: string[] // Optional field for backwards compatibility
 }
 
-export type Contact = {
-  id: string
-  name: string
-  email: string
-  phone?: string
-  message: string
-  status: string
-  timestamp: string
-}
+// Note: Contacts are handled via API/email integration, no database storage needed
