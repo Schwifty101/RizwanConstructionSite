@@ -69,7 +69,7 @@ export function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
+      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-4 pt-6">
         {/* Brand */}
         <motion.div
           className="flex items-center"
@@ -243,16 +243,12 @@ export function Navbar() {
                   >
                     <Link
                       href={item.href}
-                      className={`group relative font-serif text-2xl font-medium transition-all duration-300 py-4 px-4 -mx-4 block rounded-lg hover:bg-muted/50 ${textClasses}`}
+                      className="group relative font-serif text-2xl font-medium transition-all duration-300 py-4 px-4 -mx-4 block rounded-lg hover:bg-muted/50 text-foreground hover:text-muted-gold"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <span className="relative z-10">{item.name}</span>
                       <motion.div 
-                        className={`absolute bottom-2 left-4 h-0.5 bg-gradient-to-r ${
-                          isHomePage && !isScrolled
-                            ? "from-dusty-gold to-dusty-gold/60"
-                            : "from-muted-gold to-muted-gold/60"
-                        } opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                        className="absolute bottom-2 left-4 h-0.5 bg-gradient-to-r from-muted-gold to-muted-gold/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         initial={{ width: 0 }}
                         whileHover={{ width: "2rem" }}
                         transition={{ duration: 0.3 }}
@@ -273,11 +269,7 @@ export function Navbar() {
                     }
                   }}
                 >
-                  <div className={`w-full h-px bg-gradient-to-r ${
-                    isHomePage && !isScrolled
-                      ? "from-transparent via-paper-white/20 to-transparent"
-                      : "from-transparent via-border/40 to-transparent"
-                  }`} />
+                  <div className="w-full h-px bg-gradient-to-r from-transparent via-border/40 to-transparent" />
                 </motion.div>
                 
                 <motion.div

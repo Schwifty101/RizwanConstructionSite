@@ -21,7 +21,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
       exit="exit"
     >
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Hero Background Image */}
         <motion.div 
           className="absolute inset-0 z-0"
@@ -41,13 +41,13 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
         </motion.div>
         
         {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-4 text-center">
+        <div className="relative z-10 container mx-auto px-6 sm:px-8 md:px-4 text-center py-20 sm:py-24">
           <motion.div
             className="max-w-5xl mx-auto"
             variants={presets.heroSection}
           >
             <motion.h1 
-              className="text-5xl md:text-7xl lg:text-8xl text-retro-display text-paper-white mb-8 drop-shadow-2xl"
+              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl text-retro-display text-paper-white mb-6 sm:mb-8 drop-shadow-2xl leading-tight"
               variants={{
                 initial: { opacity: 0, y: 50 },
                 animate: { 
@@ -62,7 +62,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
             </motion.h1>
             
             <motion.div 
-              className="w-32 h-1 bg-gradient-to-r from-transparent via-dusty-gold to-transparent mx-auto mb-8 rounded-full"
+              className="w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-dusty-gold to-transparent mx-auto mb-6 sm:mb-8 rounded-full"
               variants={{
                 initial: { opacity: 0, scaleX: 0 },
                 animate: { 
@@ -74,7 +74,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
             />
             
             <motion.p 
-              className="text-xl md:text-2xl text-paper-white/90 max-w-3xl mx-auto mb-12 font-medium leading-relaxed drop-shadow-lg"
+              className="text-lg sm:text-xl md:text-2xl text-paper-white/90 max-w-3xl mx-auto mb-8 sm:mb-12 font-medium leading-relaxed drop-shadow-lg px-4 sm:px-0"
               variants={{
                 initial: { opacity: 0, y: 30 },
                 animate: { 
@@ -89,7 +89,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
             </motion.p>
             
             <motion.div 
-              className="flex flex-col sm:flex-row gap-6 justify-center"
+              className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center px-4 sm:px-0"
               variants={{
                 initial: { opacity: 0, y: 30 },
                 animate: { 
@@ -103,7 +103,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button asChild size="lg" className="btn-retro text-lg px-10 py-7 shadow-2xl">
+                <Button asChild size="lg" className="btn-retro text-base sm:text-lg px-8 sm:px-10 py-6 sm:py-7 shadow-2xl w-full sm:w-auto">
                   <Link href="/portfolio">Explore Portfolio</Link>
                 </Button>
               </motion.div>
@@ -111,7 +111,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button asChild variant="outline" size="lg" className="text-lg px-10 py-7 border-paper-white/80 text-paper-white bg-transparent hover:bg-paper-white hover:text-charcoal shadow-2xl transition-all duration-300 font-semibold">
+                <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-8 sm:px-10 py-6 sm:py-7 border-paper-white/80 text-paper-white bg-transparent hover:bg-paper-white hover:text-charcoal shadow-2xl transition-all duration-300 font-semibold w-full sm:w-auto">
                   <Link href="/contact">Start Project</Link>
                 </Button>
               </motion.div>
