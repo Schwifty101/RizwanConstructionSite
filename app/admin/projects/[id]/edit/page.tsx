@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,19 +7,16 @@ import { ProjectForm } from '../../components/project-form'
 import { getAdminProjects } from '@/lib/admin-actions'
 import type { Project } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
-
 export default function EditProjectPage() {
   const router = useRouter()
   const params = useParams()
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
   useEffect(() => {
     const fetchProject = async () => {
       try {
         const result = await getAdminProjects()
-        
         if (result.success && result.data) {
           const foundProject = result.data.find(p => p.id === params.id)
           if (foundProject) {
@@ -37,21 +33,17 @@ export default function EditProjectPage() {
         setLoading(false)
       }
     }
-
     if (params.id) {
       fetchProject()
     }
   }, [params.id])
-
   const handleSuccess = () => {
     router.push('/admin/projects')
     router.refresh()
   }
-
   const handleCancel = () => {
     router.push('/admin/projects')
   }
-
   if (loading) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
@@ -81,7 +73,6 @@ export default function EditProjectPage() {
       </div>
     )
   }
-
   if (error || !project) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
@@ -111,11 +102,10 @@ export default function EditProjectPage() {
       </div>
     )
   }
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header with back button */}
+        {}
         <div className="flex flex-col space-y-4 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
             <BackButton href="/admin/projects" label="Back to Projects" />
@@ -133,8 +123,7 @@ export default function EditProjectPage() {
             </div>
           </div>
         </div>
-
-        {/* Form Card */}
+        {}
         <Card className="shadow-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl">Project Details</CardTitle>

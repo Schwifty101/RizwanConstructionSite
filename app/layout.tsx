@@ -5,24 +5,19 @@ import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { generateMetadata, generateViewport, generateOrganizationSchema, generateLocalBusinessSchema } from "@/lib/seo";
 import { logEnvironmentStatus } from "@/lib/env-validation";
-
-// Log environment status on server startup
 if (typeof window === 'undefined') {
   logEnvironmentStatus();
 }
-
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
-
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   display: "swap",
 });
-
 export const metadata: Metadata = generateMetadata({
   title: "Professional Interior Designer & Construction Services in Islamabad | Rawalpindi",
   description: "Expert interior design and construction services in Islamabad & Rawalpindi. Specializing in false ceilings, texture coating, wooden flooring, window blinds, and complete interior solutions for homes, offices, hotels & restaurants. Quality craftsmanship with 10+ years experience.",
@@ -40,9 +35,7 @@ export const metadata: Metadata = generateMetadata({
   ],
   url: "/",
 });
-
 export const viewport = generateViewport();
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,7 +43,6 @@ export default function RootLayout({
 }>) {
   const organizationSchema = generateOrganizationSchema();
   const localBusinessSchema = generateLocalBusinessSchema();
-
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <head>
@@ -64,7 +56,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
       </head>
       <body className="font-sans antialiased bg-background text-foreground" suppressHydrationWarning>
-        {/* Structured Data */}
+        {}
         <Script
           id="organization-schema"
           type="application/ld+json"
@@ -79,7 +71,6 @@ export default function RootLayout({
             __html: JSON.stringify(localBusinessSchema),
           }}
         />
-
         <Navbar />
         {children}
       </body>

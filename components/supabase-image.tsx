@@ -1,9 +1,7 @@
 'use client'
-
 import Image from 'next/image'
 import { getSafeImageUrl } from '@/lib/image-utils'
 import { ComponentProps } from 'react'
-
 interface SupabaseImageProps extends Omit<ComponentProps<typeof Image>, 'src' | 'srcSet' | 'placeholder'> {
   src: string | null | undefined
   fallbackText?: string
@@ -11,7 +9,6 @@ interface SupabaseImageProps extends Omit<ComponentProps<typeof Image>, 'src' | 
   fallbackHeight?: number
   priority?: boolean
 }
-
 export function SupabaseImage({ 
   src, 
   alt, 
@@ -23,9 +20,6 @@ export function SupabaseImage({
   ...props 
 }: SupabaseImageProps) {
   const safeImageUrl = getSafeImageUrl(src, fallbackWidth, fallbackHeight, fallbackText)
-  
-  // For ALL URLs (Supabase, blob, data, http), use unoptimized to avoid Next.js issues
-  // This ensures compatibility with blob URLs for previews and Supabase URLs for storage
   return (
     <Image
       src={safeImageUrl}

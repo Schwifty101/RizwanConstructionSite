@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabase"
 import { ServicesClient } from "./services-client"
-
 async function getServices() {
   try {
     const { data, error } = await supabase
@@ -8,7 +7,6 @@ async function getServices() {
       .select('*')
       .eq('active', true)
       .order('order_index', { ascending: true })
-
     if (error) {
       console.error('Error fetching services:', error)
       return []
@@ -19,11 +17,7 @@ async function getServices() {
     return []
   }
 }
-
-// No fallback services - all services come from database
-
 export default async function Services() {
   const services = await getServices()
-
   return <ServicesClient services={services} />
 }

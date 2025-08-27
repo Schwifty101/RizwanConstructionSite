@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -12,35 +11,27 @@ import { SupabaseImage } from '@/components/supabase-image'
 import { Edit2, Trash2, Plus, Eye, EyeOff } from 'lucide-react'
 import { Service } from '@/lib/supabase'
 import { containerVariants, itemVariants } from '@/lib/animations'
-
 interface ServicesTableProps {
   services: Service[]
 }
-
 export function ServicesTable({ services }: ServicesTableProps) {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
   const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null)
   const [isToggling, setIsToggling] = useState<string | null>(null)
-
   const handleDelete = async () => {
     if (!serviceToDelete) return
-    
     setIsDeleting(true)
-    
     try {
       const response = await fetch('/api/services', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: serviceToDelete.id })
       })
-
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to delete service')
       }
-
-      // Refresh the page to show updated data
       router.refresh()
     } catch (error) {
       console.error('Error deleting service:', error)
@@ -50,10 +41,8 @@ export function ServicesTable({ services }: ServicesTableProps) {
       setServiceToDelete(null)
     }
   }
-
   const handleToggleStatus = async (service: Service) => {
     setIsToggling(service.id)
-    
     try {
       const response = await fetch('/api/services', {
         method: 'PATCH',
@@ -63,13 +52,10 @@ export function ServicesTable({ services }: ServicesTableProps) {
           active: !service.active
         })
       })
-
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Failed to update service')
       }
-
-      // Refresh the page to show updated data
       router.refresh()
     } catch (error) {
       console.error('Error updating service:', error)
@@ -78,7 +64,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
       setIsToggling(null)
     }
   }
-
   if (services.length === 0) {
     return (
       <Card className="shadow-sm">
@@ -107,10 +92,9 @@ export function ServicesTable({ services }: ServicesTableProps) {
       </Card>
     )
   }
-
   return (
     <div>
-      {/* Mobile view - Card layout for small screens */}
+      {}
       <div className="block md:hidden space-y-4 p-4">
         {services.map((service, index) => (
           <motion.div
@@ -161,7 +145,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
                 </div>
               </div>
             </div>
-            
             <div className="flex items-center justify-between pt-2">
               <Button
                 variant="ghost"
@@ -188,7 +171,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
                   </>
                 )}
               </Button>
-              
               <div className="flex items-center space-x-2 ml-auto">
                 <Button variant="ghost" size="sm" asChild>
                   <Link
@@ -198,7 +180,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
                     <Edit2 className="w-4 h-4" />
                   </Link>
                 </Button>
-                
                 <Button
                   variant="ghost"
                   size="sm"
@@ -212,8 +193,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
           </motion.div>
         ))}
       </div>
-
-      {/* Desktop view - Table layout for larger screens */}
+      {}
       <div className="hidden md:block p-2">
         <motion.div
           className="overflow-hidden"
@@ -272,7 +252,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
                         </div>
                       </div>
                     </TableCell>
-                    
                     <TableCell>
                       <div className="max-w-md">
                         <p className="text-sm text-muted-foreground line-clamp-2">
@@ -280,13 +259,11 @@ export function ServicesTable({ services }: ServicesTableProps) {
                         </p>
                       </div>
                     </TableCell>
-                    
                     <TableCell className="text-center">
                       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-stone-100 text-stone-800 text-sm font-medium">
                         {service.order_index}
                       </span>
                     </TableCell>
-                    
                     <TableCell className="text-center">
                       <Button
                         variant="ghost"
@@ -314,7 +291,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
                         )}
                       </Button>
                     </TableCell>
-                    
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end space-x-2">
                         <Button variant="ghost" size="sm" asChild>
@@ -325,7 +301,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
                             <Edit2 className="w-4 h-4" />
                           </Link>
                         </Button>
-                        
                         <Button
                           variant="ghost"
                           size="sm"
@@ -343,7 +318,6 @@ export function ServicesTable({ services }: ServicesTableProps) {
           </Table>
         </motion.div>
       </div>
-
       <DeleteConfirmationDialog
         isOpen={!!serviceToDelete}
         onClose={() => setServiceToDelete(null)}

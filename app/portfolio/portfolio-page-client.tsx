@@ -1,17 +1,14 @@
 "use client"
-
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Project } from "@/lib/supabase"
 import { presets, pageTransitionVariants } from "@/lib/animations"
 import { PortfolioClient } from "./portfolio-client"
-
 interface PortfolioPageClientProps {
   projects: Project[]
   categories: string[]
 }
-
 export function PortfolioPageClient({ projects, categories }: PortfolioPageClientProps) {
   return (
     <motion.div
@@ -21,7 +18,7 @@ export function PortfolioPageClient({ projects, categories }: PortfolioPageClien
       exit="exit"
       className="pt-20"
     >
-      {/* Hero Section */}
+      {}
       <section className="py-20 bg-gradient-to-br from-cream to-beige">
         <div className="container mx-auto px-4 text-center">
           <motion.h1 
@@ -46,11 +43,9 @@ export function PortfolioPageClient({ projects, categories }: PortfolioPageClien
           </motion.p>
         </div>
       </section>
-
-      {/* Client-side filtering and projects display */}
+      {}
       <PortfolioClient projects={projects} categories={categories} />
-
-      {/* Call to Action */}
+      {}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 text-center">
           <motion.h2 

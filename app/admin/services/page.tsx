@@ -5,13 +5,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { BackButton } from '@/components/ui/back-button'
 import Link from 'next/link'
 import { Plus, AlertCircle } from 'lucide-react'
-
-// Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
-
 export default async function ServicesPage() {
   const result = await getAdminServices()
-  
   if (!result.success) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
@@ -32,7 +28,6 @@ export default async function ServicesPage() {
                 </p>
               </div>
             </div>
-            
             <div className="flex-shrink-0">
               <Button asChild className="w-full sm:w-auto">
                 <Link href="/admin/services/new" className="flex items-center justify-center space-x-2">
@@ -42,7 +37,6 @@ export default async function ServicesPage() {
               </Button>
             </div>
           </div>
-          
           <Card className="shadow-sm">
             <CardContent className="py-12 px-6">
               <div className="text-center space-y-3">
@@ -58,13 +52,11 @@ export default async function ServicesPage() {
       </div>
     )
   }
-
   const services = result.data || []
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
       <div className="space-y-6">
-        {/* Header */}
+        {}
         <div className="flex flex-col space-y-4 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
             <BackButton href="/admin" label="Back to Dashboard" />
@@ -81,7 +73,6 @@ export default async function ServicesPage() {
               </p>
             </div>
           </div>
-          
           <div className="flex-shrink-0">
             <Button asChild className="w-full sm:w-auto">
               <Link href="/admin/services/new" className="flex items-center justify-center space-x-2">
@@ -91,8 +82,7 @@ export default async function ServicesPage() {
             </Button>
           </div>
         </div>
-
-        {/* Services Table */}
+        {}
         <div className="bg-white rounded-lg shadow-sm border border-stone-200">
           <ServicesTable services={services} />
         </div>

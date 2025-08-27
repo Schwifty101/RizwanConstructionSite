@@ -1,6 +1,6 @@
-# The New Home - Where Dreams Take Shape
+# TheNewHome - Where Dreams Take Shape
 
-A modern, responsive portfolio website for interior design professionals built with Next.js 15 and Supabase. This project showcases **The New Home** - an interior design company specializing in texture coating, window blinds, flooring, false ceilings, and complete interior solutions for homes, hotels, restaurants, and offices.
+A modern, responsive portfolio website for interior design professionals built with Next.js 15 and Supabase. This project showcases **TheNewHome** - an interior design company specializing in texture coating, window blinds, flooring, false ceilings, and complete interior solutions for homes, hotels, restaurants, and offices.
 
 ## Features
 

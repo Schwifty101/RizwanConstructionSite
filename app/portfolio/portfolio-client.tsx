@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -7,17 +6,13 @@ import { Button } from "@/components/ui/button"
 import { ImageSlideshow } from "@/components/ui/image-slideshow"
 import { Project } from "@/lib/supabase"
 import { containerVariants, itemVariants } from "@/lib/animations"
-
 interface PortfolioClientProps {
   projects: Project[]
   categories: string[]
 }
-
-
 export function PortfolioClient({ projects, categories }: PortfolioClientProps) {
   const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects)
   const [selectedCategory, setSelectedCategory] = useState("All")
-
   useEffect(() => {
     if (selectedCategory === "All") {
       setFilteredProjects(projects)
@@ -25,10 +20,9 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
       setFilteredProjects(projects.filter(project => project.category === selectedCategory))
     }
   }, [selectedCategory, projects])
-
   return (
     <div>
-      {/* Filter Section */}
+      {}
       <section className="py-12 bg-background border-b">
         <div className="container mx-auto px-4">
           <motion.div 
@@ -58,8 +52,7 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
           </motion.div>
         </div>
       </section>
-
-      {/* Projects Grid */}
+      {}
       <section className="py-20">
         <div className="container mx-auto px-4">
           {filteredProjects.length > 0 ? (
@@ -98,7 +91,6 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                             <span className="text-muted-foreground">Project Image</span>
                           </div>
                         )}
-                        
                         {project.featured && (
                           <motion.div 
                             className="absolute top-4 left-4 bg-muted-gold text-white px-3 py-1 rounded-full text-sm font-medium"
@@ -109,14 +101,12 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                             Featured
                           </motion.div>
                         )}
-                        
                         <motion.div
                           className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           initial={{ opacity: 0 }}
                           whileHover={{ opacity: 1 }}
                         />
                       </motion.div>
-                      
                       <div className="p-6">
                         <div className="mb-4">
                           <h3 className="text-xl font-serif font-bold text-foreground group-hover:text-muted-gold transition-colors duration-300 mb-2">
@@ -130,11 +120,9 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                             <span>{new Date(project.date).getFullYear()}</span>
                           </div>
                         </div>
-                        
                         <p className="text-muted-foreground mb-4 line-clamp-3 flex-1">
                           {project.description}
                         </p>
-                        
                         <motion.div
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}

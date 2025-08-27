@@ -1,5 +1,4 @@
 import { Metadata, Viewport } from 'next'
-
 interface SeoConfig {
   title: string
   description: string
@@ -13,7 +12,6 @@ interface SeoConfig {
   section?: string
   noIndex?: boolean
 }
-
 export const SITE_CONFIG = {
   siteName: 'Professional Construction & Interior Design Services - Islamabad | Rawalpindi',
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://rizwan-interiors.vercel.app',
@@ -40,7 +38,6 @@ export const SITE_CONFIG = {
     lng: 73.0479
   }
 }
-
 export function generateMetadata({
   title,
   description,
@@ -57,10 +54,8 @@ export function generateMetadata({
   const fullTitle = title.includes(SITE_CONFIG.siteName) ? title : `${title} | ${SITE_CONFIG.siteName}`
   const imageUrl = image ? `${SITE_CONFIG.siteUrl}${image}` : `${SITE_CONFIG.siteUrl}${SITE_CONFIG.defaultImage}`
   const canonicalUrl = url ? `${SITE_CONFIG.siteUrl}${url}` : SITE_CONFIG.siteUrl
-
   const allKeywords = [
     ...keywords,
-    // Core services
     'interior design',
     'construction services',
     'texture coating',
@@ -72,7 +67,6 @@ export function generateMetadata({
     'aluminium glass work',
     'custom blinds',
     'curtains',
-    // Local SEO keywords
     'interior designer Islamabad',
     'construction company Islamabad',
     'interior design Rawalpindi',
@@ -83,20 +77,17 @@ export function generateMetadata({
     'vinyl flooring Rawalpindi',
     'window blinds Islamabad',
     'aluminum glass work Islamabad',
-    // Commercial keywords
     'home interiors Pakistan',
     'hotel interiors Islamabad',
     'restaurant interiors Rawalpindi',
     'office interiors Islamabad',
     'commercial construction Pakistan',
     'residential interior design',
-    // Long-tail keywords
     'best interior designer in Islamabad',
     'professional construction services Pakistan',
     'modern interior design Islamabad',
     'luxury home interiors Pakistan'
   ]
-
   const metadata: Metadata = {
     title: fullTitle,
     description,
@@ -140,19 +131,15 @@ export function generateMetadata({
     },
     manifest: '/site.webmanifest'
   }
-
   return metadata
 }
-
 export function generateViewport(): Viewport {
   return {
     width: 'device-width',
     initialScale: 1,
-    themeColor: '#C9A66B' // muted-gold color
+    themeColor: '#C9A66B' 
   }
 }
-
-// Structured data generators
 export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
@@ -175,11 +162,9 @@ export function generateOrganizationSchema() {
       addressCountry: SITE_CONFIG.address.country
     },
     sameAs: [
-      // Add social media URLs here
     ]
   }
 }
-
 export function generateLocalBusinessSchema() {
   return {
     '@context': 'https://schema.org',
@@ -274,7 +259,6 @@ export function generateLocalBusinessSchema() {
     }
   }
 }
-
 interface ProjectSchemaInput {
   title: string
   description: string
@@ -284,7 +268,6 @@ interface ProjectSchemaInput {
   location?: string
   slug: string
 }
-
 export function generateProjectSchema(project: ProjectSchemaInput) {
   return {
     '@context': 'https://schema.org',
@@ -311,7 +294,6 @@ export function generateProjectSchema(project: ProjectSchemaInput) {
     }
   }
 }
-
 export function generateBreadcrumbSchema(breadcrumbs: Array<{ name: string; url: string }>) {
   return {
     '@context': 'https://schema.org',
@@ -324,7 +306,6 @@ export function generateBreadcrumbSchema(breadcrumbs: Array<{ name: string; url:
     }))
   }
 }
-
 export function generateServiceSchema() {
   return {
     '@context': 'https://schema.org',
@@ -381,7 +362,6 @@ export function generateServiceSchema() {
     }
   }
 }
-
 export function generateFAQSchema() {
   return {
     '@context': 'https://schema.org',

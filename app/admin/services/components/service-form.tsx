@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,22 +13,18 @@ import { Upload, X, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { SupabaseImage } from '@/components/supabase-image'
 import { Service } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-
 const serviceFormSchema = z.object({
   name: z.string().min(1, 'Service name is required').max(255),
   description: z.string().optional(),
   order_index: z.number().min(0, 'Order must be 0 or greater'),
   active: z.boolean().default(true)
 })
-
 type ServiceFormInput = z.infer<typeof serviceFormSchema>
-
 interface ServiceFormProps {
   service?: Service
   onSuccess?: () => void
   onCancel?: () => void
 }
-
 export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -38,7 +33,6 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
   const [uploadProgress, setUploadProgress] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const router = useRouter()
-
   const form = useForm({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
@@ -48,23 +42,17 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
       active: service?.active ?? true
     }
   })
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       setError('Please select a valid image file')
       return
     }
-
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
       setError('Image size must be less than 10MB')
       return
     }
-
     setSelectedImage(file)
     setImagePreview(URL.createObjectURL(file))
     setError(null)
@@ -80,68 +68,51 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
       fileInputRef.current.value = ''
     }
   }
-
   const uploadImage = async (file: File, serviceName: string): Promise<string> => {
     const formData = new FormData()
-    
-    // Create filename: service-name.extension
     const fileExtension = file.name.split('.').pop()
     const filename = `${serviceName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.${fileExtension}`
-    
     formData.append('file', file)
     formData.append('filename', filename)
     formData.append('bucket', 'service-images')
-
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
     })
-
     if (!response.ok) {
       const errorData = await response.json()
       throw new Error(errorData.error || 'Failed to upload image')
     }
-
     const { url } = await response.json()
     return url
   }
-
   const onSubmit = async (data: ServiceFormInput) => {
     setIsSubmitting(true)
     setError(null)
     setUploadProgress(0)
-
     try {
       let imageUrl = service?.image_url
-
-      // Upload new image if selected
       if (selectedImage) {
         setUploadProgress(50)
         imageUrl = await uploadImage(selectedImage, data.name)
         setUploadProgress(100)
       }
-
       const serviceData = {
         ...data,
         image_url: imageUrl,
         ...(service && { id: service.id })
       }
-
       const url = '/api/services'
       const method = service ? 'PATCH' : 'POST'
-
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(serviceData)
       })
-
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || `Failed to ${service ? 'update' : 'create'} service`)
       }
-
-      // Call success callback if provided, otherwise redirect
       if (onSuccess) {
         onSuccess()
       } else {
@@ -155,7 +126,6 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
       setUploadProgress(0)
     }
   }
-
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <AnimatePresence>
@@ -171,8 +141,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Service Name */}
+      {}
       <div className="space-y-2">
         <Label htmlFor="name">Service Name *</Label>
         <Input
@@ -185,8 +154,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
           <p className="text-sm text-red-600">{form.formState.errors.name.message}</p>
         )}
       </div>
-
-      {/* Description */}
+      {}
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
         <Textarea
@@ -200,8 +168,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
           <p className="text-sm text-red-600">{form.formState.errors.description.message}</p>
         )}
       </div>
-
-      {/* Order Index */}
+      {}
       <div className="space-y-2">
         <Label htmlFor="order_index">Display Order</Label>
         <Input
@@ -219,8 +186,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
           <p className="text-sm text-red-600">{form.formState.errors.order_index.message}</p>
         )}
       </div>
-
-      {/* Active Status */}
+      {}
       <div className="flex items-center space-x-2">
         <Checkbox
           id="active"
@@ -230,8 +196,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
         />
         <Label htmlFor="active">Service is active and visible to users</Label>
       </div>
-
-      {/* Service Image */}
+      {}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Label>Service Image</Label>
@@ -247,16 +212,13 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
             <span>Choose Image</span>
           </Button>
         </div>
-
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          onChange={handleImageChange}
           className="hidden"
+          onChange={handleImageUpload}
         />
-
-        {/* Upload Progress */}
         <AnimatePresence>
           {uploadProgress > 0 && uploadProgress < 100 && (
             <motion.div
@@ -275,8 +237,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Image Preview */}
+        {}
         <AnimatePresence>
           {imagePreview && (
             <motion.div
@@ -311,7 +272,6 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
             </motion.div>
           )}
         </AnimatePresence>
-
         {!imagePreview && (
           <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
             <ImageIcon className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
@@ -332,8 +292,7 @@ export function ServiceForm({ service, onSuccess, onCancel }: ServiceFormProps) 
           </div>
         )}
       </div>
-
-      {/* Submit Button */}
+      {}
       <div className="flex items-center justify-end space-x-4 pt-4">
         <Button
           type="button"

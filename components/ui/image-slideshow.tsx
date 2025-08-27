@@ -1,11 +1,9 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SupabaseImage } from '@/components/supabase-image'
-
 interface ImageSlideshowProps {
   images: string[]
   alt: string
@@ -17,7 +15,6 @@ interface ImageSlideshowProps {
   showArrows?: boolean
   sizes?: string
 }
-
 export function ImageSlideshow({
   images,
   alt,
@@ -31,33 +28,23 @@ export function ImageSlideshow({
 }: ImageSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
-
-  // If only one image, don't show controls
   const hasMultipleImages = images.length > 1
-  
-  // Auto-advance slides
   useEffect(() => {
     if (!autoPlay || !hasMultipleImages || isHovered) return
-
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length)
     }, autoPlayInterval)
-
     return () => clearInterval(interval)
   }, [autoPlay, autoPlayInterval, images.length, isHovered, hasMultipleImages])
-
   const goToSlide = (index: number) => {
     setCurrentIndex(index)
   }
-
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
   }
-
   const goToNext = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length)
   }
-
   if (!images || images.length === 0) {
     return (
       <div className={`bg-stone-100 flex items-center justify-center ${getAspectRatioClass(aspectRatio)} ${className}`}>
@@ -65,7 +52,6 @@ export function ImageSlideshow({
       </div>
     )
   }
-
   return (
     <div 
       className={`relative overflow-hidden rounded-lg bg-stone-100 ${getAspectRatioClass(aspectRatio)} ${className}`}
@@ -95,8 +81,7 @@ export function ImageSlideshow({
           />
         </motion.div>
       </AnimatePresence>
-
-      {/* Navigation Arrows */}
+      {}
       {hasMultipleImages && showArrows && (
         <>
           <motion.div
@@ -115,7 +100,6 @@ export function ImageSlideshow({
               <ChevronLeft className="w-4 h-4" />
             </Button>
           </motion.div>
-
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: isHovered ? 1 : 0 }}
@@ -134,8 +118,7 @@ export function ImageSlideshow({
           </motion.div>
         </>
       )}
-
-      {/* Dot Indicators */}
+      {}
       {hasMultipleImages && showDots && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
           {images.map((_, index) => (
@@ -154,8 +137,7 @@ export function ImageSlideshow({
           ))}
         </div>
       )}
-
-      {/* Image Counter */}
+      {}
       {hasMultipleImages && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -169,7 +151,6 @@ export function ImageSlideshow({
     </div>
   )
 }
-
 function getAspectRatioClass(aspectRatio: string): string {
   switch (aspectRatio) {
     case 'square':

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Phone, MapPin, Clock } from "lucide-react"
+import { Phone, MapPin, Clock, Mail, Smartphone } from "lucide-react"
 import { containerVariants, itemVariants, presets, pageTransitionVariants } from "@/lib/animations"
 
 export function ContactClient() {
@@ -64,7 +64,6 @@ export function ContactClient() {
       exit="exit"
       className="pt-20"
     >
-      {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-cream to-beige">
         <div className="container mx-auto px-4 text-center">
           <motion.h1
@@ -90,7 +89,6 @@ export function ContactClient() {
         </div>
       </section>
 
-      {/* Contact Information & Form */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <motion.div
@@ -100,7 +98,6 @@ export function ContactClient() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
           >
-            {/* Contact Information */}
             <motion.div variants={itemVariants}>
               <h2 className="text-3xl font-serif font-bold text-foreground mb-8">
                 Get In Touch
@@ -115,9 +112,19 @@ export function ContactClient() {
               >
                 {[
                   {
+                    icon: Mail,
+                    title: "Email",
+                    content: "muhammadrizwan1975@gmail.com"
+                  },
+                  {
                     icon: Phone,
                     title: "Phone",
-                    content: "(+92)300-5131990\n(051)5738190\n(051)7131990"
+                    content: "+92(0)51-5428-998"
+                  },
+                  {
+                    icon: Smartphone,
+                    title: "Mobile",
+                    content: "+92(0)321-5578-477"
                   },
                   {
                     icon: MapPin,
@@ -151,7 +158,6 @@ export function ContactClient() {
               </motion.div>
             </motion.div>
 
-            {/* Contact Form */}
             <motion.div variants={itemVariants}>
               <motion.div
                 whileHover={{ y: -4 }}
@@ -244,8 +250,8 @@ export function ContactClient() {
                       {submitMessage && (
                         <motion.div
                           className={`p-4 rounded-lg ${submitMessage.includes('Thank you')
-                              ? 'bg-green-50 text-green-800 border border-green-200'
-                              : 'bg-red-50 text-red-800 border border-red-200'
+                            ? 'bg-green-50 text-green-800 border border-green-200'
+                            : 'bg-red-50 text-red-800 border border-red-200'
                             }`}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
@@ -277,7 +283,6 @@ export function ContactClient() {
         </div>
       </section>
 
-      {/* FAQ Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <motion.div

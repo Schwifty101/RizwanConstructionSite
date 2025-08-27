@@ -1,23 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-navigation-menu'],
     serverActions: {
-      bodySizeLimit: '50mb', // Increase to 50MB for multiple file uploads
+      bodySizeLimit: '50mb',
     },
   },
 
-  // Suppress hydration warnings caused by browser extensions
   onDemandEntries: {
-    // period (in ms) where the server will keep pages in the buffer
     maxInactiveAge: 25 * 1000,
-    // number of pages that should be kept simultaneously without being disposed
     pagesBufferLength: 2,
   },
 
-  // Image configuration
   images: {
     remotePatterns: [
       {
@@ -26,16 +21,13 @@ const nextConfig: NextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
-    // Increase timeout and add error handling
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  // Turbopack configuration (stable in Next.js 15)
   turbopack: {
     rules: {
-      // Handle SVG files with SVGR
       '*.svg': {
         loaders: ['@svgr/webpack'],
         as: '*.js',
@@ -43,7 +35,6 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Output configuration
   output: 'standalone',
 };
 

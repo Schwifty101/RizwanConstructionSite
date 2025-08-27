@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom'
 import 'whatwg-fetch'
-
-// Polyfill Response.json for Node.js < 18 compatibility
 if (!global.Response.json) {
   global.Response.json = function (data, init = {}) {
     return new Response(JSON.stringify(data), {
@@ -13,8 +11,6 @@ if (!global.Response.json) {
     })
   }
 }
-
-// Mock Next.js router
 jest.mock('next/navigation', () => ({
   useRouter() {
     return {
@@ -33,8 +29,6 @@ jest.mock('next/navigation', () => ({
     return ''
   },
 }))
-
-// Mock Framer Motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
     div: ({ children, ...props }) => <div {...props}>{children}</div>,
@@ -44,16 +38,12 @@ jest.mock('framer-motion', () => ({
   },
   AnimatePresence: ({ children }) => children,
 }))
-
-// Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
   constructor() { }
   disconnect() { }
   observe() { }
   unobserve() { }
 }
-
-// Mock window.matchMedia (only in jsdom environment)
 if (typeof window !== 'undefined') {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
@@ -61,8 +51,8 @@ if (typeof window !== 'undefined') {
       matches: false,
       media: query,
       onchange: null,
-      addListener: jest.fn(), // deprecated
-      removeListener: jest.fn(), // deprecated
+      addListener: jest.fn(), 
+      removeListener: jest.fn(), 
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
       dispatchEvent: jest.fn(),
