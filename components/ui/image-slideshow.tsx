@@ -72,13 +72,17 @@ export function ImageSlideshow({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ 
+            duration: 0.3, 
+            ease: [0.25, 0.46, 0.45, 0.94],
+            scale: { duration: 0.4 }
+          }}
           className="absolute inset-0"
         >
           <SupabaseImage

@@ -81,16 +81,16 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
   }
 
   return (
-    <div className="p-6">
+    <div>
       {/* Mobile view - Card layout for small screens */}
-      <div className="block md:hidden space-y-4">
+      <div className="block md:hidden space-y-4 p-4">
         {projects.map((project, index) => (
           <motion.div
             key={project.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-stone-50 rounded-lg p-4 space-y-3"
+            className="bg-white rounded-lg p-4 space-y-3 shadow-sm border border-stone-200"
           >
             <div className="flex items-start space-x-3">
               <div className="flex-shrink-0">
@@ -120,7 +120,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                     {project.description}
                   </p>
                 )}
-                <div className="flex items-center space-x-4 mt-2 text-xs text-stone-500">
+                <div className="flex flex-col justify-center items-start space-x-4 space-y-1 mt-2 text-xs text-stone-500">
                   <span className="px-2 py-1 bg-stone-200 rounded-full">
                     {project.category}
                   </span>
@@ -173,7 +173,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
       </div>
 
       {/* Desktop view - Table layout for larger screens */}
-      <div className="hidden md:block">
+      <div className="hidden md:block p-2">
         <Table>
           <TableHeader>
             <TableRow>

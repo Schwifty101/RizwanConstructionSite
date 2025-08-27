@@ -35,7 +35,7 @@ export default async function ProjectsPage() {
           </div>
           
           <Card className="shadow-sm">
-            <CardContent className="py-12">
+            <CardContent className="py-12 px-6">
               <div className="text-center space-y-3">
                 <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
                 <div>

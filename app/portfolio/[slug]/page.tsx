@@ -120,7 +120,7 @@ export default async function ProjectDetail({ params }: PageProps) {
                   alt={project.title}
                   aspectRatio="video"
                   autoPlay={true}
-                  autoPlayInterval={5000}
+                  autoPlayInterval={4500}
                   showDots={true}
                   showArrows={true}
                   sizes="(max-width: 1200px) 100vw, 1200px"
@@ -223,7 +223,7 @@ export default async function ProjectDetail({ params }: PageProps) {
                         alt={relatedProject.title}
                         aspectRatio="portrait"
                         autoPlay={true}
-                        autoPlayInterval={4000}
+                        autoPlayInterval={3500}
                         showDots={relatedProject.images.length > 1}
                         showArrows={false}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

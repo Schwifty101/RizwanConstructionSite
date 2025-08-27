@@ -88,7 +88,7 @@ export function PortfolioClient({ projects, categories }: PortfolioClientProps) 
                             alt={project.title}
                             aspectRatio="portrait"
                             autoPlay={true}
-                            autoPlayInterval={3000}
+                            autoPlayInterval={3500}
                             showDots={project.images.length > 1}
                             showArrows={project.images.length > 1}
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

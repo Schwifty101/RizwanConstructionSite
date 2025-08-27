@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { getAdminProjects } from '@/lib/admin-actions'
-import { FolderOpen, Plus, BarChart3, Eye, Calendar } from 'lucide-react'
+import { FolderOpen, Plus, BarChart3, Eye, Calendar, Settings } from 'lucide-react'
 import { AuthenticatedLayout } from './components/authenticated-layout'
 
 // Force dynamic rendering for this page
@@ -33,12 +33,20 @@ export default async function AdminDashboard() {
           </p>
         </div>
         
-        <Button asChild>
-          <Link href="/admin/projects" className="flex items-center space-x-2">
-            <FolderOpen className="h-4 w-4" />
-            <span>Manage Projects</span>
-          </Link>
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button asChild variant="outline" className="w-full sm:w-auto">
+            <Link href="/admin/services" className="flex items-center justify-center space-x-2">
+              <Settings className="h-4 w-4" />
+              <span>Services</span>
+            </Link>
+          </Button>
+          <Button asChild className="w-full sm:w-auto">
+            <Link href="/admin/projects" className="flex items-center justify-center space-x-2">
+              <FolderOpen className="h-4 w-4" />
+              <span>Projects</span>
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -84,7 +92,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -112,6 +120,30 @@ export default async function AdminDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
+              <Settings className="h-5 w-5" />
+              <span>Service Management</span>
+            </CardTitle>
+            <CardDescription>
+              Manage your service offerings and capabilities
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Button asChild className="w-full">
+              <Link href="/admin/services">
+                Manage All Services
+              </Link>
+            </Button>
+            <Button variant="outline" asChild className="w-full">
+              <Link href="/admin/services/new">
+                Add New Service
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
               <Eye className="h-5 w-5" />
               <span>View Website</span>
             </CardTitle>
@@ -128,6 +160,11 @@ export default async function AdminDashboard() {
             <Button variant="outline" asChild className="w-full">
               <Link href="/portfolio" target="_blank">
                 View Portfolio
+              </Link>
+            </Button>
+            <Button variant="outline" asChild className="w-full">
+              <Link href="/services" target="_blank">
+                View Services
               </Link>
             </Button>
           </CardContent>

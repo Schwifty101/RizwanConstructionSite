@@ -84,7 +84,7 @@ export function Navbar() {
               The New Home
             </motion.span>
             <span className={`font-serif text-lg md:text-xl transition-colors duration-300 ${brandClasses}`}>
-              Interior <span className="block">Design</span>
+              Interior Design
             </span>
           </Link>
         </motion.div>
@@ -141,7 +141,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className={`lg:hidden relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
+            className={`lg:hidden z-60 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
                 ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
                 : "hover:bg-muted-gold/10 hover:text-muted-gold"
               }`}
