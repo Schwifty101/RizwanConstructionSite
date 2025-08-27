@@ -24,9 +24,20 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = generateMetadata({
-  title: "Professional Construction & Interior Design Services",
-  description: "Transform your space with expert construction and interior design services. Residential and commercial projects with quality craftsmanship and attention to detail.",
-  keywords: ["construction services", "interior design", "home renovation", "commercial construction", "residential contractor", "custom homes", "remodeling"],
+  title: "Professional Interior Designer & Construction Services in Islamabad | Rawalpindi",
+  description: "Expert interior design and construction services in Islamabad & Rawalpindi. Specializing in false ceilings, texture coating, wooden flooring, window blinds, and complete interior solutions for homes, offices, hotels & restaurants. Quality craftsmanship with 10+ years experience.",
+  keywords: [
+    "interior designer Islamabad",
+    "construction company Islamabad", 
+    "interior design Rawalpindi",
+    "false ceiling contractor Islamabad",
+    "office interior design Islamabad",
+    "texture coating Islamabad",
+    "wooden flooring Pakistan",
+    "window blinds Islamabad",
+    "home interiors Pakistan",
+    "commercial interior design"
+  ],
   url: "/",
 });
 

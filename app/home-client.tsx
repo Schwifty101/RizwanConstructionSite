@@ -57,7 +57,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
                 }
               }}
             >
-              The New Home<br />
+              {/* The New Home<br /> */}
               <span className="text-dusty-gold drop-shadow-lg">Where Dreams Take Shape</span>
             </motion.h1>
             
@@ -190,7 +190,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
                               alt={project.title}
                               aspectRatio="portrait"
                               autoPlay={true}
-                              autoPlayInterval={4000}
+                              autoPlayInterval={3500}
                               showDots={validateImageArray(project.images).length > 1}
                               showArrows={false}
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

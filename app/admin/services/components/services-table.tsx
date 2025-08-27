@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -17,6 +18,7 @@ interface ServicesTableProps {
 }
 
 export function ServicesTable({ services }: ServicesTableProps) {
+  const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
   const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null)
   const [isToggling, setIsToggling] = useState<string | null>(null)
@@ -39,7 +41,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
       }
 
       // Refresh the page to show updated data
-      window.location.reload()
+      router.refresh()
     } catch (error) {
       console.error('Error deleting service:', error)
       alert('Failed to delete service. Please try again.')
@@ -68,7 +70,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
       }
 
       // Refresh the page to show updated data
-      window.location.reload()
+      router.refresh()
     } catch (error) {
       console.error('Error updating service:', error)
       alert('Failed to update service status. Please try again.')
@@ -108,129 +110,239 @@ export function ServicesTable({ services }: ServicesTableProps) {
 
   return (
     <div>
-      <motion.div
-        className="overflow-hidden"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-16">Image</TableHead>
-              <TableHead>Service Name</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="w-20 text-center">Order</TableHead>
-              <TableHead className="w-20 text-center">Status</TableHead>
-              <TableHead className="w-32 text-center">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <AnimatePresence>
-              {services.map((service, index) => (
-                <motion.tr
-                  key={service.id}
-                  variants={itemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                  transition={{ delay: index * 0.05 }}
-                  className="group hover:bg-muted/50 transition-colors"
+      {/* Mobile view - Card layout for small screens */}
+      <div className="block md:hidden space-y-4 p-4">
+        {services.map((service, index) => (
+          <motion.div
+            key={service.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-white rounded-lg p-4 space-y-3 shadow-sm border border-stone-200"
+          >
+            <div className="flex items-start space-x-3">
+              <div className="flex-shrink-0">
+                <div className="w-16 h-16 rounded-lg overflow-hidden bg-muted">
+                  {service.image_url ? (
+                    <SupabaseImage
+                      src={service.image_url}
+                      alt={service.name}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                      No Image
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center space-x-2">
+                  <h3 className="font-medium text-stone-900">{service.name}</h3>
+                  <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-stone-200 text-xs font-medium">
+                    {service.order_index}
+                  </span>
+                </div>
+                {service.description && (
+                  <p className="text-sm text-stone-600 mt-1 line-clamp-2">
+                    {service.description}
+                  </p>
+                )}
+                <div className="flex items-center space-x-4 mt-2 text-xs text-stone-500">
+                  <span className={`px-2 py-1 rounded-full ${service.active 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
+                  }`}>
+                    {service.active ? 'Active' : 'Hidden'}
+                  </span>
+                  <span>{new Date(service.created_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between pt-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleToggleStatus(service)}
+                disabled={isToggling === service.id}
+                className={`${
+                  service.active 
+                    ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
+                    : 'text-red-600 hover:text-red-700 hover:bg-red-50'
+                }`}
+              >
+                {isToggling === service.id ? (
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                ) : service.active ? (
+                  <>
+                    <Eye className="w-4 h-4 mr-1" />
+                    Active
+                  </>
+                ) : (
+                  <>
+                    <EyeOff className="w-4 h-4 mr-1" />
+                    Hidden
+                  </>
+                )}
+              </Button>
+              
+              <div className="flex items-center space-x-2 ml-auto">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link
+                    href={`/admin/services/${service.id}/edit`}
+                    className="flex items-center space-x-1"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </Link>
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setServiceToDelete(service)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
-                  <TableCell>
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted">
-                      {service.image_url ? (
-                        <SupabaseImage
-                          src={service.image_url}
-                          alt={service.name}
-                          width={48}
-                          height={48}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
-                          No Image
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Desktop view - Table layout for larger screens */}
+      <div className="hidden md:block p-2">
+        <motion.div
+          className="overflow-hidden"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Service</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-center">Order</TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <AnimatePresence>
+                {services.map((service, index) => (
+                  <motion.tr
+                    key={service.id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                    transition={{ delay: index * 0.05 }}
+                    className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                  >
+                    <TableCell>
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-muted">
+                            {service.image_url ? (
+                              <SupabaseImage
+                                src={service.image_url}
+                                alt={service.name}
+                                width={48}
+                                height={48}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-muted-foreground text-xs">
+                                No Image
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium text-foreground">
-                        {service.name}
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-stone-900">
+                            {service.name}
+                          </p>
+                          <p className="text-sm text-stone-600">
+                            Created {new Date(service.created_at).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        Created {new Date(service.created_at).toLocaleDateString()}
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div className="max-w-md">
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {service.description || 'No description'}
+                        </p>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-w-md">
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {service.description || 'No description'}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-muted text-sm font-medium">
-                      {service.order_index}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleToggleStatus(service)}
-                      disabled={isToggling === service.id}
-                      className={`h-8 w-16 ${
-                        service.active 
-                          ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
-                          : 'text-red-600 hover:text-red-700 hover:bg-red-50'
-                      }`}
-                    >
-                      {isToggling === service.id ? (
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                      ) : service.active ? (
-                        <>
-                          <Eye className="w-3 h-3 mr-1" />
-                          Active
-                        </>
-                      ) : (
-                        <>
-                          <EyeOff className="w-3 h-3 mr-1" />
-                          Hidden
-                        </>
-                      )}
-                    </Button>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
+                    </TableCell>
+                    
+                    <TableCell className="text-center">
+                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-stone-100 text-stone-800 text-sm font-medium">
+                        {service.order_index}
+                      </span>
+                    </TableCell>
+                    
+                    <TableCell className="text-center">
                       <Button
                         variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                        asChild
+                        size="sm"
+                        onClick={() => handleToggleStatus(service)}
+                        disabled={isToggling === service.id}
+                        className={`${
+                          service.active 
+                            ? 'text-green-600 hover:text-green-700 hover:bg-green-50' 
+                            : 'text-red-600 hover:text-red-700 hover:bg-red-50'
+                        }`}
                       >
-                        <Link href={`/admin/services/${service.id}/edit`}>
-                          <Edit2 className="h-4 w-4" />
-                        </Link>
+                        {isToggling === service.id ? (
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        ) : service.active ? (
+                          <>
+                            <Eye className="w-3 h-3 mr-1" />
+                            Active
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff className="w-3 h-3 mr-1" />
+                            Hidden
+                          </>
+                        )}
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => setServiceToDelete(service)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </motion.tr>
-              ))}
-            </AnimatePresence>
-          </TableBody>
-        </Table>
-      </motion.div>
+                    </TableCell>
+                    
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link
+                            href={`/admin/services/${service.id}/edit`}
+                            className="flex items-center space-x-1"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Link>
+                        </Button>
+                        
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setServiceToDelete(service)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </motion.tr>
+                ))}
+              </AnimatePresence>
+            </TableBody>
+          </Table>
+        </motion.div>
+      </div>
 
       <DeleteConfirmationDialog
         isOpen={!!serviceToDelete}

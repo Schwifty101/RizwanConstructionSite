@@ -15,19 +15,29 @@ interface SeoConfig {
 }
 
 export const SITE_CONFIG = {
-  siteName: 'The New Home - Where Dreams Take Shape',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://the-new-home.com',
+  siteName: 'Professional Construction & Interior Design Services - Islamabad | Rawalpindi',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://rizwan-interiors.vercel.app',
   defaultImage: '/images/og-image.jpg',
-  twitterHandle: '@thenewhome',
-  author: 'The New Home',
-  phone: '+1-555-0123',
-  email: 'info@thenewhome.com',
+  twitterHandle: '@rizwaninteriors',
+  author: 'Rizwan Construction & Interiors',
+  phone: '+92-300-5131990',
+  email: 'info@rizwaninteriors.com',
   address: {
-    streetAddress: '123 Interior Design Ave',
-    city: 'Your City',
-    state: 'Your State',
-    postalCode: '12345',
-    country: 'US'
+    streetAddress: 'Sector G-10, Markaz',
+    city: 'Islamabad',
+    state: 'Islamabad Capital Territory',
+    postalCode: '44000',
+    country: 'PK'
+  },
+  businessHours: {
+    weekdays: 'Mo-Fr 09:00-18:00',
+    saturday: 'Sa 09:00-17:00',
+    sunday: 'Su Closed'
+  },
+  serviceAreas: ['Islamabad', 'Rawalpindi', 'Chakwal', 'Attock', 'Taxila'],
+  coordinates: {
+    lat: 33.6844,
+    lng: 73.0479
   }
 }
 
@@ -50,7 +60,9 @@ export function generateMetadata({
 
   const allKeywords = [
     ...keywords,
+    // Core services
     'interior design',
+    'construction services',
     'texture coating',
     'zola paint',
     'window blinds',
@@ -58,12 +70,31 @@ export function generateMetadata({
     'wooden flooring',
     'false ceilings',
     'aluminium glass work',
-    'home interiors',
-    'hotel interiors',
-    'restaurant interiors',
-    'office interiors',
     'custom blinds',
-    'curtains'
+    'curtains',
+    // Local SEO keywords
+    'interior designer Islamabad',
+    'construction company Islamabad',
+    'interior design Rawalpindi',
+    'false ceiling contractor Islamabad',
+    'office interior design Islamabad',
+    'texture coating Islamabad',
+    'wooden flooring Islamabad',
+    'vinyl flooring Rawalpindi',
+    'window blinds Islamabad',
+    'aluminum glass work Islamabad',
+    // Commercial keywords
+    'home interiors Pakistan',
+    'hotel interiors Islamabad',
+    'restaurant interiors Rawalpindi',
+    'office interiors Islamabad',
+    'commercial construction Pakistan',
+    'residential interior design',
+    // Long-tail keywords
+    'best interior designer in Islamabad',
+    'professional construction services Pakistan',
+    'modern interior design Islamabad',
+    'luxury home interiors Pakistan'
   ]
 
   const metadata: Metadata = {
@@ -154,8 +185,9 @@ export function generateLocalBusinessSchema() {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': `${SITE_CONFIG.siteUrl}#LocalBusiness`,
-    name: SITE_CONFIG.siteName,
-    description: 'The New Home - where every space has a story. We create elegant, comfortable, and modern interior designs for homes, offices, restaurants, and hotels.',
+    name: 'Rizwan Construction & Interior Design Services',
+    alternateName: 'Rizwan Interiors Islamabad',
+    description: 'Professional construction and interior design services in Islamabad and Rawalpindi. Specializing in false ceilings, texture coating, wooden flooring, window blinds, and complete interior solutions for homes, offices, hotels, and restaurants.',
     url: SITE_CONFIG.siteUrl,
     telephone: SITE_CONFIG.phone,
     email: SITE_CONFIG.email,
@@ -169,22 +201,76 @@ export function generateLocalBusinessSchema() {
     },
     geo: {
       '@type': 'GeoCoordinates',
-      // Add latitude and longitude if available
+      latitude: SITE_CONFIG.coordinates.lat,
+      longitude: SITE_CONFIG.coordinates.lng
     },
     openingHours: [
-      'Mo-Fr 08:00-17:00',
-      'Sa 09:00-15:00'
+      SITE_CONFIG.businessHours.weekdays,
+      SITE_CONFIG.businessHours.saturday
     ],
     priceRange: '$$',
-    paymentAccepted: ['Cash', 'Credit Card', 'Check'],
-    currenciesAccepted: 'USD',
-    serviceArea: {
-      '@type': 'GeoCircle',
-      geoMidpoint: {
-        '@type': 'GeoCoordinates'
-        // Add coordinates
-      },
-      geoRadius: '50000' // 50km radius
+    paymentAccepted: ['Cash', 'Bank Transfer', 'Mobile Payment'],
+    currenciesAccepted: 'PKR',
+    serviceArea: SITE_CONFIG.serviceAreas.map(area => ({
+      '@type': 'City',
+      name: area,
+      containedInPlace: {
+        '@type': 'Country',
+        name: 'Pakistan'
+      }
+    })),
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Interior Design & Construction Services',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'False Ceiling Installation',
+            description: 'Professional false ceiling installation and design services'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Texture Coating & Zola Paint',
+            description: 'Wall texture coating and premium paint services'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Wooden & Vinyl Flooring',
+            description: 'High-quality flooring installation and maintenance'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Window Blinds & Curtains',
+            description: 'Custom window treatments and blinds installation'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Complete Interior Design',
+            description: 'Full interior design services for residential and commercial spaces'
+          }
+        }
+      ]
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.8',
+      reviewCount: '47',
+      bestRating: '5',
+      worstRating: '1'
     }
   }
 }
@@ -244,26 +330,111 @@ export function generateServiceSchema() {
     '@context': 'https://schema.org',
     '@type': 'Service',
     '@id': `${SITE_CONFIG.siteUrl}/services#Service`,
-    name: 'Complete Interior Design Services - The New Home',
-    description: 'Elegant interior design services including texture coating, window blinds, flooring, false ceilings, and specialized designs for homes, hotels, restaurants, and offices.',
+    name: 'Professional Interior Design & Construction Services - Islamabad | Rawalpindi',
+    description: 'Expert interior design and construction services in Islamabad and Rawalpindi, Pakistan. Specializing in false ceilings, texture coating, wooden flooring, window blinds, aluminum glass work, and complete interior solutions for residential and commercial spaces.',
     provider: {
       '@type': 'Organization',
-      name: SITE_CONFIG.siteName,
-      url: SITE_CONFIG.siteUrl
+      name: 'Rizwan Construction & Interior Design Services',
+      url: SITE_CONFIG.siteUrl,
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: SITE_CONFIG.address.city,
+        addressRegion: SITE_CONFIG.address.state,
+        addressCountry: 'Pakistan'
+      }
     },
     serviceType: [
-      'Texture Coating & Zola Paint',
-      'Window Blinds',
-      'Vinyl & Wooden Flooring',
-      'False Ceilings',
+      'False Ceiling Installation Islamabad',
+      'Texture Coating & Zola Paint Services',
+      'Window Blinds & Curtains Installation',
+      'Vinyl & Wooden Flooring Pakistan',
       'Aluminium & Glass Work',
-      'Home Interiors',
-      'Hotel & Restaurant Interiors',
-      'Office Interiors'
+      'Residential Interior Design',
+      'Commercial Interior Design',
+      'Hotel & Restaurant Interior Design',
+      'Office Interior Design Islamabad',
+      'Home Renovation Services',
+      'Construction Services Pakistan'
     ],
-    areaServed: {
-      '@type': 'State',
-      name: SITE_CONFIG.address.state
+    areaServed: SITE_CONFIG.serviceAreas.map(area => ({
+      '@type': 'City',
+      name: area,
+      containedInPlace: {
+        '@type': 'AdministrativeArea',
+        name: 'Punjab & Islamabad Capital Territory',
+        containedInPlace: {
+          '@type': 'Country',
+          name: 'Pakistan'
+        }
+      }
+    })),
+    offers: {
+      '@type': 'AggregateOffer',
+      priceRange: '$$',
+      priceCurrency: 'PKR',
+      availability: 'https://schema.org/InStock'
+    },
+    hasCredential: {
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'Professional Certification',
+      competencyRequired: 'Interior Design & Construction'
     }
+  }
+}
+
+export function generateFAQSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What interior design services do you offer in Islamabad?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'We offer comprehensive interior design services including false ceiling installation, texture coating, wooden and vinyl flooring, window blinds, aluminum glass work, and complete interior solutions for homes, offices, hotels, and restaurants in Islamabad and Rawalpindi.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Do you provide false ceiling services in Rawalpindi?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, we provide professional false ceiling installation and design services throughout Rawalpindi, Islamabad, and surrounding areas including Chakwal, Attock, and Taxila.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'What types of flooring do you install?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'We specialize in wooden flooring, vinyl flooring, laminate flooring, and other premium flooring solutions. Our team ensures professional installation with quality materials suitable for Pakistan\'s climate.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'Do you work on commercial interior projects?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, we handle both residential and commercial interior design projects including offices, hotels, restaurants, retail spaces, and other commercial establishments in Islamabad and Rawalpindi.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the cost of interior design services in Islamabad?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Our interior design costs vary based on project scope, materials, and requirements. We offer competitive rates for all services including texture coating, false ceilings, flooring, and complete interior solutions. Contact us for a detailed quote.'
+        }
+      },
+      {
+        '@type': 'Question',
+        name: 'How long does a typical interior design project take?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Project timelines depend on scope and complexity. Simple projects like texture coating or blinds installation may take 3-7 days, while complete interior renovations can take 4-8 weeks. We provide detailed timelines during consultation.'
+        }
+      }
+    ]
   }
 }

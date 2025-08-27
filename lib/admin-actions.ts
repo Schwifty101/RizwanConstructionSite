@@ -266,6 +266,34 @@ export async function updateProject(id: string, formData: ProjectFormData) {
   }
 }
 
+// Toggle project featured status
+export async function toggleProjectFeatured(id: string, featured: boolean) {
+  try {
+    const { supabase } = await getAuthenticatedClient()
+    
+    const { data, error } = await supabase
+      .from('projects')
+      .update({ featured })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    revalidatePath('/admin')
+    revalidatePath('/portfolio')
+    revalidatePath('/')
+    
+    return { success: true, data }
+  } catch (error) {
+    console.error('Error toggling project featured status:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Failed to update project featured status' 
+    }
+  }
+}
+
 // Delete project
 export async function deleteProject(id: string) {
   try {

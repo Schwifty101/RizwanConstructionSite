@@ -32,10 +32,19 @@ export default async function ServicesPage() {
                 </p>
               </div>
             </div>
+            
+            <div className="flex-shrink-0">
+              <Button asChild className="w-full sm:w-auto">
+                <Link href="/admin/services/new" className="flex items-center justify-center space-x-2">
+                  <Plus className="h-4 w-4" />
+                  <span>Add Service</span>
+                </Link>
+              </Button>
+            </div>
           </div>
           
           <Card className="shadow-sm">
-            <CardContent className="py-12">
+            <CardContent className="py-12 px-6">
               <div className="text-center space-y-3">
                 <AlertCircle className="h-12 w-12 text-red-500 mx-auto" />
                 <div>
@@ -73,12 +82,14 @@ export default async function ServicesPage() {
             </div>
           </div>
           
-          <Button asChild className="w-full sm:w-auto">
-            <Link href="/admin/services/new" className="flex items-center justify-center space-x-2">
-              <Plus className="h-4 w-4" />
-              <span>Add Service</span>
-            </Link>
-          </Button>
+          <div className="flex-shrink-0">
+            <Button asChild className="w-full sm:w-auto">
+              <Link href="/admin/services/new" className="flex items-center justify-center space-x-2">
+                <Plus className="h-4 w-4" />
+                <span>Add Service</span>
+              </Link>
+            </Button>
+          </div>
         </div>
 
         {/* Services Table */}
