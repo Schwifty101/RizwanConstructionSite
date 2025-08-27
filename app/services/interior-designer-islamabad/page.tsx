@@ -11,7 +11,7 @@ export const metadata: Metadata = generateMetadata({
     "best interior designer Islamabad",
     "interior design services Islamabad",
     "home interior designer Pakistan",
-    "office interior design Islamabad", 
+    "office interior design Islamabad",
     "residential interior designer",
     "commercial interior design",
     "modern interior design Islamabad"
@@ -43,7 +43,7 @@ export default function InteriorDesignerIslamabadPage() {
     areaServed: ['Islamabad', 'Rawalpindi', 'Chakwal', 'Attock'],
     serviceType: [
       'Residential Interior Design',
-      'Commercial Interior Design', 
+      'Commercial Interior Design',
       'Office Interior Design',
       'Home Interior Design',
       'Modern Interior Design',
@@ -67,11 +67,11 @@ export default function InteriorDesignerIslamabadPage() {
           __html: JSON.stringify(serviceSchema),
         }}
       />
-      
-      <div className="container mx-auto px-4 py-8">
+
+      <div className="container mx-auto px-4 py-16">
         <nav className="text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-primary">Home</Link> / 
-          <Link href="/services" className="hover:text-primary ml-1">Services</Link> / 
+          <Link href="/" className="hover:text-primary">Home</Link> /
+          <Link href="/services" className="hover:text-primary ml-1">Services</Link> /
           <span className="ml-1">Interior Designer Islamabad</span>
         </nav>
 
@@ -81,7 +81,7 @@ export default function InteriorDesignerIslamabadPage() {
               Professional Interior Designer in Islamabad
             </h1>
             <p className="text-xl text-muted-foreground">
-              Transform your space with Pakistan&apos;s leading interior design services. 
+              Transform your space with Pakistan&apos;s leading interior design services.
               Specializing in residential and commercial interiors in Islamabad, Rawalpindi, and surrounding areas.
             </p>
           </header>
@@ -118,7 +118,7 @@ export default function InteriorDesignerIslamabadPage() {
 
           <section className="mb-12">
             <h2 className="text-3xl font-semibold mb-6">Interior Design Specializations</h2>
-            
+
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="bg-card p-6 rounded-lg">
                 <h4 className="text-lg font-semibold mb-3">Residential Interior Design</h4>
@@ -132,7 +132,7 @@ export default function InteriorDesignerIslamabadPage() {
                   <li>• Color consultation</li>
                 </ul>
               </div>
-              
+
               <div className="bg-card p-6 rounded-lg">
                 <h4 className="text-lg font-semibold mb-3">Commercial Interior Design</h4>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -145,7 +145,7 @@ export default function InteriorDesignerIslamabadPage() {
                   <li>• Functional workspace solutions</li>
                 </ul>
               </div>
-              
+
               <div className="bg-card p-6 rounded-lg">
                 <h4 className="text-lg font-semibold mb-3">Hospitality Interior Design</h4>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -225,29 +225,29 @@ export default function InteriorDesignerIslamabadPage() {
               <div>
                 <h4 className="font-semibold text-lg mb-2">What is the cost of interior design services in Islamabad?</h4>
                 <p className="text-muted-foreground">
-                  Interior design costs vary based on project scope, space size, and design complexity. 
-                  We offer flexible packages starting from PKR 50,000 for basic room design to comprehensive home interior solutions. 
+                  Interior design costs vary based on project scope, space size, and design complexity.
+                  We offer flexible packages starting from PKR 50,000 for basic room design to comprehensive home interior solutions.
                   Contact us for a detailed quote based on your specific requirements.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-lg mb-2">Do you provide 3D design visualization?</h4>
                 <p className="text-muted-foreground">
-                  Yes, we provide detailed 3D design visualizations and renderings to help you visualize the final result before implementation. 
+                  Yes, we provide detailed 3D design visualizations and renderings to help you visualize the final result before implementation.
                   This ensures you&apos;re completely satisfied with the design before we begin the actual work.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-lg mb-2">How long does an interior design project take?</h4>
                 <p className="text-muted-foreground">
-                  Project timelines depend on scope and complexity. A single room design typically takes 2-4 weeks, 
+                  Project timelines depend on scope and complexity. A single room design typically takes 2-4 weeks,
                   while complete home interior projects may take 6-12 weeks. We provide detailed project timelines during consultation.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-lg mb-2">Do you work on both residential and commercial projects?</h4>
                 <p className="text-muted-foreground">
-                  Yes, we specialize in both residential and commercial interior design projects. 
+                  Yes, we specialize in both residential and commercial interior design projects.
                   Our portfolio includes homes, apartments, offices, retail spaces, restaurants, and hotels throughout Islamabad and Rawalpindi.
                 </p>
               </div>
@@ -258,8 +258,8 @@ export default function InteriorDesignerIslamabadPage() {
             <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Space?</h2>
             <p className="text-xl mb-6">Get expert interior design consultation in Islamabad & Rawalpindi</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a href="tel:+92-300-1234567" className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-                Call +92-300-1234567
+              <a href="tel:+92-300-5131990" className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
+                Call +92-300-5131990
               </a>
               <Link href="/contact" className="border border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary">
                 Free Consultation

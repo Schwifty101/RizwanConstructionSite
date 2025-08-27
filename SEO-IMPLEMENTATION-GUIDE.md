@@ -18,20 +18,20 @@ This guide provides step-by-step instructions to complete the SEO implementation
 **Time Required: 2 hours**
 
 #### Action Items:
+
 - [ ] **Update Contact Information in Code**:
-  - Replace `+92-300-1234567` with your actual phone number in `/lib/seo.ts` (line 23)
+  - Replace `+92-300-5131990` with your actual phone number in `/lib/seo.ts` (line 23)
   - Replace `info@rizwaninteriors.com` with your actual email in `/lib/seo.ts` (line 24)
   - Update business address in `/lib/seo.ts` (lines 25-31) with your actual location
-  
 - [ ] **Verify Business Coordinates**:
   - Use Google Maps to find your exact coordinates
   - Update `lat` and `lng` in `/lib/seo.ts` (lines 38-41)
-  
 - [ ] **Customize Business Name**:
   - Replace "Rizwan Construction & Interior Design Services" with your actual business name
   - Update throughout the codebase (search for "Rizwan" and replace)
 
 #### File Locations to Update:
+
 ```
 /lib/seo.ts - Lines 18, 22-41
 /app/services/false-ceiling-islamabad/page.tsx - Phone numbers and business name
@@ -44,6 +44,7 @@ This guide provides step-by-step instructions to complete the SEO implementation
 **Time Required: 1 hour**
 
 #### Step-by-Step:
+
 1. **Go to Google Business Profile**: https://business.google.com
 2. **Add Your Business**:
    - Business name: "Your Actual Business Name"
@@ -61,6 +62,7 @@ This guide provides step-by-step instructions to complete the SEO implementation
    - Upload logo and business photos
 
 #### Business Description Template:
+
 ```
 Professional interior design and construction services in Islamabad and Rawalpindi. We specialize in false ceiling installation, texture coating, wooden flooring, vinyl flooring, window blinds, and aluminum glass work. With 10+ years of experience, we serve residential and commercial clients across Islamabad, Rawalpindi, and surrounding areas. Our expert team provides complete interior solutions for homes, offices, hotels, and restaurants. Contact us for free consultations and quotes.
 ```
@@ -71,6 +73,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 3 hours**
 
 #### Photo Requirements (Minimum 15 photos):
+
 - [ ] **Exterior Photos** (2-3):
   - Office/showroom exterior
   - Signage and entrance
@@ -88,6 +91,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
   - Close-ups of quality workmanship
 
 #### Photo Optimization:
+
 - High resolution (minimum 1024x768)
 - Good lighting and professional appearance
 - Add descriptive filenames (e.g., "false-ceiling-installation-islamabad.jpg")
@@ -102,9 +106,10 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 30 minutes**
 
 #### Steps:
+
 1. **Go to Google Search Console**: https://search.google.com/search-console
 2. **Add Property**: Enter your website URL
-3. **Verify Ownership**: 
+3. **Verify Ownership**:
    - Upload HTML file method (recommended)
    - Or use Google Analytics if already installed
 4. **Submit Sitemap**:
@@ -118,6 +123,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 45 minutes**
 
 #### Implementation:
+
 1. **Create GA4 Property**: https://analytics.google.com
 2. **Get Tracking Code**: Copy GA4 measurement ID
 3. **Add to Next.js**:
@@ -125,12 +131,14 @@ Professional interior design and construction services in Islamabad and Rawalpin
    npm install @next/third-parties
    ```
 4. **Add to `/app/layout.tsx`**:
+
    ```jsx
-   import { GoogleAnalytics } from '@next/third-parties/google'
-   
+   import { GoogleAnalytics } from "@next/third-parties/google";
+
    // Add before closing </body> tag
-   <GoogleAnalytics gaId="G-XXXXXXXXXX" />
+   <GoogleAnalytics gaId="G-XXXXXXXXXX" />;
    ```
+
 5. **Set Up Goals**:
    - Contact form submissions
    - Phone clicks
@@ -142,6 +150,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 1 hour**
 
 #### Benefits:
+
 - Track button clicks, form submissions
 - Advanced conversion tracking
 - Easier marketing campaign tracking
@@ -156,6 +165,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 4 hours**
 
 #### Pakistan Business Directories:
+
 - [ ] **Pakistan Yellow Pages**: https://yellowpages.com.pk
 - [ ] **OLX Pakistan Business**: https://olx.com.pk/business
 - [ ] **Locanto Pakistan**: https://islamabad.locanto.pk
@@ -163,12 +173,14 @@ Professional interior design and construction services in Islamabad and Rawalpin
 - [ ] **Rozee.pk Business**: https://www.rozee.pk/business-directory
 
 #### Construction Industry Directories:
+
 - [ ] **Pakistan Contractors Association**
 - [ ] **Interior Designers Association of Pakistan**
 - [ ] **Islamabad Chamber of Commerce**
 - [ ] **Rawalpindi Chamber of Commerce**
 
 #### Submission Checklist for Each Directory:
+
 - [ ] Business name (consistent across all)
 - [ ] Complete address (NAP - Name, Address, Phone)
 - [ ] Phone number (same everywhere)
@@ -184,6 +196,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 2 hours**
 
 #### Facebook Business Page:
+
 - [ ] **Create Page**: Choose "Business" category
 - [ ] **Complete Profile**:
   - Cover photo with business info
@@ -195,12 +208,14 @@ Professional interior design and construction services in Islamabad and Rawalpin
 - [ ] **Create First Post**: Welcome post with business overview
 
 #### LinkedIn Company Page:
+
 - [ ] **Create Company Page**
 - [ ] **Add Industry**: "Construction" and "Design Services"
 - [ ] **Complete About Section**: Professional description
 - [ ] **Add Specialties**: False ceilings, interior design, construction
 
 #### Instagram Business Profile:
+
 - [ ] **Convert to Business Account**
 - [ ] **Add Category**: "Interior Design Studio"
 - [ ] **Complete Bio**: Include location and services
@@ -218,22 +233,27 @@ Professional interior design and construction services in Islamabad and Rawalpin
 #### Monthly Content Calendar:
 
 **Week 1: Local Focus**
+
 - [ ] "Top 10 Interior Design Trends in Islamabad 2024"
 - [ ] "Best Areas for Interior Design Services in Rawalpindi"
 
 **Week 2: Educational Content**
+
 - [ ] "False Ceiling Cost Guide for Pakistan (2024)"
 - [ ] "Choosing the Right Flooring for Pakistan's Climate"
 
 **Week 3: Project Showcases**
+
 - [ ] "Office Interior Design Transformation in F-11 Islamabad"
 - [ ] "Modern Home Interior Design in Bahria Town"
 
 **Week 4: Technical/How-to**
+
 - [ ] "Maintenance Tips for Wooden Flooring in Humid Weather"
 - [ ] "How to Choose Window Blinds for Your Home in Pakistan"
 
 #### Content Optimization Checklist:
+
 - [ ] Include target keywords in title (front-loaded)
 - [ ] Use local keywords (Islamabad, Rawalpindi) throughout
 - [ ] Add internal links to service pages
@@ -248,6 +268,7 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 2 hours per project**
 
 #### For Each New Project:
+
 - [ ] **Professional Photos**:
   - Before/during/after shots
   - Detail shots of quality work
@@ -273,12 +294,14 @@ Professional interior design and construction services in Islamabad and Rawalpin
 **Time Required: 1 hour per week**
 
 #### Review Collection Process:
+
 1. **Identify Happy Customers**:
    - Recent project completions
    - Customers who gave positive feedback
    - Long-term satisfied clients
 
 2. **Request Reviews**:
+
    ```
    Template Message:
    "Thank you for choosing us for your interior design project. We're thrilled you're happy with the results! Would you mind sharing your experience on Google? It helps other homeowners in Islamabad find quality interior design services. Here's the direct link: [Google Review Link]"
@@ -292,16 +315,19 @@ Professional interior design and construction services in Islamabad and Rawalpin
 #### Review Response Templates:
 
 **5-Star Review Response:**
+
 ```
 Thank you [Name] for the wonderful review! We're delighted that you're happy with your [specific service] in [location]. It was a pleasure working on your project, and we appreciate you recommending our interior design services in Islamabad. We look forward to helping with any future projects!
 ```
 
 **4-Star Review Response:**
+
 ```
 Thank you [Name] for your feedback on our [specific service]. We're pleased you're satisfied with the results in [location]. We appreciate your suggestions and will use them to continue improving our interior design services in Islamabad. Thank you for choosing us!
 ```
 
 **Negative Review Response:**
+
 ```
 Thank you [Name] for bringing this to our attention. We sincerely apologize for not meeting your expectations on the [specific project]. We'd like to make this right. Please contact us directly at [phone] so we can discuss how to resolve this matter. We value all feedback as it helps us improve our services.
 ```
@@ -312,6 +338,7 @@ Thank you [Name] for bringing this to our attention. We sincerely apologize for 
 **Time Required: 30 minutes per week**
 
 #### Weekly Tasks:
+
 - [ ] Check Google Business Profile for new reviews
 - [ ] Respond to all reviews within 24 hours
 - [ ] Monitor Facebook page reviews
@@ -330,6 +357,7 @@ Thank you [Name] for bringing this to our attention. We sincerely apologize for 
 #### Key Metrics to Track:
 
 **Google Search Console:**
+
 - [ ] **Impressions**: Total search appearances
 - [ ] **Clicks**: Traffic from organic search
 - [ ] **CTR**: Click-through rate (target: >5%)
@@ -338,6 +366,7 @@ Thank you [Name] for bringing this to our attention. We sincerely apologize for 
 - [ ] **Search Queries**: Keywords driving traffic
 
 **Google Analytics:**
+
 - [ ] **Organic Traffic**: Month-over-month growth
 - [ ] **Bounce Rate**: Quality of traffic (target: <60%)
 - [ ] **Session Duration**: User engagement
@@ -346,6 +375,7 @@ Thank you [Name] for bringing this to our attention. We sincerely apologize for 
 - [ ] **Geographic Data**: Traffic from target cities
 
 #### Monthly SEO Report Template:
+
 ```
 Month: [Current Month]
 
@@ -376,11 +406,13 @@ Month: [Current Month]
 **Time Required: 1 hour per month**
 
 #### Tools to Use:
+
 - **Google Business Profile Insights**: Track views, clicks, calls
 - **Local Search Rankings**: Check positions for "near me" searches
 - **Citation Monitoring**: Ensure NAP consistency across directories
 
 #### Monthly Local SEO Checklist:
+
 - [ ] Update Google Business Profile with new photos
 - [ ] Post monthly updates on social media
 - [ ] Check for new local directories to submit to
@@ -400,18 +432,21 @@ Month: [Current Month]
 #### Local Link Building Opportunities:
 
 **Industry Partnerships:**
+
 - [ ] **Architects in Islamabad**: Offer referral partnerships
 - [ ] **Real Estate Agents**: Collaborate on staging projects
 - [ ] **Material Suppliers**: Request links from supplier websites
 - [ ] **Construction Companies**: Partner for larger projects
 
 **Local Business Networks:**
+
 - [ ] **Islamabad Chamber of Commerce**: Join and get directory listing
 - [ ] **Rawalpindi Chamber**: Business membership and networking
 - [ ] **Local Business Associations**: Interior design groups
 - [ ] **Trade Shows**: Participate in home improvement exhibitions
 
 **Content-Based Links:**
+
 - [ ] **Guest Blog Posts**: Write for local lifestyle blogs
 - [ ] **Local Media**: Press releases for major projects
 - [ ] **Before/After Features**: Pitch to home improvement sites
@@ -423,6 +458,7 @@ Month: [Current Month]
 **Time Required: 2 hours per month**
 
 #### Monthly Technical Audit:
+
 - [ ] **Page Speed**: Check loading times (target: <3 seconds)
 - [ ] **Mobile Optimization**: Test on various devices
 - [ ] **Core Web Vitals**: Monitor LCP, FID, CLS scores
@@ -436,6 +472,7 @@ Month: [Current Month]
 ## 🎯 Success Metrics & KPIs
 
 ### 3-Month Goals:
+
 - [ ] **Google Business Profile**: 25+ reviews, 4.5+ star rating
 - [ ] **Local Pack Rankings**: Top 3 for primary keywords
 - [ ] **Organic Traffic**: 200% increase from baseline
@@ -443,6 +480,7 @@ Month: [Current Month]
 - [ ] **Phone Calls**: 50+ monthly calls from search
 
 ### 6-Month Goals:
+
 - [ ] **Page 1 Rankings**: 10+ target keywords
 - [ ] **Organic Traffic**: 400% increase from baseline
 - [ ] **Lead Generation**: 30+ qualified leads per month
@@ -454,6 +492,7 @@ Month: [Current Month]
 ## 📞 Quick Reference Information
 
 ### Business Information to Use Consistently:
+
 **Business Name**: [Your Actual Business Name]  
 **Phone**: [Your Actual Phone Number]  
 **Email**: [Your Actual Email]  
@@ -462,6 +501,7 @@ Month: [Current Month]
 **Business Hours**: Monday-Friday 9:00 AM - 6:00 PM, Saturday 9:00 AM - 5:00 PM, Sunday Closed
 
 ### Primary Target Keywords:
+
 - interior designer Islamabad
 - construction company Islamabad
 - false ceiling contractor Islamabad
@@ -470,6 +510,7 @@ Month: [Current Month]
 - home interior design services Islamabad
 
 ### Important Links:
+
 - **Google Business Profile**: https://business.google.com
 - **Google Search Console**: https://search.google.com/search-console
 - **Google Analytics**: https://analytics.google.com
@@ -480,16 +521,19 @@ Month: [Current Month]
 ## 📋 Weekly Maintenance Checklist
 
 ### Monday: Content & Social Media
+
 - [ ] Plan week's social media posts
 - [ ] Check for new Google Business Profile reviews
 - [ ] Respond to any customer inquiries
 
 ### Wednesday: Performance Check
+
 - [ ] Quick review of Search Console data
 - [ ] Check website loading speed
 - [ ] Monitor competitor activities
 
 ### Friday: Review & Planning
+
 - [ ] Weekly performance summary
 - [ ] Plan next week's content
 - [ ] Update project portfolio if new work completed

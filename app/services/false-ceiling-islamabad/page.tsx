@@ -8,7 +8,7 @@ export const metadata: Metadata = generateMetadata({
   description: "Leading false ceiling contractor in Islamabad offering professional installation services. Gypsum, POP, and modern false ceiling designs for homes, offices, hotels. Free quotes & quality workmanship guaranteed.",
   keywords: [
     "false ceiling contractor Islamabad",
-    "false ceiling installation Islamabad", 
+    "false ceiling installation Islamabad",
     "gypsum ceiling Islamabad",
     "POP ceiling contractor",
     "ceiling design Islamabad",
@@ -44,11 +44,11 @@ export default function FalseCeilingIslamabadPage() {
           __html: JSON.stringify(faqSchema),
         }}
       />
-      
-      <div className="container mx-auto px-4 py-8">
+
+      <div className="container mx-auto px-4 py-16">
         <nav className="text-sm text-muted-foreground mb-6">
-          <Link href="/" className="hover:text-primary">Home</Link> / 
-          <Link href="/services" className="hover:text-primary ml-1">Services</Link> / 
+          <Link href="/" className="hover:text-primary">Home</Link> /
+          <Link href="/services" className="hover:text-primary ml-1">Services</Link> /
           <span className="ml-1">False Ceiling Islamabad</span>
         </nav>
 
@@ -58,7 +58,7 @@ export default function FalseCeilingIslamabadPage() {
               Professional False Ceiling Contractor in Islamabad
             </h1>
             <p className="text-xl text-muted-foreground">
-              Expert false ceiling installation services in Islamabad & Rawalpindi. 
+              Expert false ceiling installation services in Islamabad & Rawalpindi.
               Transform your space with modern ceiling designs, quality materials, and professional workmanship.
             </p>
           </header>
@@ -133,21 +133,21 @@ export default function FalseCeilingIslamabadPage() {
               <div>
                 <h4 className="font-semibold text-lg mb-2">What is the cost of false ceiling per square foot in Islamabad?</h4>
                 <p className="text-muted-foreground">
-                  False ceiling costs in Islamabad range from PKR 250-800 per square foot depending on material and design complexity. 
+                  False ceiling costs in Islamabad range from PKR 250-800 per square foot depending on material and design complexity.
                   Gypsum ceilings typically cost PKR 300-500 per sq ft, while designer POP ceilings range from PKR 500-800 per sq ft.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-lg mb-2">How long does false ceiling installation take?</h4>
                 <p className="text-muted-foreground">
-                  Installation time depends on room size and design complexity. A standard room (12x12 ft) typically takes 3-5 days, 
+                  Installation time depends on room size and design complexity. A standard room (12x12 ft) typically takes 3-5 days,
                   while larger spaces or intricate designs may take 1-2 weeks.
                 </p>
               </div>
               <div>
                 <h4 className="font-semibold text-lg mb-2">Do you provide false ceiling services in Rawalpindi?</h4>
                 <p className="text-muted-foreground">
-                  Yes, we provide comprehensive false ceiling services throughout Rawalpindi, including Saddar, Committee Chowk, 
+                  Yes, we provide comprehensive false ceiling services throughout Rawalpindi, including Saddar, Committee Chowk,
                   Commercial Market, and all major residential areas.
                 </p>
               </div>
@@ -158,8 +158,8 @@ export default function FalseCeilingIslamabadPage() {
             <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Ceiling?</h2>
             <p className="text-xl mb-6">Get a free quote for false ceiling installation in Islamabad & Rawalpindi</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a href="tel:+92-300-1234567" className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
-                Call +92-300-1234567
+              <a href="tel:+92-300-5131990" className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100">
+                Call +92-300-5131990
               </a>
               <Link href="/contact" className="border border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary">
                 Get Free Quote

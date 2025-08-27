@@ -20,7 +20,7 @@ export const SITE_CONFIG = {
   defaultImage: '/images/og-image.jpg',
   twitterHandle: '@rizwaninteriors',
   author: 'Rizwan Construction & Interiors',
-  phone: '+92-300-1234567',
+  phone: '+92-300-5131990',
   email: 'info@rizwaninteriors.com',
   address: {
     streetAddress: 'Sector G-10, Markaz',
@@ -232,7 +232,7 @@ export function generateLocalBusinessSchema() {
           }
         },
         {
-          '@type': 'Offer', 
+          '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
             name: 'Texture Coating & Zola Paint',
@@ -242,7 +242,7 @@ export function generateLocalBusinessSchema() {
         {
           '@type': 'Offer',
           itemOffered: {
-            '@type': 'Service', 
+            '@type': 'Service',
             name: 'Wooden & Vinyl Flooring',
             description: 'High-quality flooring installation and maintenance'
           }
@@ -251,7 +251,7 @@ export function generateLocalBusinessSchema() {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: 'Window Blinds & Curtains', 
+            name: 'Window Blinds & Curtains',
             description: 'Custom window treatments and blinds installation'
           }
         },
