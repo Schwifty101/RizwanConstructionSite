@@ -141,7 +141,7 @@ export function Navbar() {
           <Button
             variant="ghost"
             size="icon"
-            className={`lg:hidden z-60 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
+            className={`lg:hidden z-10 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
                 ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
                 : "hover:bg-muted-gold/10 hover:text-muted-gold"
               }`}

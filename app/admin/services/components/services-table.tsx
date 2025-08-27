@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -17,6 +18,7 @@ interface ServicesTableProps {
 }
 
 export function ServicesTable({ services }: ServicesTableProps) {
+  const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
   const [serviceToDelete, setServiceToDelete] = useState<Service | null>(null)
   const [isToggling, setIsToggling] = useState<string | null>(null)
@@ -39,7 +41,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
       }
 
       // Refresh the page to show updated data
-      window.location.reload()
+      router.refresh()
     } catch (error) {
       console.error('Error deleting service:', error)
       alert('Failed to delete service. Please try again.')
@@ -68,7 +70,7 @@ export function ServicesTable({ services }: ServicesTableProps) {
       }
 
       // Refresh the page to show updated data
-      window.location.reload()
+      router.refresh()
     } catch (error) {
       console.error('Error updating service:', error)
       alert('Failed to update service status. Please try again.')

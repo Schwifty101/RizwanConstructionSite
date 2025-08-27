@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +14,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog'
-import { deleteProject } from '@/lib/admin-actions'
+import { deleteProject, toggleProjectFeatured } from '@/lib/admin-actions'
 import { Edit, Trash2, Eye, Star, Calendar, MapPin } from 'lucide-react'
 import { SupabaseImage } from '@/components/supabase-image'
 import type { Project } from '@/lib/supabase'
@@ -23,7 +24,9 @@ interface ProjectsTableProps {
 }
 
 export function ProjectsTable({ projects }: ProjectsTableProps) {
+  const router = useRouter()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [togglingId, setTogglingId] = useState<string | null>(null)
   const [deleteDialog, setDeleteDialog] = useState<{
     isOpen: boolean
     project: Project | null
@@ -46,7 +49,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
       } else {
         setDeleteDialog({ isOpen: false, project: null })
         // The page will revalidate automatically due to server action
-        window.location.reload()
+        router.refresh()
       }
     } catch {
       alert('An error occurred while deleting the project')
@@ -57,6 +60,24 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
 
   const handleDeleteCancel = () => {
     setDeleteDialog({ isOpen: false, project: null })
+  }
+
+  const handleToggleFeatured = async (project: Project) => {
+    setTogglingId(project.id)
+    
+    try {
+      const result = await toggleProjectFeatured(project.id, !project.featured)
+      
+      if (!result.success) {
+        alert(`Failed to update project: ${result.error}`)
+      } else {
+        router.refresh()
+      }
+    } catch {
+      alert('An error occurred while updating the project')
+    } finally {
+      setTogglingId(null)
+    }
   }
 
   if (projects.length === 0) {
@@ -120,7 +141,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                     {project.description}
                   </p>
                 )}
-                <div className="flex flex-col justify-center items-start space-x-4 space-y-1 mt-2 text-xs text-stone-500">
+                <div className="flex flex-col justify-center items-start space-y-1 mt-2 text-xs text-stone-500">
                   <span className="px-2 py-1 bg-stone-200 rounded-full">
                     {project.category}
                   </span>
@@ -131,11 +152,26 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
             </div>
             
             <div className="flex items-center justify-between pt-2">
-              {project.featured && (
-                <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                  Featured
-                </span>
-              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => handleToggleFeatured(project)}
+                disabled={togglingId === project.id}
+                className={`${
+                  project.featured 
+                    ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50' 
+                    : 'text-stone-600 hover:text-stone-700 hover:bg-stone-50'
+                }`}
+              >
+                {togglingId === project.id ? (
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Star className={`w-4 h-4 mr-1 ${project.featured ? 'fill-current' : ''}`} />
+                    {project.featured ? 'Featured' : 'Feature'}
+                  </>
+                )}
+              </Button>
               
               <div className="flex items-center space-x-2 ml-auto">
                 <Button variant="ghost" size="sm" asChild>
@@ -253,12 +289,27 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                   </TableCell>
                   
                   <TableCell>
-                    <div className="flex flex-col space-y-1">
-                      {project.featured && (
-                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                          Featured
-                        </span>
-                      )}
+                    <div className="flex flex-col space-y-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleToggleFeatured(project)}
+                        disabled={togglingId === project.id}
+                        className={`w-fit ${
+                          project.featured 
+                            ? 'text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 cursor-pointer' 
+                            : 'text-stone-600 hover:text-stone-700 hover:bg-stone-50 cursor-pointer'
+                        }`}
+                      >
+                        {togglingId === project.id ? (
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            <Star className={`w-3 h-3 mr-1 ${project.featured ? 'fill-current' : ''}`} />
+                            {project.featured ? 'Featured' : 'Feature'}
+                          </>
+                        )}
+                      </Button>
                       <span className="text-xs text-stone-500">
                         Created {new Date(project.created_at).toLocaleDateString()}
                       </span>
