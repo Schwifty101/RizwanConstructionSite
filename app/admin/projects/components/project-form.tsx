@@ -1,5 +1,4 @@
 'use client'
-
 import { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,8 +25,6 @@ import {
   reorderStagedImages,
   MAX_IMAGES_PER_PROJECT
 } from '@/lib/image-staging'
-
-// Form-specific schema that matches the component's needs (without images)
 const projectFormSchema = z.object({
   title: z.string().min(1, 'Title is required').max(255),
   description: z.string().optional(),
@@ -36,15 +33,12 @@ const projectFormSchema = z.object({
   location: z.string().optional(),
   featured: z.boolean().default(false)
 })
-
 type ProjectFormInput = z.infer<typeof projectFormSchema>
-
 interface ProjectFormProps {
   project?: Project
   onSuccess?: () => void
   onCancel?: () => void
 }
-
 export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -52,7 +46,6 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
   const [uploadProgress, setUploadProgress] = useState<Record<string, ImageUploadProgress>>({})
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
   const form = useForm({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
@@ -64,8 +57,6 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
       featured: project?.featured ?? false
     }
   })
-
-  // Initialize staged images from existing project
   useEffect(() => {
     if (project?.images) {
       const existingImages = project.images.map((url, index) => 
@@ -74,32 +65,25 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
       setStagedImages(existingImages)
     }
   }, [project?.images])
-
-  // Cleanup staged images on unmount
   useEffect(() => {
     return () => {
       cleanupObjectUrls(stagedImages)
     }
   }, [stagedImages])
-
   const handleImageUpload = (files: FileList) => {
     if (files.length === 0) return
-
     setError(null)
     const remainingSlots = MAX_IMAGES_PER_PROJECT - stagedImages.length
     if (remainingSlots <= 0) {
       setError(`Maximum ${MAX_IMAGES_PER_PROJECT} images allowed per project`)
       return
     }
-
     const filesToProcess = Math.min(files.length, remainingSlots)
     const newStagedImages: StagedImage[] = []
     const validationErrors: string[] = []
-
     for (let i = 0; i < filesToProcess; i++) {
       const file = files[i]
       const validation = validateImageFile(file)
-      
       if (validation.valid) {
         const stagedImage = createStagedImageFromFile(file)
         newStagedImages.push(stagedImage)
@@ -107,15 +91,12 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
         validationErrors.push(`${file.name}: ${validation.error}`)
       }
     }
-
     if (validationErrors.length > 0) {
       setError(validationErrors.join('; '))
     }
-
     if (newStagedImages.length > 0) {
       setStagedImages(prev => [...prev, ...newStagedImages])
     }
-
     if (files.length > remainingSlots) {
       setError(prev => {
         const maxError = `Only ${remainingSlots} more image(s) can be added`
@@ -123,56 +104,41 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
       })
     }
   }
-
   const removeImage = (index: number) => {
     setStagedImages(prev => {
       const imageToRemove = prev[index]
       const newImages = prev.filter((_, i) => i !== index)
-      
-      // Cleanup object URL if it's a staged file
       if (!imageToRemove.isExisting && imageToRemove.url.startsWith('blob:')) {
         URL.revokeObjectURL(imageToRemove.url)
       }
-      
       return newImages
     })
-    
-    setError(null) // Clear errors when removing images
+    setError(null) 
   }
-
   const handleDragStart = (index: number) => {
     setDraggedIndex(index)
   }
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
-
   const handleDrop = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault()
-    
     if (draggedIndex !== null && draggedIndex !== dropIndex) {
       setStagedImages(prev => reorderStagedImages(prev, draggedIndex, dropIndex))
     }
-    
     setDraggedIndex(null)
   }
-
   const handleDragEnd = () => {
     setDraggedIndex(null)
   }
-
   const onSubmit = async (data: ProjectFormInput) => {
     setIsSubmitting(true)
     setError(null)
     setUploadProgress({})
-
     try {
       if (project) {
-        // Update existing project
         await handleUpdateProject(data)
       } else {
-        // Create new project
         await handleCreateProject(data)
       }
     } catch (error) {
@@ -181,27 +147,21 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
       setIsSubmitting(false)
     }
   }
-
   const handleCreateProject = async (data: ProjectFormInput) => {
-    // Step 1: Create project without images
     const createResponse = await fetch('/api/projects', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...data,
         slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-        images: [] // Empty initially
+        images: [] 
       })
     })
-
     if (!createResponse.ok) {
       const errorData = await createResponse.json()
       throw new Error(errorData.error || 'Failed to create project')
     }
-
     const createdProject = await createResponse.json()
-    
-    // Step 2: Upload staged images if any
     if (stagedImages.length > 0) {
       const uploadResult = await uploadStagedImages(
         createdProject.id,
@@ -210,12 +170,9 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           setUploadProgress(prev => ({ ...prev, [progress.imageId]: progress }))
         }
       )
-
       if (!uploadResult.success) {
         throw new Error(uploadResult.errors?.join('; ') || 'Failed to upload images')
       }
-
-      // Step 3: Update project with image URLs
       const updateResponse = await fetch('/api/projects', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -224,24 +181,17 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           images: uploadResult.urls
         })
       })
-
       if (!updateResponse.ok) {
         const errorData = await updateResponse.json()
         throw new Error(errorData.error || 'Failed to update project with images')
       }
     }
-
     onSuccess?.()
   }
-
   const handleUpdateProject = async (data: ProjectFormInput) => {
     if (!project) return
-
-    // Determine which images are new vs existing
     const existingUrls = stagedImages.filter(img => img.isExisting).map(img => img.url)
     const imagesToDelete = getImagesToDelete(project.images || [], existingUrls)
-    
-    // Upload new images if any
     let finalImageUrls = existingUrls
     if (stagedImages.some(img => !img.isExisting)) {
       const uploadResult = await uploadStagedImages(
@@ -251,15 +201,11 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           setUploadProgress(prev => ({ ...prev, [progress.imageId]: progress }))
         }
       )
-
       if (!uploadResult.success) {
         throw new Error(uploadResult.errors?.join('; ') || 'Failed to upload images')
       }
-      
       finalImageUrls = uploadResult.urls || []
     }
-
-    // Update project
     const updateResponse = await fetch('/api/projects', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
@@ -269,29 +215,23 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
         images: finalImageUrls
       })
     })
-
     if (!updateResponse.ok) {
       const errorData = await updateResponse.json()
       throw new Error(errorData.error || 'Failed to update project')
     }
-
-    // Delete removed images from storage
     if (imagesToDelete.length > 0) {
       const deleteResult = await deleteImagesFromStorage(imagesToDelete)
       if (!deleteResult.success) {
         console.warn('Failed to delete some images:', deleteResult.errors)
       }
     }
-
     onSuccess?.()
   }
-
   const categories = [
     'Home Interiors',
     'Hotel & Restaurant Interiors',
     'Office Interiors'
   ]
-
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <AnimatePresence>
@@ -307,8 +247,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Title */}
+      {}
       <div className="space-y-2">
         <Label htmlFor="title">Project Title *</Label>
         <Input
@@ -321,8 +260,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           <p className="text-sm text-red-600">{form.formState.errors.title.message}</p>
         )}
       </div>
-
-      {/* Description */}
+      {}
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
         <Textarea
@@ -336,8 +274,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           <p className="text-sm text-red-600">{form.formState.errors.description.message}</p>
         )}
       </div>
-
-      {/* Category and Date */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="category">Category *</Label>
@@ -356,7 +293,6 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
             <p className="text-sm text-red-600">{form.formState.errors.category.message}</p>
           )}
         </div>
-
         <div className="space-y-2">
           <Label htmlFor="date">Completion Date *</Label>
           <Input
@@ -370,8 +306,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           )}
         </div>
       </div>
-
-      {/* Location */}
+      {}
       <div className="space-y-2">
         <Label htmlFor="location">Location</Label>
         <Input
@@ -384,8 +319,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           <p className="text-sm text-red-600">{form.formState.errors.location.message}</p>
         )}
       </div>
-
-      {/* Featured */}
+      {}
       <div className="flex items-center space-x-2">
         <Checkbox
           id="featured"
@@ -395,8 +329,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
         />
         <Label htmlFor="featured">Feature this project on homepage</Label>
       </div>
-
-      {/* Images */}
+      {}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
@@ -423,7 +356,6 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
             </span>
           </Button>
         </div>
-
         <input
           ref={fileInputRef}
           type="file"
@@ -432,8 +364,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           onChange={(e) => e.target.files && handleImageUpload(e.target.files)}
           className="hidden"
         />
-
-        {/* Upload Progress */}
+        {}
         <AnimatePresence>
           {Object.keys(uploadProgress).length > 0 && (
             <motion.div
@@ -459,7 +390,6 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
             </motion.div>
           )}
         </AnimatePresence>
-
         <AnimatePresence>
           {stagedImages.length > 0 && (
             <motion.div
@@ -485,12 +415,11 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
                   onDrop={(e) => handleDrop(e, index)}
                   onDragEnd={handleDragEnd}
                 >
-                  {/* Drag handle */}
+                  {}
                   <div className="absolute top-2 left-2 p-1 bg-black/50 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity z-10">
                     <GripVertical className="w-3 h-3" />
                   </div>
-
-                  {/* Image */}
+                  {}
                   <SupabaseImage
                     src={stagedImage.url}
                     alt={`Project image ${index + 1}`}
@@ -498,15 +427,13 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
                     height={128}
                     className="w-full h-32 object-cover rounded-md"
                   />
-                  
-                  {/* Image status indicator */}
+                  {}
                   {!stagedImage.isExisting && (
                     <div className="absolute bottom-2 left-2 px-2 py-1 bg-blue-500 text-white text-xs rounded">
                       New
                     </div>
                   )}
-
-                  {/* Remove button */}
+                  {}
                   <motion.button
                     type="button"
                     onClick={() => removeImage(index)}
@@ -522,7 +449,6 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
             </motion.div>
           )}
         </AnimatePresence>
-
         {stagedImages.length === 0 && (
           <div className="border-2 border-dashed border-stone-300 rounded-md p-8 text-center">
             <ImageIcon className="w-12 h-12 text-stone-400 mx-auto mb-4" />
@@ -543,8 +469,7 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
           </div>
         )}
       </div>
-
-      {/* Submit Buttons */}
+      {}
       <div className="flex items-center justify-end space-x-4 pt-4">
         {onCancel && (
           <Button

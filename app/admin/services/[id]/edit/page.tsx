@@ -1,5 +1,4 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,19 +7,16 @@ import { ServiceForm } from '../../components/service-form'
 import { getAdminServices } from '@/lib/admin-actions'
 import type { Service } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
-
 export default function EditServicePage() {
   const router = useRouter()
   const params = useParams()
   const [service, setService] = useState<Service | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
   useEffect(() => {
     const fetchService = async () => {
       try {
         const result = await getAdminServices()
-        
         if (result.success && result.data) {
           const foundService = result.data.find(s => s.id === params.id)
           if (foundService) {
@@ -37,21 +33,17 @@ export default function EditServicePage() {
         setLoading(false)
       }
     }
-
     if (params.id) {
       fetchService()
     }
   }, [params.id])
-
   const handleSuccess = () => {
     router.push('/admin/services')
     router.refresh()
   }
-
   const handleCancel = () => {
     router.push('/admin/services')
   }
-
   if (loading) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
@@ -81,7 +73,6 @@ export default function EditServicePage() {
       </div>
     )
   }
-
   if (error || !service) {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
@@ -111,11 +102,10 @@ export default function EditServicePage() {
       </div>
     )
   }
-
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-7xl">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Header with back button */}
+        {}
         <div className="flex flex-col space-y-4 sm:flex-row sm:items-start sm:justify-between sm:space-y-0">
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4">
             <BackButton href="/admin/services" label="Back to Services" />
@@ -133,8 +123,7 @@ export default function EditServicePage() {
             </div>
           </div>
         </div>
-
-        {/* Form Card */}
+        {}
         <Card className="shadow-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-xl">Service Details</CardTitle>

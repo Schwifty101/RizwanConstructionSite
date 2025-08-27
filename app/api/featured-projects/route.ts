@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { optimizeProjectsForResponse } from '@/lib/image-optimization'
-
 export async function GET() {
   try {
     const { data, error } = await supabase
@@ -10,11 +9,8 @@ export async function GET() {
       .eq('featured', true)
       .order('date', { ascending: false })
       .limit(6)
-
     if (error) {
       console.error('Error fetching featured projects:', error)
-
-      // Return fallback data when database is not available
       const fallbackData = [
         {
           id: '1',
@@ -43,10 +39,8 @@ export async function GET() {
           updated_at: '2024-02-28T00:00:00Z'
         }
       ]
-
       return NextResponse.json(optimizeProjectsForResponse(fallbackData))
     }
-
     return NextResponse.json(optimizeProjectsForResponse(data || []))
   } catch (error) {
     console.error('Unexpected error:', error)

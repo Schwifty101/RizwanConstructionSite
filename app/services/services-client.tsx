@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { SupabaseImage } from "@/components/supabase-image"
 import { containerVariants, itemVariants, presets, pageTransitionVariants } from "@/lib/animations"
@@ -22,12 +21,9 @@ interface ServicesClientProps {
 
 
 export function ServicesClient({ services }: ServicesClientProps) {
-  // Map normalized service names to their corresponding image paths in public/images/services
   const serviceImageMap: Record<string, string> = {
-    // normalize to lowercase keys
     "residential construction": "/images/services/residentialConstruction.avif",
     "interior design": "/images/services/interiorDesign.avif",
-    // handle both spellings for remod(e)lling
     "kitchen remodeling": "/images/services/kitchenRemodelling.avif",
     "kitchen remodelling": "/images/services/kitchenRemodelling.avif",
     "bathroom renovation": "/images/services/bathroomRenovation.avif",
@@ -36,12 +32,10 @@ export function ServicesClient({ services }: ServicesClientProps) {
   }
 
   const getServiceImage = (service: Service): string | null => {
-    // First, try to use the database image if available
     if (service.image_url) {
       return service.image_url
     }
     
-    // Fall back to static images based on service name
     if (!service.name) return null
     const key = service.name.trim().toLowerCase()
     return serviceImageMap[key] ?? null
@@ -55,7 +49,6 @@ export function ServicesClient({ services }: ServicesClientProps) {
       exit="exit"
       className="pt-20"
     >
-      {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-cream to-beige">
         <div className="container mx-auto px-4 text-center">
           <motion.h1
@@ -81,7 +74,6 @@ export function ServicesClient({ services }: ServicesClientProps) {
         </div>
       </section>
 
-      {/* Services Grid */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           {services.length > 0 ? (
@@ -161,66 +153,9 @@ export function ServicesClient({ services }: ServicesClientProps) {
             </div>
           )}
 
-          {/* Detailed Services Accordion */}
-          {services.length > 0 && (
-          <motion.div
-            className="max-w-4xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <motion.div className="text-center mb-12" variants={presets.sectionTitle}>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-6">
-                Service Details
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Learn more about what each service includes and how we can help with your project.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              <Accordion type="single" collapsible className="w-full">
-                {services.map((service, index) => (
-                  <AccordionItem key={service.id || index} value={`item-${index}`}>
-                    <AccordionTrigger className="text-left font-serif text-lg">
-                      {service.name}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="pt-4">
-                        <p className="text-muted-foreground mb-4">
-                          {service.description}
-                        </p>
-                        {'details' in service && service.details && (
-                          <div>
-                            <h4 className="font-semibold mb-3">What&apos;s included:</h4>
-                            <ul className="space-y-2 text-muted-foreground">
-                              {service.details.map((detail: string, idx: number) => (
-                                <li key={idx} className="flex items-start">
-                                  <span className="text-muted-gold mr-2">•</span>
-                                  {detail}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </motion.div>
-          </motion.div>
-          )}
         </div>
       </section>
 
-      {/* Process Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <motion.div
@@ -297,7 +232,6 @@ export function ServicesClient({ services }: ServicesClientProps) {
         </div>
       </section>
 
-      {/* Call to Action */}
       <section className="py-20">
         <div className="container mx-auto px-4 text-center">
           <motion.div

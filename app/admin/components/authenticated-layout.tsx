@@ -2,7 +2,6 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { AdminHeader } from './admin-header'
-
 export async function AuthenticatedLayout({
   children,
 }: {
@@ -23,27 +22,20 @@ export async function AuthenticatedLayout({
               cookieStore.set(name, value, options)
             )
           } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing user sessions.
           }
         },
       },
     }
   )
-
   try {
     const { data: { user }, error } = await supabase.auth.getUser()
-    
     if (error || !user) {
       redirect('/admin/login')
     }
-
-    // User is authenticated - allow access to admin panel
   } catch (error) {
     console.error('Authentication error:', error)
     redirect('/admin/login')
   }
-
   return (
     <>
       <AdminHeader />

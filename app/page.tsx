@@ -3,7 +3,6 @@ import { supabase } from "@/lib/supabase"
 import { safeDatabaseOperation } from "@/lib/error-handler"
 import { generateServiceSchema, generateBreadcrumbSchema } from "@/lib/seo"
 import { HomeClient } from "./home-client"
-
 async function getFeaturedProjects() {
   return safeDatabaseOperation(
     async () => {
@@ -13,30 +12,25 @@ async function getFeaturedProjects() {
         .eq('featured', true)
         .order('date', { ascending: false })
         .limit(3)
-
       if (error) {
         throw new Error(`Failed to fetch featured projects: ${error.message}`)
       }
-      
       return data || []
     },
-    [], // fallback to empty array
+    [], 
     'getFeaturedProjects',
-    false // don't throw on error, use fallback
+    false 
   )
 }
-
 export default async function Home() {
   const featuredProjects = await getFeaturedProjects()
-  
   const serviceSchema = generateServiceSchema()
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: '/' }
   ])
-
   return (
     <>
-      {/* Service and Breadcrumb Schema */}
+      {}
       <Script
         id="service-schema"
         type="application/ld+json"
@@ -51,7 +45,6 @@ export default async function Home() {
           __html: JSON.stringify(breadcrumbSchema),
         }}
       />
-      
       <HomeClient featuredProjects={featuredProjects} />
     </>
   )

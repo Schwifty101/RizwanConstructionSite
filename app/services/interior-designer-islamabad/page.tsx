@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import Script from 'next/script'
 import Link from 'next/link'
 import { generateMetadata, generateBreadcrumbSchema } from '@/lib/seo'
-
 export const metadata: Metadata = generateMetadata({
   title: "Best Interior Designer in Islamabad | Professional Interior Design Services",
   description: "Top-rated interior designer in Islamabad offering complete interior design solutions. Residential & commercial spaces, modern designs, texture coating, false ceilings. 10+ years experience serving Islamabad & Rawalpindi.",
@@ -18,16 +17,14 @@ export const metadata: Metadata = generateMetadata({
   ],
   url: "/services/interior-designer-islamabad",
 })
-
 export default function InteriorDesignerIslamabadPage() {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: 'Home', url: '/' },
     { name: 'Services', url: '/services' },
     { name: 'Interior Designer Islamabad', url: '/services/interior-designer-islamabad' }
   ])
-
   const serviceSchema = {
-    '@context': 'https://schema.org',
+    '@context': 'https',
     '@type': 'ProfessionalService',
     name: 'Interior Designer Islamabad - Professional Interior Design Services',
     description: 'Professional interior design services in Islamabad and Rawalpindi. Specializing in residential and commercial interior design, modern home interiors, office design, and complete interior solutions.',
@@ -50,7 +47,6 @@ export default function InteriorDesignerIslamabadPage() {
       'Traditional Interior Design'
     ]
   }
-
   return (
     <>
       <Script
@@ -67,14 +63,12 @@ export default function InteriorDesignerIslamabadPage() {
           __html: JSON.stringify(serviceSchema),
         }}
       />
-
       <div className="container mx-auto px-4 py-16">
         <nav className="text-sm text-muted-foreground mb-6">
           <Link href="/" className="hover:text-primary">Home</Link> /
           <Link href="/services" className="hover:text-primary ml-1">Services</Link> /
           <span className="ml-1">Interior Designer Islamabad</span>
         </nav>
-
         <div className="max-w-4xl mx-auto">
           <header className="mb-8">
             <h1 className="text-4xl font-bold text-primary mb-4">
@@ -85,7 +79,6 @@ export default function InteriorDesignerIslamabadPage() {
               Specializing in residential and commercial interiors in Islamabad, Rawalpindi, and surrounding areas.
             </p>
           </header>
-
           <section className="mb-12">
             <h2 className="text-3xl font-semibold mb-6">Why Choose Our Interior Design Services?</h2>
             <div className="grid md:grid-cols-2 gap-8">
@@ -115,10 +108,8 @@ export default function InteriorDesignerIslamabadPage() {
               </div>
             </div>
           </section>
-
           <section className="mb-12">
             <h2 className="text-3xl font-semibold mb-6">Interior Design Specializations</h2>
-
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="bg-card p-6 rounded-lg">
                 <h4 className="text-lg font-semibold mb-3">Residential Interior Design</h4>
@@ -132,7 +123,6 @@ export default function InteriorDesignerIslamabadPage() {
                   <li>• Color consultation</li>
                 </ul>
               </div>
-
               <div className="bg-card p-6 rounded-lg">
                 <h4 className="text-lg font-semibold mb-3">Commercial Interior Design</h4>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -145,7 +135,6 @@ export default function InteriorDesignerIslamabadPage() {
                   <li>• Functional workspace solutions</li>
                 </ul>
               </div>
-
               <div className="bg-card p-6 rounded-lg">
                 <h4 className="text-lg font-semibold mb-3">Hospitality Interior Design</h4>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -160,7 +149,6 @@ export default function InteriorDesignerIslamabadPage() {
               </div>
             </div>
           </section>
-
           <section className="mb-12">
             <h2 className="text-3xl font-semibold mb-6">Our Design Process</h2>
             <div className="grid md:grid-cols-4 gap-4">
@@ -186,7 +174,6 @@ export default function InteriorDesignerIslamabadPage() {
               </div>
             </div>
           </section>
-
           <section className="mb-12">
             <h2 className="text-3xl font-semibold mb-6">Service Areas in Islamabad & Rawalpindi</h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -218,7 +205,6 @@ export default function InteriorDesignerIslamabadPage() {
               </div>
             </div>
           </section>
-
           <section className="mb-12">
             <h2 className="text-3xl font-semibold mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
@@ -253,7 +239,6 @@ export default function InteriorDesignerIslamabadPage() {
               </div>
             </div>
           </section>
-
           <section className="text-center bg-primary text-primary-foreground p-8 rounded-lg">
             <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Space?</h2>
             <p className="text-xl mb-6">Get expert interior design consultation in Islamabad & Rawalpindi</p>

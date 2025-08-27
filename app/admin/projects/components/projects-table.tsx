@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -18,11 +17,9 @@ import { deleteProject, toggleProjectFeatured } from '@/lib/admin-actions'
 import { Edit, Trash2, Eye, Star, Calendar, MapPin } from 'lucide-react'
 import { SupabaseImage } from '@/components/supabase-image'
 import type { Project } from '@/lib/supabase'
-
 interface ProjectsTableProps {
   projects: Project[]
 }
-
 export function ProjectsTable({ projects }: ProjectsTableProps) {
   const router = useRouter()
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -31,24 +28,18 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
     isOpen: boolean
     project: Project | null
   }>({ isOpen: false, project: null })
-
   const handleDeleteClick = (project: Project) => {
     setDeleteDialog({ isOpen: true, project })
   }
-
   const handleDeleteConfirm = async () => {
     if (!deleteDialog.project) return
-
     setDeletingId(deleteDialog.project.id)
-    
     try {
       const result = await deleteProject(deleteDialog.project.id)
-      
       if (!result.success) {
         alert(`Failed to delete project: ${result.error}`)
       } else {
         setDeleteDialog({ isOpen: false, project: null })
-        // The page will revalidate automatically due to server action
         router.refresh()
       }
     } catch {
@@ -57,17 +48,13 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
       setDeletingId(null)
     }
   }
-
   const handleDeleteCancel = () => {
     setDeleteDialog({ isOpen: false, project: null })
   }
-
   const handleToggleFeatured = async (project: Project) => {
     setTogglingId(project.id)
-    
     try {
       const result = await toggleProjectFeatured(project.id, !project.featured)
-      
       if (!result.success) {
         alert(`Failed to update project: ${result.error}`)
       } else {
@@ -79,7 +66,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
       setTogglingId(null)
     }
   }
-
   if (projects.length === 0) {
     return (
       <div className="py-12">
@@ -100,10 +86,9 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
       </div>
     )
   }
-
   return (
     <div>
-      {/* Mobile view - Card layout for small screens */}
+      {}
       <div className="block md:hidden space-y-4 p-4">
         {projects.map((project, index) => (
           <motion.div
@@ -150,7 +135,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                 </div>
               </div>
             </div>
-            
             <div className="flex items-center justify-between pt-2">
               <Button
                 variant="ghost"
@@ -172,7 +156,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                   </>
                 )}
               </Button>
-              
               <div className="flex items-center space-x-2 ml-auto">
                 <Button variant="ghost" size="sm" asChild>
                   <Link
@@ -183,7 +166,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                     <Eye className="w-4 h-4" />
                   </Link>
                 </Button>
-                
                 <Button variant="ghost" size="sm" asChild>
                   <Link
                     href={`/admin/projects/${project.id}/edit`}
@@ -192,7 +174,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                     <Edit className="w-4 h-4" />
                   </Link>
                 </Button>
-                
                 <Button
                   variant="ghost"
                   size="sm"
@@ -207,8 +188,7 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
           </motion.div>
         ))}
       </div>
-
-      {/* Desktop view - Table layout for larger screens */}
+      {}
       <div className="hidden md:block p-2">
         <Table>
           <TableHeader>
@@ -263,13 +243,11 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                       </div>
                     </div>
                   </TableCell>
-                  
                   <TableCell>
                     <span className="px-2 py-1 bg-stone-100 text-stone-800 rounded-full text-sm">
                       {project.category}
                     </span>
                   </TableCell>
-                  
                   <TableCell>
                     <div className="flex items-center space-x-1">
                       <Calendar className="w-4 h-4 text-stone-400" />
@@ -278,7 +256,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                       </span>
                     </div>
                   </TableCell>
-                  
                   <TableCell>
                     {project.location && (
                       <div className="flex items-center space-x-1">
@@ -287,7 +264,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                       </div>
                     )}
                   </TableCell>
-                  
                   <TableCell>
                     <div className="flex flex-col space-y-2">
                       <Button
@@ -315,7 +291,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                       </span>
                     </div>
                   </TableCell>
-                  
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end space-x-2">
                       <Button variant="ghost" size="sm" asChild>
@@ -327,7 +302,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                           <Eye className="w-4 h-4" />
                         </Link>
                       </Button>
-                      
                       <Button variant="ghost" size="sm" asChild>
                         <Link
                           href={`/admin/projects/${project.id}/edit`}
@@ -336,7 +310,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
                           <Edit className="w-4 h-4" />
                         </Link>
                       </Button>
-                      
                       <Button
                         variant="ghost"
                         size="sm"
@@ -353,7 +326,6 @@ export function ProjectsTable({ projects }: ProjectsTableProps) {
             </TableBody>
         </Table>
       </div>
-      
       <DeleteConfirmationDialog
         isOpen={deleteDialog.isOpen}
         onClose={handleDeleteCancel}

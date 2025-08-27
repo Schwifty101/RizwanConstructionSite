@@ -1,7 +1,7 @@
 -- ==================================
--- THE NEW HOME INTERIOR DESIGN WEBSITE DATABASE SETUP
+-- TheNewHome INTERIOR DESIGN WEBSITE DATABASE SETUP
 -- ==================================
--- For "The New Home - Where Dreams Take Shape"
+-- For "TheNewHome - Where Dreams Take Shape"
 -- Interior Design Services Database
 -- Run this entire script in your Supabase SQL Editor
 -- Go to: https://supabase.com/dashboard → Your Project → SQL Editor → New Query
@@ -127,7 +127,7 @@ DROP TRIGGER IF EXISTS update_services_updated_at ON services;
 CREATE TRIGGER update_services_updated_at BEFORE UPDATE ON services
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
--- Insert updated services data for "The New Home"
+-- Insert updated services data for "TheNewHome"
 INSERT INTO services (name, description, order_index) VALUES
 -- Main Service Categories
 ('Texture Coating & Zola Paint', 'Expert texture coatings and zola paint application for flawless wall finishes', 1),
@@ -145,7 +145,7 @@ INSERT INTO services (name, description, order_index) VALUES
 ('Paints & Finishes', 'Texture coatings to zola paints with color selection based on room size and light conditions', 12)
 ON CONFLICT DO NOTHING;
 
--- Insert sample projects data for "The New Home"
+-- Insert sample projects data for "TheNewHome"
 INSERT INTO projects (title, description, category, date, location, slug, featured) VALUES
 ('Luxury Home Interior Transformation', 'Complete home interior makeover with custom texture coating, wooden flooring, and elegant false ceilings', 'Home Interiors', '2024-01-15', 'Downtown District', 'luxury-home-interior-transformation', true),
 ('Hotel Lobby Redesign', 'International standard hotel lobby design with custom aluminium work and premium blinds', 'Hotel & Restaurant Interiors', '2024-02-28', 'Business District', 'hotel-lobby-redesign', true),
@@ -168,4 +168,4 @@ ON CONFLICT (id) DO UPDATE SET
 -- Note: RLS and policies are already enabled above, no duplicates needed
 
 -- Success message
-SELECT 'The New Home database setup completed successfully! Projects and services tables with sample interior design data have been created. Storage buckets and RLS policies are configured.' as status;
+SELECT 'TheNewHome database setup completed successfully! Projects and services tables with sample interior design data have been created. Storage buckets and RLS policies are configured.' as status;

@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
-// Hamburger menu is now custom animated
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import {
@@ -31,7 +30,6 @@ export function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY
-      // On home page, show transparent navbar until scrolled past hero section (roughly 100vh)
       if (isHomePage) {
         setIsScrolled(scrollPosition > window.innerHeight * 0.8)
       } else {
@@ -40,12 +38,11 @@ export function Navbar() {
     }
 
     window.addEventListener('scroll', handleScroll)
-    handleScroll() // Call once to set initial state
+    handleScroll()
 
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isHomePage])
 
-  // Dynamic classes based on scroll state and page
   const navbarClasses = isHomePage && !isScrolled
     ? "fixed top-0 z-50 w-full bg-transparent backdrop-blur-none border-transparent"
     : "fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
@@ -70,7 +67,6 @@ export function Navbar() {
       transition={{ duration: 0.3 }}
     >
       <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-4 pt-6">
-        {/* Brand */}
         <motion.div
           className="flex items-center"
           whileHover={{ scale: 1.02 }}
@@ -81,15 +77,11 @@ export function Navbar() {
               className={`font-serif text-2xl md:text-3xl font-bold transition-colors duration-300 ${brandClasses}`}
               whileHover={{ scale: 1.05 }}
             >
-              The New Home
+              TheNewHome
             </motion.span>
-            <span className={`font-serif text-lg md:text-xl transition-colors duration-300 ${brandClasses}`}>
-              Interior Design
-            </span>
           </Link>
         </motion.div>
 
-        {/* Desktop Navigation */}
         <NavigationMenu className="hidden lg:flex">
           <NavigationMenuList className="space-x-2">
             {navigationItems.map((item, index) => (
@@ -116,7 +108,6 @@ export function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Call to Action Button */}
         <motion.div
           className="hidden md:block"
           initial={{ opacity: 0, x: 20 }}
@@ -127,13 +118,9 @@ export function Navbar() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button asChild className={`font-medium transition-colors duration-300 ${buttonClasses}`}>
-              <Link href="/contact">Get Quote</Link>
-            </Button>
           </motion.div>
         </motion.div>
 
-        {/* Mobile Menu Button */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -148,7 +135,6 @@ export function Navbar() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {/* Animated Hamburger Icon */}
             <div className="relative w-6 h-6 flex flex-col justify-center">
               <motion.span
                 className={`absolute w-6 h-0.5 rounded-full transition-colors duration-300 ${
@@ -185,11 +171,9 @@ export function Navbar() {
         </motion.div>
       </div>
 
-      {/* Mobile Navigation */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               className="lg:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
               initial={{ opacity: 0 }}
@@ -199,7 +183,6 @@ export function Navbar() {
               onClick={() => setIsMobileMenuOpen(false)}
             />
             
-            {/* Mobile Menu */}
             <motion.div
               className="lg:hidden relative z-50 border-t border-border/20 bg-background/98 backdrop-blur-xl shadow-2xl"
               initial={{ opacity: 0, y: -20 }}
@@ -257,7 +240,6 @@ export function Navbar() {
                   </motion.div>
                 ))}
                 
-                {/* Separator */}
                 <motion.div 
                   className="py-2"
                   variants={{

@@ -4,14 +4,10 @@ import { Button } from '@/components/ui/button'
 import { getAdminProjects } from '@/lib/admin-actions'
 import { FolderOpen, Plus, BarChart3, Eye, Calendar, Settings } from 'lucide-react'
 import { AuthenticatedLayout } from './components/authenticated-layout'
-
-// Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
-
 export default async function AdminDashboard() {
   const projectsResult = await getAdminProjects()
   const projects = projectsResult.success ? projectsResult.data || [] : []
-
   const stats = {
     totalProjects: projects.length,
     featuredProjects: projects.filter(p => p.featured).length,
@@ -21,7 +17,6 @@ export default async function AdminDashboard() {
       return projectDate > thirtyDaysAgo
     }).length
   }
-
   return (
     <AuthenticatedLayout>
       <div className="space-y-8">
@@ -32,7 +27,6 @@ export default async function AdminDashboard() {
             Manage your construction portfolio and content
           </p>
         </div>
-        
         <div className="flex flex-col sm:flex-row gap-3">
           <Button asChild variant="outline" className="w-full sm:w-auto">
             <Link href="/admin/services" className="flex items-center justify-center space-x-2">
@@ -48,8 +42,7 @@ export default async function AdminDashboard() {
           </Button>
         </div>
       </div>
-
-      {/* Stats Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -63,7 +56,6 @@ export default async function AdminDashboard() {
             </p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Featured Projects</CardTitle>
@@ -76,7 +68,6 @@ export default async function AdminDashboard() {
             </p>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Recent Projects</CardTitle>
@@ -90,8 +81,7 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Quick Actions */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
           <CardHeader>
@@ -116,7 +106,6 @@ export default async function AdminDashboard() {
             </Button>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -140,7 +129,6 @@ export default async function AdminDashboard() {
             </Button>
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
@@ -170,8 +158,7 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Recent Projects */}
+      {}
       {projects.length > 0 && (
         <Card>
           <CardHeader>
