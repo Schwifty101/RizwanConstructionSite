@@ -54,7 +54,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
               }}
             >
               TheNewHome <br />
-              <span className="text-dusty-gold drop-shadow-lg text-6xl">Where Dreams take Shape</span>
+              <span className="text-dusty-gold drop-shadow-lg text-5xl">Where Dreams take Shape</span>
             </motion.h1>
 
             <motion.div
