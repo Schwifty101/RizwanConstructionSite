@@ -1,12 +1,6 @@
 {
-  "name": "Professional Interior Designer & Construction Services - Islamabad | Rawalpindi",
-  "short_name": "Rizwan Interiors",
-  "description": "Expert interior design and construction services in Islamabad & Rawalpindi. Specializing in false ceilings, texture coating, wooden flooring, window blinds.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#C9A66B",
-  "orientation": "portrait-primary",
+  "name": "TheNewHome",
+  "short_name": "TheNewHome",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,20 +8,12 @@
       "type": "image/png"
     },
     {
-      "src": "/android-chrome-512x512.png", 
+      "src": "/android-chrome-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
       "type": "image/png"
     }
   ],
-  "categories": ["business", "lifestyle", "design"],
-  "lang": "en",
-  "dir": "ltr",
-  "scope": "/",
-  "related_applications": [],
-  "prefer_related_applications": false
+  "theme_color": "#C9A66B",
+  "background_color": "#ffffff",
+  "display": "standalone"
 }

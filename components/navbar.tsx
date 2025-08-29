@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
@@ -51,9 +52,6 @@ export function Navbar() {
     ? "text-paper-white hover:text-dusty-gold bg-transparent"
     : "text-foreground hover:text-muted-gold"
 
-  const brandClasses = isHomePage && !isScrolled
-    ? "text-paper-white hover:text-dusty-gold"
-    : "text-foreground hover:text-muted-gold"
 
   const buttonClasses = isHomePage && !isScrolled
     ? "bg-dusty-gold/80 hover:bg-dusty-gold text-paper-white border-dusty-gold/50"
@@ -66,24 +64,32 @@ export function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-4 pt-6">
+      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-6 md:px-8 lg:px-12 pt-6">
+        {/* Logo - Left side */}
         <motion.div
           className="flex items-center"
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
         >
-          <Link href="/" className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
-            <motion.span
-              className={`font-serif text-2xl md:text-3xl font-bold transition-colors duration-300 ${brandClasses}`}
+          <Link href="/" className="flex items-center space-x-3">
+            <motion.div
               whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
             >
-              TheNewHome
-            </motion.span>
+              <Image
+                src="/logo-new.svg"
+                alt="TheNewHome Logo"
+                width={48}
+                height={48}
+                className="h-10 w-10 md:h-12 md:w-12"
+              />
+            </motion.div>
           </Link>
         </motion.div>
 
-        <NavigationMenu className="hidden lg:flex">
-          <NavigationMenuList className="space-x-2">
+        {/* Navigation - Center */}
+        <NavigationMenu className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2">
+          <NavigationMenuList className="flex space-x-8">
             {navigationItems.map((item, index) => (
               <NavigationMenuItem key={item.name}>
                 <NavigationMenuLink
@@ -108,27 +114,16 @@ export function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        <motion.div
-          className="hidden md:block"
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.5 }}
-        >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-          </motion.div>
-        </motion.div>
-
+        {/* Mobile menu button - Right side */}
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          className="lg:hidden"
         >
           <Button
             variant="ghost"
             size="icon"
-            className={`lg:hidden z-10 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
+            className={`z-50 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
                 ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
                 : "hover:bg-muted-gold/10 hover:text-muted-gold"
               }`}
