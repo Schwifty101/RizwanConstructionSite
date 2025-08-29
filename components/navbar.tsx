@@ -64,10 +64,10 @@ export function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto grid grid-cols-3 h-20 max-w-6xl items-center px-4 pt-6">
-        {/* Logo - Left column */}
+      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-6 md:px-8 lg:px-12 pt-6">
+        {/* Logo - Left side */}
         <motion.div
-          className="flex items-center justify-start"
+          className="flex items-center"
           whileHover={{ scale: 1.02 }}
           transition={{ duration: 0.2 }}
         >
@@ -87,8 +87,8 @@ export function Navbar() {
           </Link>
         </motion.div>
 
-        {/* Navigation - Center column */}
-        <NavigationMenu className="hidden lg:flex justify-center">
+        {/* Navigation - Center */}
+        <NavigationMenu className="hidden lg:flex absolute left-1/2 transform -translate-x-1/2">
           <NavigationMenuList className="flex space-x-8">
             {navigationItems.map((item, index) => (
               <NavigationMenuItem key={item.name}>
@@ -114,23 +114,22 @@ export function Navbar() {
           </NavigationMenuList>
         </NavigationMenu>
 
-        {/* Right side - Mobile menu button */}
-        <div className="flex justify-end">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="lg:hidden"
+        {/* Mobile menu button - Right side */}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="lg:hidden"
+        >
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`z-50 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
+                ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
+                : "hover:bg-muted-gold/10 hover:text-muted-gold"
+              }`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
           >
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`z-10 relative p-3 transition-all duration-300 ${textClasses} ${isHomePage && !isScrolled
-                  ? "hover:bg-dusty-gold/10 hover:text-dusty-gold"
-                  : "hover:bg-muted-gold/10 hover:text-muted-gold"
-                }`}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
             <div className="relative w-6 h-6 flex flex-col justify-center">
               <motion.span
                 className={`absolute w-6 h-0.5 rounded-full transition-colors duration-300 ${
@@ -163,9 +162,8 @@ export function Navbar() {
                 transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
               />
             </div>
-            </Button>
-          </motion.div>
-        </div>
+          </Button>
+        </motion.div>
       </div>
 
       <AnimatePresence>
