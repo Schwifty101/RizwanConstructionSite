@@ -64,7 +64,7 @@ export function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-6 md:px-8 lg:px-12 pt-6">
+      <div className="container mx-auto flex h-20 max-w-6xl items-center justify-between px-6 md:px-8 lg:px-12">
         {/* Logo - Left side */}
         <motion.div
           className="flex items-center"
