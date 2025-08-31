@@ -110,7 +110,15 @@ export function generateMetadata({
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: title
+          alt: title,
+          type: 'image/jpeg'
+        },
+        {
+          url: `${SITE_CONFIG.siteUrl}/images/og-image-alt.jpg`,
+          width: 1200,
+          height: 630,
+          alt: title,
+          type: 'image/jpeg'
         }
       ],
       locale: 'en_US',
