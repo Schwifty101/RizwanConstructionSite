@@ -20,7 +20,7 @@ export function HomeClient({ featuredProjects }: HomeClientProps) {
       animate="animate"
       exit="exit"
     >
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <motion.div
           className="absolute inset-0 z-0"
           initial={{ scale: 1.1 }}
